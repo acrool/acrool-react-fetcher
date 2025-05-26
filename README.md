@@ -1,11 +1,11 @@
 # Acrool React Fetcher
 
-<a href="https://acrool-react-fetcher.pages.dev/" title="Acrool React Fetcher - Fetcher list with React Component">
+<a href="https://acrool-react-fetcher.pages.dev/" title="Acrool React Fetcher - This is a block function for React development loading block">
     <img src="https://raw.githubusercontent.com/acrool/acrool-react-fetcher/main/example/public/og.webp" alt="Acrool React Fetcher Logo"/>
 </a>
 
 <p align="center">
-    Drop-down menu with rich functions, including search/groups options/avatar/multi for Reactjs
+    This is a toast message function for React development notifications
 </p>
 
 <div align="center">
@@ -19,21 +19,22 @@
 
 </div>
 
+
+`^1.1.0 support react >=18.0.0 <20.0.0`
+
+
+
 ## Features
 
-- Supports two themes (light/dark)
-- Support multiple selection function
-- Support groups options
-- Support avatar display
-- Support search search function
-- Support value custom type (string, number, boolean, object...)
-- Support accessibility (keyboard Tab, Arrow Top, Bottom, Enter)
+- Supports queue block list
+- Plug and unplug using `@acrool/react-portal` and `framer-motion`
 
 ## Install
 
 ```bash
 yarn add @acrool/react-fetcher
 ```
+
 
 ## Usage
 
@@ -42,61 +43,52 @@ add in your index.tsx
 import "@acrool/react-fetcher/dist/index.css";
 ```
 
-then in your page
+add in your App.tsx
+
 ```tsx
-import {Fetcher, FetcherMulti} from '@acrool/react-fetcher';
+import {BlockPortal} from "@acrool/react-fetcher";
 
-
-const Example = () => {
-    const [value, setValue] = useState<string|null>('');
-    const [multiValue, setMultiValue] = useState<Array<string|null>|null>(null);
-
-    const renderFetcher = () => {
-        const options = [
-            {text: 'Jack Wu', value: '1'},
-            {text: 'Imagine Chiu', value: '2'},
-            {text: 'Jason Dinwiddie', value: '3'},
-            {text: 'Gloria Lu', value: '4'},
-        ];
-        return <Fetcher value={value} onChange={setValue} options={options}/>;
-    }
-    
-    const renderFetcherMulti = () => {
-        const options = [
-            {text: 'Select option item...', value: '', avatarUrl: ''},
-            {text: 'Jack Wu', value: '1', avatarUrl: asset('/images/avatar/female-1.jpg')},
-            {text: 'Imagine Chiu', value: '2', avatarUrl: asset('/images/avatar/female-2.jpg')},
-            {text: 'Jason Dinwiddie', value: '3', avatarUrl: asset('/images/avatar/female-3.jpg')},
-            {text: 'Gloria Lu', value: '4', avatarUrl: asset('/images/avatar/female-4.jpg')},
-        ];
-        return <FetcherMulti value={multiValue} onChange={setMultiValue} options={options2} isDark/>;
-    }
-    
+const App = () => {
     return (
-        <>
-            {renderFetcher()}
-            {renderFetcherMulti()}
-        </>
+        <div>
+            <BaseUsed/>
+            <BlockPortal
+                isVisibleQueueKey={false}
+                loader={<Loader/>}
+                defaultMessage="Loading..."
+            />
+        </div>
     );
-
 };
 ```
 
-<img src="https://acrool-react-fetcher.pages.dev/preview.webp" alt="Acrool React Fetcher Preview" width="700"/>
+then in your page
 
+```tsx
+import {block} from '@acrool/react-fetcher';
+import {useEffect} from "react";
 
+const Example = () => {
 
-## Options
+    useEffect(() => {
+        block.show();
+        
+        setTimeout(() => {
+            block.hide();
+        }, 3000)
+    }, []);
 
-if need use `null` value, options type
-
-```json
-{
-    "compilerOptions": {
-        "strictNullChecks": false
-    }
-}
+    return (
+        <div>
+            sample page
+        </div>
+    );
+};
 ```
+
+- block.show
+- block.hide
+
 
 There is also a example that you can play with it:
 
@@ -105,4 +97,4 @@ There is also a example that you can play with it:
 
 ## License
 
-MIT © [imagine10255](https://github.com/imagine10255)
+MIT © [Acrool](https://github.com/acrool) & [Imagine](https://github.com/imagine10255)

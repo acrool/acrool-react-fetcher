@@ -1,0 +1,75 @@
+
+
+mutation PutAuthRefreshToken($input: AuthRefreshTokenInput!) {
+    authRefreshToken(input: $input) {
+        tokenInfo {
+            accessToken
+            refreshToken
+        }
+    }
+}
+
+
+mutation PutAuthLogin($input: AuthLoginInput!) {
+    authLogin(input: $input) {
+        name
+        tokenInfo {
+            accessToken
+            refreshToken
+        }
+
+    }
+}
+
+mutation PutAuthLogout {
+    authLogout {
+        message
+        updateCount
+    }
+}
+
+
+mutation PutAuthDirectGoogleVerify {
+    authDirectGoogleVerify {
+        url
+    }
+}
+
+
+
+mutation PutAuthLoginWithGoogle($input: AuthLoginByGoogleInput!) {
+    authLoginWithGoogle(input: $input) {
+        name
+        tokenInfo {
+            accessToken
+            refreshToken
+        }
+    }
+}
+
+mutation PutAuthSignUp($input: AuthSignUpInput!) {
+    authSignUp(input: $input) {
+        message
+        name
+        tokenInfo {
+            accessToken
+            refreshToken
+        }
+    }
+}
+
+mutation PutAuthSendVerifyCode($input: AuthSendVerifyCodeInput!) {
+    authSendVerifyCode(input: $input) {
+        message
+        verifyCodeId
+    }
+}
+
+
+
+mutation PutAuthResetPassword($input: AuthResetPasswordInput!) {
+    authResetPassword(input: $input) {
+        message
+    }
+}
+

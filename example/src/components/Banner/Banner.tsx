@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {useRef} from 'react';
 import domtoimage from 'dom-to-image';
 import Github from '../../assets/github.svg?react';
-import {media} from '@acrool/react-grid';
+import {media} from "@acrool/react-grid";
 
 
 interface IProps {
@@ -11,8 +11,9 @@ interface IProps {
 
 
 
-const repositoryUrl = 'https://github.com/acrool/acrool-react-fetcher';
-const name = 'Acrool React Fetcher';
+const repositoryUrl = 'https://github.com/acrool/acrool-react-router-hash';
+const name = 'Acrool React Router Hash';
+
 
 
 const Banner = ({
@@ -35,7 +36,6 @@ const Banner = ({
                 link.click();
             });
     };
-
 
     return <BannerRoot className={className}>
         <a href={repositoryUrl} target="_blank" rel="noopener noreferrer">

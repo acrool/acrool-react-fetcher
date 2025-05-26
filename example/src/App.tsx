@@ -1,20 +1,38 @@
+import {Route, Routes, BrowserRouter as Router} from 'react-router-dom';
+
+
+import NotFound from './views/NotFound';
+import Dashboard from './views/Dashboard';
+
 import './App.css';
-import Example from './views/Example';
 import Banner from './components/Banner';
+import {createBrowserHistory} from 'history';
+import {GridThemeProvider} from '@acrool/react-grid';
 
 
+const history = createBrowserHistory({window});
+
+
+const MainRouter = () => {
+    return  <Routes>
+        <Route path="/" element={<Dashboard/>} />
+
+        {/* NotFound */}
+        <Route path="*" element={<NotFound/>}/>
+    </Routes>;
+};
 
 
 function App() {
     return (
-        <div className="App">
-            <Banner/>
+        <GridThemeProvider>
+            <div className="App">
+                <Banner/>
 
-            <Example/>
-        </div>
+                <MainRouter/>
+            </div>
+        </GridThemeProvider>
     );
 }
 
 export default App;
-
-

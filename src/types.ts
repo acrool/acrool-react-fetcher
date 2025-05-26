@@ -1,33 +1,13 @@
+import {AxiosRequestConfig} from "axios";
 
-// export type TOfNull<T> = T;
-
-
-export interface IFetcherOption<T>  {
-    value: T;
-    text: string;
-    avatarUrl?: string,
-    color?: string,
+export interface IFetchOptions extends AxiosRequestConfig{
+    requestCode?: string
 }
 
 
-// export interface IFetcherGroupOption<T>  {
-//     groupName: string,
-//     children: IFetcherOption<T>[],
-// }
-export interface IFetcherGroupOption<T>  {
-    groupName: string,
-    children: IFetcherOption<T>[],
-}
-// export interface IFetcherGroupOption<T> {
-//     groupName: string,
-//     children: Array<{
-//         text: string,
-//         value: T,
-//         avatarUrl?: string,
-//         color?: string
-//     }>
-// }
+export interface IUseFetcherArgs<TVariables = {}> {variables?: TVariables, fetchOptions?: IFetchOptions}
+export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
 
-export type TOption<T> = IFetcherOption<T> | IFetcherGroupOption<T>
-// export type TOption<T> = IFetcherOption<TOfNull<T>>[] | IFetcherGroupOption<TOfNull<T>>[]
 
+export interface IUseFetcherArgs<TVariables = {}> {variables?: TVariables, fetchOptions?: IFetchOptions}
+export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}

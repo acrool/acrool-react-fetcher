@@ -1,5 +1,6 @@
+import logger from '@acrool/js-logger';
 import {isEmpty, isNotEmpty} from '@acrool/js-utils/equal';
-import React, {createContext, ReactNode, useCallback, useContext, useState} from 'react';
+import React, {createContext, ReactNode, RefObject, useCallback, useContext, useRef, useState} from 'react';
 
 import {IAuthTokens} from './types';
 
@@ -12,112 +13,62 @@ export interface AuthPayload {
     [key: string]: any
 }
 
+// 新增 updateTokens 的型別
+export type AuthTokensUpdater = (tokensOrUpdater: IAuthTokens | null | ((curr: IAuthTokens | null) => IAuthTokens | null)) => void;
 
 interface AuthState {
-    payload: AuthPayload | null
-    tokens: IAuthTokens | null
-    isRefreshing: boolean
-    login: (tokens: IAuthTokens) => void
-    logout: () => void
-    updateTokens: (tokens: IAuthTokens) => void
+    lastUpdateTimestamp: number
+    tokensRef: RefObject<IAuthTokens|null>|null
+    updateTokens: AuthTokensUpdater
+    isAuth: boolean
     // clearTokens: () => void
-    refreshing: (isRefreshing: boolean) => void
-    getTokens: () => IAuthTokens | null
-    getAccessToken: () => string | undefined
-    getRefreshToken: () => string | undefined
 }
 
-const AuthStateContext = createContext<AuthState | undefined>(undefined);
+const AuthStateContext = createContext<AuthState>({
+    lastUpdateTimestamp: 0,
+    tokensRef: null,
+    updateTokens: () => {},
+    isAuth: false,
+});
 
-export const useAuthState = () => {
-    const context = useContext(AuthStateContext);
-    if (!context) {
-        throw new Error('useAuthState 必須在 AuthStateProvider 內使用');
-    }
-    console.log('context.tokens', context.tokens);
-
-    return {
-        ...context,
-        isAuth: isNotEmpty(context.tokens),
-    };
-};
+export const useAuthState = () => useContext(AuthStateContext);
 
 interface AuthStateProviderProps {
     children: ReactNode
 }
 
-const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
-    const [_payload, _setPayload] = useState<AuthPayload | null>(null);
-    const [_tokens, _setTokens] = useState<IAuthTokens | null>(null);
-    const [_isRefreshing, _setIsRefreshing] = useState(false);
-
-    /**
-     * 登入，設置 payload 與 tokens
-     * @param payload 使用者資訊
-     * @param tokens 認證 Token
-     */
-    const login = useCallback((tokens: IAuthTokens) => {
-        // setPayload(payload);
-        _setTokens(tokens);
-    }, []);
-
-    /**
-     * 登出，清除 payload 與 tokens
-     */
-    const logout = useCallback(() => {
-        _setPayload(null);
-        _setTokens(null);
-    }, []);
+const AuthStateProvider = ({
+    children
+}: AuthStateProviderProps) => {
+    const tokensRef = useRef<IAuthTokens>(null);
+    const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
+    const [isAuth, setIsAuth] = useState<boolean>(false);
 
     /**
      * 更新 tokens
-     * @param tokens 新的認證 Token
+     * @param tokensOrUpdater 新的認證 Token 或 (curr) => 新的 Token
      */
-    const updateTokens = useCallback((tokens: IAuthTokens) => {
-        _setTokens(tokens);
-    }, []);
+    const updateTokens: AuthTokensUpdater = (tokensOrUpdater) => {
+        let nextTokens: IAuthTokens | null;
+        if (typeof tokensOrUpdater === 'function') {
+            nextTokens = (tokensOrUpdater as (curr: IAuthTokens | null) => IAuthTokens | null)(tokensRef.current);
+        } else {
+            nextTokens = tokensOrUpdater;
+        }
+        logger.danger('更新Token', nextTokens);
+        tokensRef.current = nextTokens;
+        setIsAuth(isNotEmpty(nextTokens));
+        setLastUpdateTimestamp(Date.now());
+    };
 
-    /**
-     * 設置是否正在刷新 Token 狀態
-     * @param isRefreshing 是否正在刷新
-     */
-    const refreshing = useCallback((isRefreshing: boolean) => {
-        _setIsRefreshing(isRefreshing);
-    }, []);
-
-    /**
-     * 取得目前的 tokens
-     * @returns tokens 或 null
-     */
-    const getTokens = useCallback(() => _tokens, [_tokens]);
-
-    /**
-     * 取得目前的 accessToken
-     * @returns accessToken 或 undefined
-     */
-    const getAccessToken = useCallback(() => _tokens?.accessToken, [_tokens]);
-
-    /**
-     * 取得目前的 refreshToken
-     * @returns refreshToken 或 undefined
-     */
-    const getRefreshToken = useCallback(() => _tokens?.refreshToken, [_tokens]);
-
-    console.log('tokens', _tokens);
 
 
     return (
         <AuthStateContext.Provider value={{
-            payload: _payload,
-            tokens: _tokens,
-            isRefreshing: _isRefreshing,
-            login,
-            logout,
+            tokensRef,
+            isAuth,
             updateTokens,
-            refreshing,
-            getTokens,
-            getAccessToken,
-            getRefreshToken,
+            lastUpdateTimestamp,
         }}>
             {children}
         </AuthStateContext.Provider>

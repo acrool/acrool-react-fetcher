@@ -1,7 +1,9 @@
+import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
 import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
+import {useAuthState} from '../AuthStateProvider';
 import {SystemException} from '../exception';
 import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';
 import AxiosCancelException from './AxiosCancelException';
@@ -12,8 +14,9 @@ import {
     TInterceptorResponseError,
     TInterceptorResponseSuccess
 } from './types';
-import {useAuthState} from "../AuthStateProvider";
 
+
+let isTokenRefreshing = false;
 let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
 
 export const AxiosClientContext = createContext<AxiosInstance>(axiosInstance);
@@ -45,7 +48,8 @@ const AxiosClientProvider = ({
     onError,
 }: IProps) => {
 
-    const authState = useAuthState();
+    const {tokensRef, updateTokens} = useAuthState();
+
 
     useLayoutEffect(() => {
         const interceptorReq = axiosInstance.interceptors.request.use(interceptorsRequest);
@@ -54,18 +58,18 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [authState.isRefreshing]);
+    }, [isTokenRefreshing, updateTokens]);
 
 
     /**
      * 發送 refreshToken 並更新 token 狀態
      */
     const postRefreshToken = () => {
-        console.log('onRefreshToken', onRefreshToken);
-        
-        if(!onRefreshToken) return;
+        const refreshToken = tokensRef?.current?.refreshToken;
+        logger.warning('postRefreshToken', refreshToken);
+        if(!onRefreshToken || !refreshToken) return;
 
-        onRefreshToken()
+        onRefreshToken(refreshToken)
             .then(authTokens => {
                 // 假設外部 refreshToken 已經自動更新 token 狀態
                 if(isEmpty(authTokens)){
@@ -75,11 +79,11 @@ const AxiosClientProvider = ({
                     });
                 }
                 // authTokensManager.update(authTokens);
-                authState.updateTokens(authTokens);
+                updateTokens(authTokens);
                 runPendingRequest(true);
             })
             .catch(() => {
-                handleOnForceLogout();
+                // handleOnForceLogout();
                 runPendingRequest(false);
             });
     };
@@ -90,8 +94,9 @@ const AxiosClientProvider = ({
      * @param isSuccess
      */
     const runPendingRequest = (isSuccess: boolean) => {
-        // authTokensManager.refreshing(false);
-        authState.refreshing(false);
+        logger.warning('runPendingRequest');
+
+        isTokenRefreshing = false;
         for(const cb of pendingRequestQueues){
             cb(isSuccess);
         }
@@ -103,11 +108,12 @@ const AxiosClientProvider = ({
      * 處理登出
      */
     const handleOnForceLogout = () => {
+        logger.warning('Logout');
         // authTokensManager
         //     .refreshing(false)
         //     .clear();
-        authState.refreshing(false);
-        authState.logout();
+        isTokenRefreshing = false;
+        updateTokens(null);
 
         if(onForceLogout) onForceLogout();
     };
@@ -142,19 +148,19 @@ const AxiosClientProvider = ({
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
             // const authTokens = authTokensManager.tokens;
-            const authTokens = authState.tokens;
+            logger.warning('interceptorsRequest');
 
             originConfig.headers['Accept-Language'] = getLocale();
 
-            if(authTokens?.accessToken){
-                originConfig.headers['Authorization'] = `Bearer ${authTokens.accessToken}`;
+            if(tokensRef?.current?.accessToken){
+                originConfig.headers['Authorization'] = `Bearer ${tokensRef?.current?.accessToken}`;
             }
 
             // if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
             //     pushPendingRequestQueues(resolve, reject)(originConfig);
             //     reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             // }
-            if(!checkIsRefreshTokenAPI(originConfig) && authState.isRefreshing){
+            if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             }
@@ -183,8 +189,8 @@ const AxiosClientProvider = ({
 
         const responseFirstError = getResponseFirstError(response);
         // const authTokens = authTokensManager.tokens;
-        const authTokens = authState.tokens;
 
+        logger.warning('interceptorsResponseError');
 
         // const {refreshToken: refreshTokenValue} = getAuthTokens();
         if (onError) {
@@ -192,10 +198,14 @@ const AxiosClientProvider = ({
         }
 
         if(response && originalConfig) {
+
+
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
+                logger.warning('401OrUNAUTHENTICATED', tokensRef?.current?.refreshToken);
 
-                if (isEmpty(authTokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                if (isEmpty(tokensRef?.current?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                    isTokenRefreshing = false; // 考慮放置位置
                     handleOnForceLogout();
                     return Promise.reject(new SystemException(responseFirstError));
                 }
@@ -204,8 +214,9 @@ const AxiosClientProvider = ({
                 //     authTokensManager.refreshing(true);
                 //     postRefreshToken();
                 // }
-                if (!authState.isRefreshing) {
-                    authState.refreshing(true);
+
+                if (!isTokenRefreshing) {
+                    isTokenRefreshing = true;
                     postRefreshToken();
                 }
 

@@ -50,13 +50,13 @@ export function useLogout() {
     const {t} = useLocale();
     const navigate = useNavigate();
     const [AuthLogoutMutation] = usePutAuthLogoutMutation();
-    const {logout} = useAuthState();
+    const {updateTokens} = useAuthState();
 
     return () => {
         AuthLogoutMutation({})
             .unwrap()
             .then(res => {
-                logout();
+                updateTokens(null);
                 // dispatch(actions.logout());
                 // navigate(loginRoutePath);
                 setTimeout(() => {
@@ -121,7 +121,7 @@ export function useKickOut() {
  */
 function useCheckIn() {
     // const dispatch = useAppDispatch();
-    const {login} = useAuthState();
+    const {updateTokens} = useAuthState();
 
 
     const {t} = useLocale();
@@ -129,8 +129,7 @@ function useCheckIn() {
     return (args: ICheckIn) => {
         // 將緩存失效
         // dispatch(authActions.login(args));
-        login(args.authTokens);
-        console.log('sssss');
+        updateTokens(args.authTokens);
 
         console.log(t('message.login', {args: {userName: args.name}}));
     };

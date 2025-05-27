@@ -2,6 +2,7 @@ import {AuthStateProvider, AuthTokensManager,FetcherClientProvider} from '@acroo
 import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
+import {usePutAuthRefreshTokenMutation} from '@/store/__generated__';
 import {useRefreshToken} from '@/store/main/auth/hook';
 import {removeAuthTokens} from '@/store/main/auth/utils';
 
@@ -24,6 +25,9 @@ const ReactFetcherProvider = ({
     const handleChangeLocale = (newLocale: string) => {
         dayjs.locale(newLocale);
     };
+
+    const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
+
     const RefreshToken = useRefreshToken();
 
 
@@ -38,9 +42,17 @@ const ReactFetcherProvider = ({
             //         window.mockTokens = undefined;
             //     }
             // })}
-            onRefreshToken={async () => {
-                console.log('refresh token');
-                const res = await RefreshToken();
+            onRefreshToken={async (refreshToken) => {
+                const res = await RefreshTokenMutation({
+                    variables: {input: {refreshToken: refreshToken}},
+                    fetchOptions: {
+                        requestCode: 'refreshToken',
+                        // headers: {
+                        //     [refreshingHeaderKey]: 'true',
+                        // }
+                    }
+                }).unwrap();
+
                 return res?.authRefreshToken.authTokens;
             }}
             onForceLogout={ () => {
@@ -49,7 +61,7 @@ const ReactFetcherProvider = ({
             getLocale={() => 'zh-TW'}
         >
             {children}
-        </FetcherClientProvider>;
+        </FetcherClientProvider>
     </AuthStateProvider>;
 
 };

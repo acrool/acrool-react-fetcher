@@ -39,6 +39,7 @@ const ReactFetcherProvider = ({
             //     }
             // })}
             onRefreshToken={async () => {
+                console.log('refresh token');
                 const res = await RefreshToken();
                 return res?.authRefreshToken.authTokens;
             }}

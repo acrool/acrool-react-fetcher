@@ -2,11 +2,15 @@ import {Flex} from '@acrool/react-grid';
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
+import {useAuthState} from '@acrool/react-fetcher';
 import {useGetBookmarkQuery} from '@/store/__generated__';
 import {useLogout} from '@/store/main/auth/hook';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+
+    const {updateTokens} = useAuthState();
+
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
     });
@@ -19,13 +23,13 @@ const Dashboard = () => {
     const logout = useLogout();
 
     /**
-     * 模擬AccessToken失效, 刷新成功, 重發請求
+     * 模擬AccessToken失效, 刷新成功, 重發請求成功
      */
     const handleMockTokenInvalid = () => {
-        window.mockTokens = {
+        updateTokens({
             ...window.mockTokens,
             accessToken: 'mock-invalid-token',
-        };
+        });
 
         Bookmark1.refetch();
         Bookmark2.refetch();
@@ -39,10 +43,10 @@ const Dashboard = () => {
      * 模擬AccessToken失效, 刷新失敗, 停止重發
      */
     const handleMockTokenInvalidRefreshFail = () => {
-        window.mockTokens = {
+        updateTokens({
             refreshToken: 'mock-invalid-token',
             accessToken: 'mock-invalid-token',
-        };
+        });
 
 
         Bookmark1.refetch();
@@ -57,10 +61,10 @@ const Dashboard = () => {
      * 模擬AccessToken失效, 刷新回傳為空, 停止重發
      */
     const handleMockTokenInvalidRefreshEmpty = () => {
-        window.mockTokens = {
+        updateTokens({
             refreshToken: 'mock-empty-token',
             accessToken: 'mock-invalid-token',
-        };
+        });
 
         Bookmark1.refetch();
     };

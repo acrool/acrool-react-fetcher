@@ -54,13 +54,15 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [authState.isRefreshing, authState.tokens]);
+    }, [authState.isRefreshing]);
 
 
     /**
      * 發送 refreshToken 並更新 token 狀態
      */
     const postRefreshToken = () => {
+        console.log('onRefreshToken', onRefreshToken);
+        
         if(!onRefreshToken) return;
 
         onRefreshToken()

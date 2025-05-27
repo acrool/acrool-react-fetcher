@@ -11,14 +11,14 @@ import {
     IPutAuthLoginVariables,
     usePutAuthLoginMutation,
     usePutAuthLogoutMutation,
-    usePutAuthRefreshTokenMutation
+    usePutAuthRefreshTokenMutation,
+    bookmarkApi,
 } from '@/store/__generated__';
 import {authActions, authSelector} from '@/store/main/auth';
 import {actions} from '@/store/main/auth/reducer';
 import {getAuthTokens, setAuthTokens} from '@/store/main/auth/utils';
 
 import {ICheckIn} from './model';
-
 
 
 export const selectPayload = memoize(authSelector.payload);
@@ -54,9 +54,12 @@ export function useLogout() {
         AuthLogoutMutation({})
             .unwrap()
             .then(res => {
-                dispatch(actions.logout());
+                // dispatch(actions.logout());
+                navigate('/sign/login');
+                // bookmarkApi.util.invalidateTags('Bookmark');
+
+
                 console.log(t('message.logout', {def: 'Thank you for your use, you have successfully logged out'}));
-                navigate(loginRoutePath);
             });
 
     };

@@ -65,6 +65,8 @@ export const handlers = [
     // authLogout graphql mutation handler
     graphql.mutation('PutAuthLogout', async () => {
         validAccessToken = '';
+        validRefreshToken = '';
+
         return HttpResponse.json({
             data: {
                 authLogout: {

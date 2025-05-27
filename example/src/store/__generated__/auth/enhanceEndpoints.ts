@@ -6,7 +6,6 @@ const enhancedApi = api.enhanceEndpoints({
         // Dashboard
         PutAuthLogout: {
             invalidatesTags: (result, error, arg) => [
-                {type: 'Bookmark'},
             ]
         },
     }

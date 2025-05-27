@@ -17,12 +17,18 @@ const AuthRoute = ({
     const {pathname} = useLocation();
     const isAuthSuccess = useAppSelector(authSelector.isAuth);
 
+    console.log('isAuthSuccess', isAuthSuccess);
+    
     if(isSignRoute){
         // in sign route, if isAuth then redirect to home route
         if(isAuthSuccess){
+            console.log('to home');
             return <Navigate to="/" state={{from: pathname}} replace/>;
         }
+
     }else if(!isAuthSuccess){
+        console.log('to login');
+
         return <Navigate to="/sign/login" state={{from: pathname}} replace/>;
     }
 

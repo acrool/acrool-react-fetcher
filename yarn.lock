@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@acrool/js-logger@^1.0.27":
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/@acrool/js-logger/-/js-logger-1.0.27.tgz#daed340cd6eedcb6d33c4f751afdff96db8bde8a"
+  integrity sha512-HVIqU7UxLy+ib4G+ejUrCZeZhArawfNrzKuub3Up3JtgBB0pgDXB5gIZCkmhFKhm9Z04mZH5vTOF+0FdPcLEcg==
+
 "@acrool/js-utils@^3.2.25":
   version "3.2.25"
   resolved "https://registry.yarnpkg.com/@acrool/js-utils/-/js-utils-3.2.25.tgz#7c8f04665c68d66f0a30ab01dc94e9e6931ca61d"

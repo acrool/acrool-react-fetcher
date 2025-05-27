@@ -30,7 +30,8 @@
   "exclude": [
     "example",
     "node_modules",
-    "**/*.spec.ts"
+    "**/*.spec.ts",
+    "**/*.test.ts"
   ],
   "files": [],
   "references": [{ "path": "./tsconfig.node.json" }]

@@ -7,10 +7,14 @@ import {useLogout} from '@/store/main/auth/hook';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const Bookmark = useGetBookmarkQuery({
+    const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
-    }, {
-        skip: false,
+    });
+    const Bookmark2 = useGetBookmarkQuery({
+        variables: {bookmarkId: '2'}
+    });
+    const Bookmark3 = useGetBookmarkQuery({
+        variables: {bookmarkId: '3'}
     });
     const logout = useLogout();
 
@@ -23,7 +27,12 @@ const Dashboard = () => {
             accessToken: 'mock-invalid-token',
         };
 
-        Bookmark.refetch();
+        Bookmark1.refetch();
+        Bookmark2.refetch();
+
+        setTimeout(() => {
+            Bookmark3.refetch();
+        },100);
     };
 
     /**
@@ -35,7 +44,13 @@ const Dashboard = () => {
             accessToken: 'mock-invalid-token',
         };
 
-        Bookmark.refetch();
+
+        Bookmark1.refetch();
+        Bookmark2.refetch();
+
+        setTimeout(() => {
+            Bookmark3.refetch();
+        },100);
     };
 
     return  <div>
@@ -49,7 +64,8 @@ const Dashboard = () => {
             <button type="button" onClick={handleMockTokenInvalidRefreshFail}>Mock reFetch + token invalid + refresh token fail</button>
         </Flex>
 
-        {Bookmark.data?.bookmark?.name}
+        {Bookmark1.data?.bookmark?.name}
+        {Bookmark2.data?.bookmark?.name}
 
         {JSON.stringify(window.mockTokens)}
     </div>;

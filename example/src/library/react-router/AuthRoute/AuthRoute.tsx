@@ -2,7 +2,7 @@ import {Navigate, Outlet, useLocation} from 'react-router-dom';
 
 import {useAppSelector} from '@/library/redux';
 import {authSelector} from '@/store/main/auth';
-
+import {useAuthState} from '@acrool/react-fetcher';
 
 interface IProps {
     isSignRoute?: boolean
@@ -15,18 +15,19 @@ const AuthRoute = ({
     isSignRoute = false
 }: IProps) => {
     const {pathname} = useLocation();
-    const isAuthSuccess = useAppSelector(authSelector.isAuth);
+    // const isAuthSuccess = useAppSelector(authSelector.isAuth);
+    const {isAuth} = useAuthState();
 
-    console.log('isAuthSuccess', isAuthSuccess);
-    
+    console.log('isAuthSuccess', isAuth);
+
     if(isSignRoute){
         // in sign route, if isAuth then redirect to home route
-        if(isAuthSuccess){
+        if(isAuth){
             console.log('to home');
             return <Navigate to="/" state={{from: pathname}} replace/>;
         }
 
-    }else if(!isAuthSuccess){
+    }else if(!isAuth){
         console.log('to login');
 
         return <Navigate to="/sign/login" state={{from: pathname}} replace/>;

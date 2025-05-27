@@ -1,4 +1,4 @@
-import {AuthTokensManager,FetcherClientProvider} from '@acrool/react-fetcher';
+import {AuthStateProvider, AuthTokensManager,FetcherClientProvider} from '@acrool/react-fetcher';
 import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
@@ -27,27 +27,30 @@ const ReactFetcherProvider = ({
     const RefreshToken = useRefreshToken();
 
 
-    return <FetcherClientProvider
-        authTokensManager={new AuthTokensManager({
-            getter: () => window.mockTokens,
-            updater: (authTokens) => {
-                window.mockTokens = authTokens;
-            },
-            clearer: () => {
-                window.mockTokens = undefined;
-            }
-        })}
-        onRefreshToken={async () => {
-            const res = await RefreshToken();
-            return res?.authRefreshToken.authTokens;
-        }}
-        onForceLogout={ () => {
-            removeAuthTokens();
-        }}
-        getLocale={() => 'zh-TW'}
-    >
-        {children}
-    </FetcherClientProvider>;
+    return <AuthStateProvider>
+        <FetcherClientProvider
+            // authTokensManager={new AuthTokensManager({
+            //     getter: () => window.mockTokens,
+            //     updater: (authTokens) => {
+            //         window.mockTokens = authTokens;
+            //     },
+            //     clearer: () => {
+            //         window.mockTokens = undefined;
+            //     }
+            // })}
+            onRefreshToken={async () => {
+                const res = await RefreshToken();
+                return res?.authRefreshToken.authTokens;
+            }}
+            onForceLogout={ () => {
+                removeAuthTokens();
+            }}
+            getLocale={() => 'zh-TW'}
+        >
+            {children}
+        </FetcherClientProvider>;
+    </AuthStateProvider>;
+
 };
 
 export default ReactFetcherProvider;

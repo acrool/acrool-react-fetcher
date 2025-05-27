@@ -19,6 +19,7 @@ import {actions} from '@/store/main/auth/reducer';
 import {getAuthTokens, setAuthTokens} from '@/store/main/auth/utils';
 
 import {ICheckIn} from './model';
+import {useAuthState} from '@acrool/react-fetcher';
 
 
 export const selectPayload = memoize(authSelector.payload);
@@ -49,14 +50,25 @@ export function useLogout() {
     const {t} = useLocale();
     const navigate = useNavigate();
     const [AuthLogoutMutation] = usePutAuthLogoutMutation();
+    const {logout} = useAuthState();
 
     return () => {
         AuthLogoutMutation({})
             .unwrap()
             .then(res => {
+                logout();
                 // dispatch(actions.logout());
-                navigate('/sign/login');
-                // bookmarkApi.util.invalidateTags('Bookmark');
+                // navigate(loginRoutePath);
+                setTimeout(() => {
+                    dispatch(bookmarkApi.util.invalidateTags(
+                        [
+                            {type: 'Bookmark'}
+                        ]
+                    ));
+                }, 10);
+
+                console.log('ssd');
+
 
 
                 console.log(t('message.logout', {def: 'Thank you for your use, you have successfully logged out'}));
@@ -108,14 +120,17 @@ export function useKickOut() {
  * 報到 (登入 註冊 到後櫃檯報到)
  */
 function useCheckIn() {
-    const dispatch = useAppDispatch();
+    // const dispatch = useAppDispatch();
+    const {login} = useAuthState();
 
 
     const {t} = useLocale();
 
     return (args: ICheckIn) => {
         // 將緩存失效
-        dispatch(authActions.login(args));
+        // dispatch(authActions.login(args));
+        login(args.authTokens);
+        console.log('sssss');
 
         console.log(t('message.login', {args: {userName: args.name}}));
     };
@@ -143,9 +158,9 @@ export function useRefreshToken() {
             variables: {input: {refreshToken: authTokens.refreshToken}},
             fetchOptions: {
                 requestCode: 'refreshToken',
-                headers: {
-                    [refreshingHeaderKey]: 'true',
-                }
+                // headers: {
+                //     [refreshingHeaderKey]: 'true',
+                // }
             }
         }).unwrap();
 

@@ -1,5 +1,6 @@
 
 import {IUseFetcherArgs} from '@acrool/react-fetcher';
+
 import {baseApi} from '@/library/redux/baseApi';
 
 import * as Types from '../types.generated';

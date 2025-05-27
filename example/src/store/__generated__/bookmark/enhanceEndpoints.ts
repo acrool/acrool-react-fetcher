@@ -4,7 +4,9 @@ const enhancedApi = api.enhanceEndpoints({
     endpoints: {
         // Bookmarks
         GetBookmark: {
-            providesTags: (result, error, arg) => [{type: 'Bookmark'}]
+            providesTags: (result, error, arg) => [
+                {type: 'Bookmark'}
+            ]
         },
         PutBookmarkCreate: {
             invalidatesTags: (result, error, arg) => [{type: 'Bookmarks'}]

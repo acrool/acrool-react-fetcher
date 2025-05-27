@@ -8,7 +8,7 @@ export type TInterceptorResponseSuccess = (value: AxiosResponse<any>) => AxiosRe
 export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
 
 export interface IAxiosClientProviderProps {
-    authTokensManager: AuthTokensManager
+    // authTokensManager: AuthTokensManager
     // getAuthTokens: () => IAuthTokens |undefined
     onRefreshToken?: () => Promise<IAuthTokens|undefined>
     onForceLogout: () => void

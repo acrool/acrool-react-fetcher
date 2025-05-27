@@ -12,6 +12,7 @@ import {
     TInterceptorResponseError,
     TInterceptorResponseSuccess
 } from './types';
+import {useAuthState} from "../AuthStateProvider";
 
 let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
 
@@ -22,9 +23,21 @@ interface IProps extends IAxiosClientProviderProps{
     children: React.ReactNode
 }
 
+
+/**
+ * Axios Client 提供者
+ * @param children
+ * @param authTokensManager
+ * @param onRefreshToken
+ * @param onForceLogout
+ * @param getLocale
+ * @param t
+ * @param onError
+ * @constructor
+ */
 const AxiosClientProvider = ({
     children,
-    authTokensManager,
+    // authTokensManager,
     onRefreshToken,
     onForceLogout,
     getLocale,
@@ -32,6 +45,7 @@ const AxiosClientProvider = ({
     onError,
 }: IProps) => {
 
+    const authState = useAuthState();
 
     useLayoutEffect(() => {
         const interceptorReq = axiosInstance.interceptors.request.use(interceptorsRequest);
@@ -40,7 +54,7 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [authTokensManager.isRefreshing]);
+    }, [authState.isRefreshing, authState.tokens]);
 
 
     /**
@@ -58,7 +72,8 @@ const AxiosClientProvider = ({
                         code: 'SERVICE_HTTP_401',
                     });
                 }
-                authTokensManager.update(authTokens);
+                // authTokensManager.update(authTokens);
+                authState.updateTokens(authTokens);
                 runPendingRequest(true);
             })
             .catch(() => {
@@ -73,7 +88,8 @@ const AxiosClientProvider = ({
      * @param isSuccess
      */
     const runPendingRequest = (isSuccess: boolean) => {
-        authTokensManager.refreshing(false);
+        // authTokensManager.refreshing(false);
+        authState.refreshing(false);
         for(const cb of pendingRequestQueues){
             cb(isSuccess);
         }
@@ -85,9 +101,11 @@ const AxiosClientProvider = ({
      * 處理登出
      */
     const handleOnForceLogout = () => {
-        authTokensManager
-            .refreshing(false)
-            .clear();
+        // authTokensManager
+        //     .refreshing(false)
+        //     .clear();
+        authState.refreshing(false);
+        authState.logout();
 
         if(onForceLogout) onForceLogout();
     };
@@ -121,14 +139,20 @@ const AxiosClientProvider = ({
      */
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
-            const authTokens = authTokensManager.tokens;
+            // const authTokens = authTokensManager.tokens;
+            const authTokens = authState.tokens;
+
             originConfig.headers['Accept-Language'] = getLocale();
 
             if(authTokens?.accessToken){
                 originConfig.headers['Authorization'] = `Bearer ${authTokens.accessToken}`;
             }
 
-            if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
+            // if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
+            //     pushPendingRequestQueues(resolve, reject)(originConfig);
+            //     reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
+            // }
+            if(!checkIsRefreshTokenAPI(originConfig) && authState.isRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             }
@@ -156,7 +180,9 @@ const AxiosClientProvider = ({
         const status = axiosError.status;
 
         const responseFirstError = getResponseFirstError(response);
-        const authTokens = authTokensManager.tokens;
+        // const authTokens = authTokensManager.tokens;
+        const authTokens = authState.tokens;
+
 
         // const {refreshToken: refreshTokenValue} = getAuthTokens();
         if (onError) {
@@ -172,8 +198,12 @@ const AxiosClientProvider = ({
                     return Promise.reject(new SystemException(responseFirstError));
                 }
 
-                if (!authTokensManager.isRefreshing) {
-                    authTokensManager.refreshing(true);
+                // if (!authTokensManager.isRefreshing) {
+                //     authTokensManager.refreshing(true);
+                //     postRefreshToken();
+                // }
+                if (!authState.isRefreshing) {
+                    authState.refreshing(true);
                     postRefreshToken();
                 }
 

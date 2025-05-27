@@ -53,6 +53,18 @@ const Dashboard = () => {
         },100);
     };
 
+    /**
+     * 模擬AccessToken失效, 刷新回傳為空, 停止重發
+     */
+    const handleMockTokenInvalidRefreshEmpty = () => {
+        window.mockTokens = {
+            refreshToken: 'mock-empty-token',
+            accessToken: 'mock-invalid-token',
+        };
+
+        Bookmark1.refetch();
+    };
+
     return  <div>
         <h2>Dashboard</h2>
         <p>
@@ -62,6 +74,7 @@ const Dashboard = () => {
             <button type="button" onClick={logout}>Logout</button>
             <button type="button" onClick={handleMockTokenInvalid}>Mock reFetch + token invalid</button>
             <button type="button" onClick={handleMockTokenInvalidRefreshFail}>Mock reFetch + token invalid + refresh token fail</button>
+            <button type="button" onClick={handleMockTokenInvalidRefreshEmpty}>Mock reFetch + token invalid + refresh token empty</button>
         </Flex>
 
         {Bookmark1.data?.bookmark?.name}

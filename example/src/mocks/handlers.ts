@@ -78,7 +78,17 @@ export const handlers = [
 
     // refreshToken handler
     graphql.mutation('PutAuthRefreshToken', async ({request, variables}) => {
-    // 這裡可以驗證 refreshToken
+        if (variables.input.refreshToken === 'mock-empty-token') {
+            return HttpResponse.json({
+                data: {
+                    authRefreshToken: {
+                        authTokens: {
+                        }
+                    }
+                }
+            });
+        }
+
         if (variables.input.refreshToken !== validRefreshToken) {
             return HttpResponse.json({
                 errors: [

@@ -62,6 +62,7 @@ const AxiosClientProvider = ({
                 runPendingRequest(true);
             })
             .catch(() => {
+                handleOnForceLogout();
                 runPendingRequest(false);
             });
     };

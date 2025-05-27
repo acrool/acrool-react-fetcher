@@ -34,8 +34,6 @@ export const useAuthState = () => {
     if (!context) {
         throw new Error('useAuthState 必須在 AuthStateProvider 內使用');
     }
-    console.log('context.tokens', context.tokens);
-
     return {
         ...context,
         isAuth: isNotEmpty(context.tokens),
@@ -102,8 +100,6 @@ const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
      * @returns refreshToken 或 undefined
      */
     const getRefreshToken = useCallback(() => _tokens?.refreshToken, [_tokens]);
-
-    console.log('tokens', _tokens);
 
 
     return (

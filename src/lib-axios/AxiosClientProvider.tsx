@@ -45,7 +45,8 @@ const AxiosClientProvider = ({
     onError,
 }: IProps) => {
 
-    const authState = useAuthState();
+    const {isRefreshing, tokens, updateTokens, refreshing, logout} = useAuthState();
+
 
     useLayoutEffect(() => {
         const interceptorReq = axiosInstance.interceptors.request.use(interceptorsRequest);
@@ -54,18 +55,17 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [authState.isRefreshing]);
+    }, [isRefreshing, tokens]);
 
 
     /**
      * 發送 refreshToken 並更新 token 狀態
      */
     const postRefreshToken = () => {
-        console.log('onRefreshToken', onRefreshToken);
-        
-        if(!onRefreshToken) return;
 
-        onRefreshToken()
+        if(!onRefreshToken || !tokens?.refreshToken) return;
+
+        onRefreshToken(tokens.refreshToken)
             .then(authTokens => {
                 // 假設外部 refreshToken 已經自動更新 token 狀態
                 if(isEmpty(authTokens)){
@@ -75,11 +75,11 @@ const AxiosClientProvider = ({
                     });
                 }
                 // authTokensManager.update(authTokens);
-                authState.updateTokens(authTokens);
+                updateTokens(authTokens);
                 runPendingRequest(true);
             })
             .catch(() => {
-                handleOnForceLogout();
+                // handleOnForceLogout();
                 runPendingRequest(false);
             });
     };
@@ -91,7 +91,7 @@ const AxiosClientProvider = ({
      */
     const runPendingRequest = (isSuccess: boolean) => {
         // authTokensManager.refreshing(false);
-        authState.refreshing(false);
+        refreshing(false);
         for(const cb of pendingRequestQueues){
             cb(isSuccess);
         }
@@ -106,8 +106,8 @@ const AxiosClientProvider = ({
         // authTokensManager
         //     .refreshing(false)
         //     .clear();
-        authState.refreshing(false);
-        authState.logout();
+        refreshing(false);
+        logout();
 
         if(onForceLogout) onForceLogout();
     };
@@ -142,19 +142,18 @@ const AxiosClientProvider = ({
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
             // const authTokens = authTokensManager.tokens;
-            const authTokens = authState.tokens;
 
             originConfig.headers['Accept-Language'] = getLocale();
 
-            if(authTokens?.accessToken){
-                originConfig.headers['Authorization'] = `Bearer ${authTokens.accessToken}`;
+            if(tokens?.accessToken){
+                originConfig.headers['Authorization'] = `Bearer ${tokens?.accessToken}`;
             }
 
             // if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
             //     pushPendingRequestQueues(resolve, reject)(originConfig);
             //     reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             // }
-            if(!checkIsRefreshTokenAPI(originConfig) && authState.isRefreshing){
+            if(!checkIsRefreshTokenAPI(originConfig) && isRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             }
@@ -183,7 +182,6 @@ const AxiosClientProvider = ({
 
         const responseFirstError = getResponseFirstError(response);
         // const authTokens = authTokensManager.tokens;
-        const authTokens = authState.tokens;
 
 
         // const {refreshToken: refreshTokenValue} = getAuthTokens();
@@ -192,10 +190,14 @@ const AxiosClientProvider = ({
         }
 
         if(response && originalConfig) {
+            console.log('onRefreshToken222-----', tokens);
+
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
 
-                if (isEmpty(authTokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                if (isEmpty(tokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                    console.log('ForceLogout---ForceLogout--');
+
                     handleOnForceLogout();
                     return Promise.reject(new SystemException(responseFirstError));
                 }
@@ -204,8 +206,9 @@ const AxiosClientProvider = ({
                 //     authTokensManager.refreshing(true);
                 //     postRefreshToken();
                 // }
-                if (!authState.isRefreshing) {
-                    authState.refreshing(true);
+
+                if (!isRefreshing) {
+                    refreshing(true);
                     postRefreshToken();
                 }
 

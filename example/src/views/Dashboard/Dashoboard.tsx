@@ -10,6 +10,7 @@ const Dashboard = () => {
     const navigate = useNavigate();
 
     const {updateTokens} = useAuthState();
+    const {tokens} = useAuthState();
 
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
@@ -27,8 +28,8 @@ const Dashboard = () => {
      */
     const handleMockTokenInvalid = () => {
         updateTokens({
-            ...window.mockTokens,
             accessToken: 'mock-invalid-token',
+            refreshToken: 'mock-login-refresh-token',
         });
 
         Bookmark1.refetch();
@@ -84,7 +85,7 @@ const Dashboard = () => {
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
-        {JSON.stringify(window.mockTokens)}
+        {JSON.stringify(tokens)}
     </div>;
 };
 

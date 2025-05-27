@@ -1,13 +1,14 @@
-import {Route, Routes, BrowserRouter as Router} from 'react-router-dom';
-
-
-import NotFound from './views/NotFound';
-import Dashboard from './views/Dashboard';
-
 import './App.css';
-import Banner from './components/Banner';
+
 import {createBrowserHistory} from 'history';
-import {GridThemeProvider} from '@acrool/react-grid';
+import {Route, Routes} from 'react-router-dom';
+
+import {AuthRoute} from '@/library/react-router';
+
+import Banner from './components/Banner';
+import Dashboard from './views/Dashboard';
+import Login from './views/Login';
+import NotFound from './views/NotFound';
 
 
 const history = createBrowserHistory({window});
@@ -15,7 +16,14 @@ const history = createBrowserHistory({window});
 
 const MainRouter = () => {
     return  <Routes>
-        <Route path="/" element={<Dashboard/>} />
+
+        <Route element={<AuthRoute/>}>
+            <Route path="/" element={<Dashboard/>} />
+        </Route>
+
+        <Route path="sign" element={<AuthRoute isSignRoute/>}>
+            <Route path="login" element={<Login/>} />
+        </Route>
 
         {/* NotFound */}
         <Route path="*" element={<NotFound/>}/>
@@ -25,13 +33,11 @@ const MainRouter = () => {
 
 function App() {
     return (
-        <GridThemeProvider>
-            <div className="App">
-                <Banner/>
+        <div className="App">
+            <Banner/>
 
-                <MainRouter/>
-            </div>
-        </GridThemeProvider>
+            <MainRouter/>
+        </div>
     );
 }
 

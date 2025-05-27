@@ -8,7 +8,7 @@ const api = {
     baseUrl: '/api-admin',
     timeout: 120 * 1000
 };
-const persistKey = 'persist:acrool-backdesk';
+const persistKey = 'persist:acrool-fetcher';
 
 const persistWhileList = [
     'auth.profile',

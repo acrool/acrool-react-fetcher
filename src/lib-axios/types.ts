@@ -1,13 +1,18 @@
-import {AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+import {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+
+import AuthTokensManager from '../AuthTokensManager';
+import {IAuthTokens, IResponseFirstError} from '../types';
 
 export type TInterceptorRequest = (value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
-export type TInterceptorResponse = (value: AxiosResponse<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
+export type TInterceptorResponseSuccess = (value: AxiosResponse<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
+export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
 
-export interface AxiosClientDependencies {
-  getTokenInfo: () => { accessToken?: string, refreshToken?: string }
-  refreshToken: () => Promise<{ tokenInfo: any } | null>
-  onForceLogout: () => void
-  getLocale: () => string
-  t?: (key: string, options?: any) => string
-  onError?: (error: { code: string, response: any, originalConfig: any }) => void
+export interface IAxiosClientProviderProps {
+    authTokensManager: AuthTokensManager
+    // getAuthTokens: () => IAuthTokens |undefined
+    onRefreshToken?: () => Promise<IAuthTokens|undefined>
+    onForceLogout: () => void
+        getLocale: () => string
+    t?: (key: string, options?: any) => string
+    onError?: (error: IResponseFirstError) => void
 }

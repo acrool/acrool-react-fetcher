@@ -2,9 +2,10 @@ import {render, waitFor} from '@testing-library/react';
 import AxiosMockAdapter from 'axios-mock-adapter';
 import React from 'react';
 
+import AuthTokensManager from '../../AuthTokensManager';
 import AxiosClientProvider, {useAxiosClient} from '../AxiosClientProvider';
 import {axiosInstance} from '../config';
-import {AxiosClientDependencies} from '../types';
+import {IAxiosClientProviderProps} from '../types';
 
 const TestComponent: React.FC<{ onResult: (data: any) => void }> = ({onResult}) => {
     const client = useAxiosClient();
@@ -23,7 +24,7 @@ describe('AxiosClientProvider', () => {
     let refreshCalled = false;
     let forceLogoutCalled = false;
 
-    const getTokenInfo = () => ({
+    const getAuthTokens = () => ({
         accessToken,
         refreshToken: refreshTokenValue,
     });
@@ -33,7 +34,7 @@ describe('AxiosClientProvider', () => {
         // 模擬刷新成功
         accessToken = 'token2';
         refreshTokenValue = 'refresh2';
-        return {tokenInfo: {accessToken, refreshToken: refreshTokenValue}};
+        return {accessToken, refreshToken: refreshTokenValue};
     });
 
     const onForceLogout = jest.fn(() => {
@@ -42,9 +43,17 @@ describe('AxiosClientProvider', () => {
 
     const getLocale = () => 'zh-TW';
 
-    const dependencies: AxiosClientDependencies = {
-        getTokenInfo,
-        refreshToken,
+    const dependencies: IAxiosClientProviderProps = {
+        authTokensManager: new AuthTokensManager({
+            getter: () => getAuthTokens(),
+            updater: (authTokens) => {
+                // refreshToken(authTokens);
+            },
+            clearer: () => {
+
+            }
+        }),
+        onRefreshToken: refreshToken,
         onForceLogout,
         getLocale,
     };
@@ -71,7 +80,9 @@ describe('AxiosClientProvider', () => {
 
         const onResult = jest.fn();
         render(
-            <AxiosClientProvider dependencies={dependencies}>
+            <AxiosClientProvider {
+                ...dependencies
+            }>
                 <TestComponent onResult={onResult} />
             </AxiosClientProvider>
         );
@@ -98,7 +109,9 @@ describe('AxiosClientProvider', () => {
 
         const onResult = jest.fn();
         render(
-            <AxiosClientProvider dependencies={dependencies}>
+            <AxiosClientProvider {
+                ...dependencies
+            }>
                 <TestComponent onResult={onResult} />
             </AxiosClientProvider>
         );
@@ -122,7 +135,9 @@ describe('AxiosClientProvider', () => {
 
         const onResult = jest.fn();
         render(
-            <AxiosClientProvider dependencies={dependencies}>
+            <AxiosClientProvider {
+                ...dependencies
+            }>
                 <TestComponent onResult={onResult} />
             </AxiosClientProvider>
         );
@@ -135,19 +150,21 @@ describe('AxiosClientProvider', () => {
 
     it('WS_FORBIDDEN 會觸發 onError 回調', async () => {
         mock.onPost('/test').reply(config => {
-            return [200, { errors: [{ code: 'WS_FORBIDDEN', message: 'forbidden' }] }];
+            return [200, {errors: [{code: 'WS_FORBIDDEN', message: 'forbidden'}]}];
         });
         const onError = jest.fn();
-        const customDeps = { ...dependencies, onError };
+        const customDeps = {...dependencies, onError};
         const onResult = jest.fn();
         render(
-            <AxiosClientProvider dependencies={customDeps}>
+            <AxiosClientProvider {
+                ...dependencies
+            }>
                 <TestComponent onResult={onResult} />
             </AxiosClientProvider>
         );
         await waitFor(() => {
             expect(onError).toHaveBeenCalledWith(
-                expect.objectContaining({ code: 'WS_FORBIDDEN' })
+                expect.objectContaining({code: 'WS_FORBIDDEN'})
             );
         });
     });

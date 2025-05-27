@@ -1,4 +1,3 @@
-import {defaultSerializeQueryArgs} from '@reduxjs/toolkit/query/react';
 
 import api from './query.generated';
 
@@ -7,7 +6,7 @@ const enhancedApi = api.enhanceEndpoints({
         // Dashboard
         PutAuthLogout: {
             invalidatesTags: (result, error, arg) => [
-                {type: 'Tasks'},
+                {type: 'Bookmark'},
             ]
         },
     }

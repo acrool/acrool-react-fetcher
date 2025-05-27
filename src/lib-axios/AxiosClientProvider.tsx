@@ -1,66 +1,101 @@
+import {isEmpty} from '@acrool/js-utils/equal';
 import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {SystemException} from '../exception';
-import {checkIsRefreshTokenAPI, getResponseFirstError, getSystemError} from '../utils';
+import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';
 import AxiosCancelException from './AxiosCancelException';
 import {axiosInstance} from './config';
-import {AxiosClientDependencies,TInterceptorRequest, TInterceptorResponse} from './types';
+import {
+    IAxiosClientProviderProps,
+    TInterceptorRequest,
+    TInterceptorResponseError,
+    TInterceptorResponseSuccess
+} from './types';
 
 let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
-let isTokenRefreshing = false;
 
 export const AxiosClientContext = createContext<AxiosInstance>(axiosInstance);
 export const useAxiosClient = () => useContext(AxiosClientContext);
 
-interface IProps {
+interface IProps extends IAxiosClientProviderProps{
     children: React.ReactNode
-    dependencies: AxiosClientDependencies
 }
 
 const AxiosClientProvider = ({
     children,
-    dependencies,
+    authTokensManager,
+    onRefreshToken,
+    onForceLogout,
+    getLocale,
+    t = (key: string, options?: any) => key, // fallback
+    onError,
 }: IProps) => {
-    const {
-        getTokenInfo,
-        refreshToken,
-        onForceLogout,
-        getLocale,
-        t = (key: string, options?: any) => key, // fallback
-        onError,
-    } = dependencies;
+
 
     useLayoutEffect(() => {
         const interceptorReq = axiosInstance.interceptors.request.use(interceptorsRequest);
-        const interceptorRes = axiosInstance.interceptors.response.use(interceptorsResponse);
+        const interceptorRes = axiosInstance.interceptors.response.use(interceptorsResponseSuccess, interceptorsResponseError);
         return () => {
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [isTokenRefreshing]);
+    }, [authTokensManager.isRefreshing]);
 
+
+    /**
+     * 發送 refreshToken 並更新 token 狀態
+     */
     const postRefreshToken = () => {
-        refreshToken()
-            .then(res => {
-                if(!res) return;
+        if(!onRefreshToken) return;
+
+        onRefreshToken()
+            .then(authTokens => {
                 // 假設外部 refreshToken 已經自動更新 token 狀態
+                if(isEmpty(authTokens)){
+                    throw new SystemException({
+                        message: 'Refresh Token Fail',
+                        code: 'SERVICE_HTTP_401',
+                    });
+                }
+                authTokensManager.update(authTokens);
                 runPendingRequest(true);
             })
             .catch(() => {
-                onForceLogout();
                 runPendingRequest(false);
             });
     };
 
+
+    /**
+     * 執行 pendingRequestQueues
+     * @param isSuccess
+     */
     const runPendingRequest = (isSuccess: boolean) => {
-        isTokenRefreshing = false;
+        authTokensManager.refreshing(false);
         for(const cb of pendingRequestQueues){
             cb(isSuccess);
         }
         pendingRequestQueues = [];
     };
 
+
+    /**
+     * 處理登出
+     */
+    const handleOnForceLogout = () => {
+        authTokensManager
+            .refreshing(false)
+            .clear();
+
+        if(onForceLogout) onForceLogout();
+    };
+
+    /**
+     * 將 request 放入 pendingRequestQueues
+     * @param resolve
+     * @param reject
+     */
     const pushPendingRequestQueues = (
         resolve: (value: any) => void,
         reject: (value: SystemException) => void
@@ -79,12 +114,20 @@ const AxiosClientProvider = ({
         };
     };
 
+    /**
+     * 設定 request header
+     * @param originConfig
+     */
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
-            const {accessToken} = getTokenInfo();
+            const authTokens = authTokensManager.tokens;
             originConfig.headers['Accept-Language'] = getLocale();
-            originConfig.headers['Authorization'] = accessToken ? `Bearer ${accessToken}`: undefined;
-            if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
+
+            if(authTokens?.accessToken){
+                originConfig.headers['Authorization'] = `Bearer ${authTokens.accessToken}`;
+            }
+
+            if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
             }
@@ -92,31 +135,53 @@ const AxiosClientProvider = ({
         });
     };
 
-    const interceptorsResponse: TInterceptorResponse = (response) => {
-        const originalConfig = response.config;
-        const error = getResponseFirstError(response);
-        const {refreshToken: refreshTokenValue} = getTokenInfo();
-        if(error){
-            if (onError) {
-                onError({code: error.code, response, originalConfig});
-            }
-            if(error.code === 'UNAUTHENTICATED'){
-                if(!refreshTokenValue || checkIsRefreshTokenAPI(originalConfig)) {
-                    isTokenRefreshing = false;
-                    onForceLogout();
-                    return Promise.reject(getSystemError(response));
+
+    /**
+     * 處理 response 成功
+     * @param response
+     */
+    const interceptorsResponseSuccess: TInterceptorResponseSuccess = (response) => {
+        return response;
+    };
+
+
+    /**
+     * 處理 response 失敗
+     * @param axiosError
+     */
+    const interceptorsResponseError: TInterceptorResponseError = (axiosError) => {
+        const response = axiosError.response;
+        const originalConfig = axiosError.config;
+        const status = axiosError.status;
+
+        const responseFirstError = getResponseFirstError(response);
+        const authTokens = authTokensManager.tokens;
+
+        // const {refreshToken: refreshTokenValue} = getAuthTokens();
+        if (onError) {
+            onError(responseFirstError);
+        }
+
+        if(response && originalConfig) {
+            if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
+                // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
+
+                if (isEmpty(authTokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                    handleOnForceLogout();
+                    return Promise.reject(new SystemException(responseFirstError));
                 }
-                if(!isTokenRefreshing){
-                    isTokenRefreshing = true;
+
+                if (!authTokensManager.isRefreshing) {
+                    authTokensManager.refreshing(true);
                     postRefreshToken();
                 }
+
                 return new Promise((resolve, reject) => {
                     pushPendingRequestQueues(resolve, reject)(originalConfig);
                 });
             }
-            return Promise.reject(getSystemError(response));
         }
-        return response;
+        return Promise.reject(new SystemException(responseFirstError));
     };
 
     return <AxiosClientContext.Provider value={axiosInstance}>{children}</AxiosClientContext.Provider>;

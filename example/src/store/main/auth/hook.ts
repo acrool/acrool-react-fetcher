@@ -1,4 +1,3 @@
-import {block} from '@acrool/react-block';
 import {IUseFetcherArgs} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import {memoize} from 'proxy-memoize';
@@ -9,16 +8,14 @@ import {loginRoutePath} from '@/config/app';
 import {refreshingHeaderKey} from '@/library/graphql/config';
 import {useAppDispatch, useAppSelector} from '@/library/redux';
 import {
-    IPutAuthLoginVariables, IPutAuthLoginWithGoogleVariables, IPutAuthSignUpVariables,
-    usePutAuthDirectGoogleVerifyMutation,
+    IPutAuthLoginVariables,
     usePutAuthLoginMutation,
-    usePutAuthLoginWithGoogleMutation,
     usePutAuthLogoutMutation,
-    usePutAuthRefreshTokenMutation, usePutAuthSignUpMutation
+    usePutAuthRefreshTokenMutation
 } from '@/store/__generated__';
 import {authActions, authSelector} from '@/store/main/auth';
 import {actions} from '@/store/main/auth/reducer';
-import {getTokenInfo} from '@/store/main/auth/utils';
+import {getAuthTokens, setAuthTokens} from '@/store/main/auth/utils';
 
 import {ICheckIn} from './model';
 
@@ -117,9 +114,6 @@ function useCheckIn() {
         // 將緩存失效
         dispatch(authActions.login(args));
 
-        // 成功後跳轉
-        dispatch(authActions.setLoginDone());
-
         console.log(t('message.login', {args: {userName: args.name}}));
     };
 
@@ -135,15 +129,15 @@ export function useRefreshToken() {
     const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
 
     return async () => {
-        const {refreshToken} = getTokenInfo();
+        const authTokens = getAuthTokens();
 
-        if(!refreshToken){
+        if(!authTokens?.refreshToken){
             console.error('refresh token is empty');
-            return;
+            return undefined;
         }
 
         return RefreshTokenMutation({
-            variables: {input: {refreshToken}},
+            variables: {input: {refreshToken: authTokens.refreshToken}},
             fetchOptions: {
                 requestCode: 'refreshToken',
                 headers: {
@@ -152,6 +146,7 @@ export function useRefreshToken() {
             }
         }).unwrap();
 
+        // return result.authRefreshToken.authTokens;
     };
 
 }
@@ -175,80 +170,3 @@ export function useLogin() {
 
 
 }
-
-/**
- * 跳轉到Google身份驗證
- * OAuth Login
- */
-export function useDirectGoogleVerify() {
-    const [AuthDirectGoogleVerifyMutation] = usePutAuthDirectGoogleVerifyMutation();
-
-    return () => {
-        block.show();
-        AuthDirectGoogleVerifyMutation({})
-            .unwrap()
-            .then(res => {
-                window.location.href = res.authDirectGoogleVerify.url;
-            })
-            .finally(() => {
-                block.hide();
-            });
-    };
-
-}
-
-
-/**
- * Google 身份驗證成功後 返回代碼 讓我方驗證
- */
-export function useLoginByGoogle() {
-    const CheckIn = useCheckIn();
-    const [AuthLoginWithGoogleMutation] = usePutAuthLoginWithGoogleMutation();
-
-    return async (args: IUseFetcherArgs<IPutAuthLoginWithGoogleVariables>) => {
-        return AuthLoginWithGoogleMutation(args)
-            .unwrap()
-            .then(res => {
-                CheckIn(res.authLoginWithGoogle);
-            });
-
-    };
-}
-
-
-
-/**
- * 會員註冊
- */
-export function useSignUp() {
-    const CheckIn = useCheckIn();
-    const [AuthSignUpMutation] = usePutAuthSignUpMutation();
-
-    return async (args: IUseFetcherArgs<IPutAuthSignUpVariables>) => {
-        return AuthSignUpMutation(args)
-            .unwrap()
-            .then(res => {
-                CheckIn(res.authSignUp);
-            });
-    };
-}
-
-
-
-/**
- * 發送驗證碼
- */
-// export function useSendVerifyCode() {
-//     const dispatch = useAppDispatch();
-//
-//     return usePutAuthSendVerifyCodeMutation({
-//         ...mutationBlockEvent,
-//         onSuccess: res => {
-//             dispatch(actions.sendVerifyCodeSuccess({verifyCodeId: res.authSendVerifyCode.verifyCodeId}));
-//             dialog.success(res.authSendVerifyCode.message);
-//         }
-//     });
-//
-// }
-
-

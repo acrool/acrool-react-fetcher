@@ -16,18 +16,33 @@ import {appTheme, gridConfig, history, store} from './setup';
 
 const routePrefixPath = '';
 
+function renderApp() {
+    ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+        createElement(composedProviders(
+            [
+                providerWithProps(ReduxProvider, {store}),
+                // providerWithProps(ApolloProvider, {client: apolloClient}),
+                providerWithProps(ReactLocaleProvider, {}),
+                providerWithProps(Router, {history: history, basename: routePrefixPath}),
+                providerWithProps(ReactFetcherProvider, {}),
+                providerWithProps(GridThemeProvider, {gridTheme: gridConfig}),
+            ]
+        )(App))
+    );
+}
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-    createElement(composedProviders(
-        [
-            providerWithProps(ReduxProvider, {store}),
-            // providerWithProps(ApolloProvider, {client: apolloClient}),
-            providerWithProps(ReactLocaleProvider, {}),
-            providerWithProps(Router, {history: history, basename: routePrefixPath}),
-            providerWithProps(ReactFetcherProvider, {}),
-            providerWithProps(GridThemeProvider, {gridTheme: gridConfig}),
-        ]
-    )(App))
-);
+if (import.meta.env.DEV) {
+    import('./mocks/browser').then(({worker}) => {
+        worker.start({
+            quiet: false,
+            // onUnhandledRequest: 'error',
+        }).then(() => {
+            console.log('MSW worker started');
+            renderApp();
+        });
+    });
+} else {
+    renderApp();
+}
 
 

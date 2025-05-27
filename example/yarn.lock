@@ -7,6 +7,11 @@
   resolved "https://registry.yarnpkg.com/@acrool/js-logger/-/js-logger-1.0.26.tgz#fd033cb2581c776c8f6310adec5f1430ec28d7c7"
   integrity sha512-JnjCgzrZEcfePt0XxkFGN0TqxbFETpWm92lPhn5gK1jaVSFdwbxKPeY+fLPFmG70ECw/s5t0vOW/ByCgpUvAiw==
 
+"@acrool/js-logger@^1.0.27":
+  version "1.0.27"
+  resolved "https://registry.yarnpkg.com/@acrool/js-logger/-/js-logger-1.0.27.tgz#daed340cd6eedcb6d33c4f751afdff96db8bde8a"
+  integrity sha512-HVIqU7UxLy+ib4G+ejUrCZeZhArawfNrzKuub3Up3JtgBB0pgDXB5gIZCkmhFKhm9Z04mZH5vTOF+0FdPcLEcg==
+
 "@acrool/js-utils@^3.2.25":
   version "3.2.25"
   resolved "https://registry.yarnpkg.com/@acrool/js-utils/-/js-utils-3.2.25.tgz#7c8f04665c68d66f0a30ab01dc94e9e6931ca61d"
@@ -1572,15 +1577,6 @@ form-data@^4.0.0:
     es-set-tostringtag "^2.1.0"
     mime-types "^2.1.12"
 
-framer-motion@^11.18.2:
-  version "11.18.2"
-  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.18.2.tgz#0c6bd05677f4cfd3b3bdead4eb5ecdd5ed245718"
-  integrity sha512-5F5Och7wrvtLVElIpclDT0CBzMVg3dL22B64aZwHtsIY8RB4mXICLrkajK4G9R+ieSAGcgrLeae2SeUTg2pr6w==
-  dependencies:
-    motion-dom "^11.18.1"
-    motion-utils "^11.18.1"
-    tslib "^2.4.0"
-
 framer-motion@^12.7.4:
   version "12.12.2"
   resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-12.12.2.tgz#7aa7925ea828f768453248686a970dee3424ee11"
@@ -1843,24 +1839,12 @@ miniflare@4.20250507.0:
     youch "3.3.4"
     zod "3.22.3"
 
-motion-dom@^11.18.1:
-  version "11.18.1"
-  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-11.18.1.tgz#e7fed7b7dc6ae1223ef1cce29ee54bec826dc3f2"
-  integrity sha512-g76KvA001z+atjfxczdRtw/RXOM3OMSdd1f4DL77qCTF/+avrRJiawSG4yDibEQ215sr9kpinSlX2pCTJ9zbhw==
-  dependencies:
-    motion-utils "^11.18.1"
-
 motion-dom@^12.12.1:
   version "12.12.1"
   resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.12.1.tgz#12f50c778ca295de337e28f3b4937da86e9098ea"
   integrity sha512-GXq/uUbZBEiFFE+K1Z/sxdPdadMdfJ/jmBALDfIuHGi0NmtealLOfH9FqT+6aNPgVx8ilq0DtYmyQlo6Uj9LKQ==
   dependencies:
     motion-utils "^12.12.1"
-
-motion-utils@^11.18.1:
-  version "11.18.1"
-  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-11.18.1.tgz#671227669833e991c55813cf337899f41327db5b"
-  integrity sha512-49Kt+HKjtbJKLtgO/LKj9Ld+6vw9BjH5d9sc40R/kVyH8GLAXgT42M2NnuPcJNuA3s9ZfZBUcwIgpmZWGEE+hA==
 
 motion-utils@^12.12.1:
   version "12.12.1"
@@ -1872,7 +1856,7 @@ ms@2.1.2:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-msw@^2.8.4:
+msw@^2.0.0:
   version "2.8.4"
   resolved "https://registry.yarnpkg.com/msw/-/msw-2.8.4.tgz#e61f50f5bc891e5b81655e4450650b587b761dd5"
   integrity sha512-GLU8gx0o7RBG/3x/eTnnLd5S5ZInxXRRRMN8GJwaPZ4jpJTxzQfWGvwr90e8L5dkKJnz+gT4gQYCprLy/c4kVw==
@@ -2059,6 +2043,11 @@ react-dom@^19.1.0:
   integrity sha512-Xs1hdnE+DyKgeHJeJznQmYMIBG3TKIHJJT95Q58nHLSrElKlGQqDTR2HQ9fx5CN/Gk6Vh/kupBTDLU11/nDk/g==
   dependencies:
     scheduler "^0.26.0"
+
+react-hook-form@^7.56.4:
+  version "7.56.4"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.56.4.tgz#273f55d43fb24ace3e2b9409d0d5326306d7905e"
+  integrity sha512-Rob7Ftz2vyZ/ZGsQZPaRdIefkgOSrQSPXfqBdvOPwJfoGnjwRJUs7EM7Kc1mcoDv3NOtqBzPGbcMB8CGn9CKgw==
 
 react-intl@7.1.11:
   version "7.1.11"

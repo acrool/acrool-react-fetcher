@@ -13,69 +13,10 @@ query GetBookmark($bookmarkId: ID!) {
 }
 
 
-
-query GetBookmarksWithPagination($workspaceId: ID!, $paginate: PaginateInput!, $search: BookmarksWithPaginationSearchInput) {
-    bookmarksWithPagination(workspaceId: $workspaceId, paginate: $paginate, search: $search) {
-        meta {
-            ...PaginateMeta
-        }
-        info {
-            ...PaginateInfo
-        }
-        rows {
-            id
-            name
-            desc
-            url
-            devUrl
-            evaluateUrl
-            country
-            remark
-            createdAt
-            updatedAt
-            creator {
-                ...MemberShort
-            }
-            faviconUrl
-        }
-    }
-}
-
-
-
-
-
-
-
-
 mutation PutBookmarkCreate($workspaceId: ID!, $input: BookmarkCreateInput!, $favicon: Upload) {
     bookmarkCreate(workspaceId: $workspaceId, input: $input, favicon: $favicon) {
         message
         newId
-    }
-}
-
-
-mutation PutBookmarkUpdate($bookmarkId: ID!, $input: BookmarkUpdateInput!, $favicon: Upload) {
-    bookmarkUpdate(bookmarkId: $bookmarkId, input: $input, favicon: $favicon) {
-        message
-        updateCount
-    }
-}
-
-
-mutation PutBookmarkDelete($bookmarkId: ID!) {
-    bookmarkDelete(bookmarkId: $bookmarkId) {
-        deleteCount
-        message
-    }
-}
-
-
-mutation PutBookmarkDeleteAvatar($bookmarkId: ID!) {
-    bookmarkDeleteAvatar(bookmarkId: $bookmarkId) {
-        message
-        deleteCount
     }
 }
 

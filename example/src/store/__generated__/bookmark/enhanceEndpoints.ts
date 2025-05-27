@@ -6,19 +6,7 @@ const enhancedApi = api.enhanceEndpoints({
         GetBookmark: {
             providesTags: (result, error, arg) => [{type: 'Bookmark'}]
         },
-        GetBookmarksWithPagination: {
-            providesTags: (result, error, arg) => [{type: 'Bookmarks'}],
-        },
         PutBookmarkCreate: {
-            invalidatesTags: (result, error, arg) => [{type: 'Bookmarks'}]
-        },
-        PutBookmarkUpdate: {
-            invalidatesTags: (result, error, arg) => [
-                {type: 'Bookmark'},
-                {type: 'Bookmarks'},
-            ]
-        },
-        PutBookmarkDelete: {
             invalidatesTags: (result, error, arg) => [{type: 'Bookmarks'}]
         },
     }

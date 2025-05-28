@@ -1,6 +1,5 @@
 import {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
 
-import AuthTokensManager from '../AuthTokensManager';
 import {IAuthTokens, IResponseFirstError} from '../types';
 
 export type TInterceptorRequest = (value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;

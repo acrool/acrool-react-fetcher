@@ -38,7 +38,7 @@ interface AuthStateProviderProps {
 }
 
 const AuthStateProvider = ({
-    children
+    children,
 }: AuthStateProviderProps) => {
     const tokensRef = useRef<IAuthTokens>(null);
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);

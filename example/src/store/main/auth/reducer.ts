@@ -14,11 +14,11 @@ import {IState,name, state} from './state';
  |         Action Payload Interface         |
  /** ---------------------------------------*/
 export interface IActionCreators {
-    // 系統登入
-    login: ICheckIn
-    refreshToken: {authTokens: IAuthTokens}
-    // 系統登出
-    logout: undefined
+    // // 系統登入
+    // login: ICheckIn
+    // refreshToken: {authTokens: IAuthTokens}
+    // // 系統登出
+    // logout: undefined
 }
 
 
@@ -26,30 +26,30 @@ export interface IActionCreators {
  |                Reducer                   |
  /** ---------------------------------------*/
 const reducers: TReducers<IActionCreators, IState> = {
-    /**
-     * 登入系統
-     */
-    login: (state, {payload}) => {
-        setAuthTokens(payload.authTokens);
-    },
-
-    /**
-     * 更新 Token
-     * @param state
-     * @param payload
-     */
-    refreshToken: (state, {payload}) => {
-        setAuthTokens(payload.authTokens);
-    },
-
-
-    /**
-     * 登出系統
-     */
-    logout: (state, action) => {
-        removeAuthTokens();
-        return {...state, profile: undefined};
-    },
+    // /**
+    //  * 登入系統
+    //  */
+    // login: (state, {payload}) => {
+    //     setAuthTokens(payload.authTokens);
+    // },
+    //
+    // /**
+    //  * 更新 Token
+    //  * @param state
+    //  * @param payload
+    //  */
+    // refreshToken: (state, {payload}) => {
+    //     setAuthTokens(payload.authTokens);
+    // },
+    //
+    //
+    // /**
+    //  * 登出系統
+    //  */
+    // logout: (state, action) => {
+    //     removeAuthTokens();
+    //     return {...state, profile: undefined};
+    // },
 };
 
 

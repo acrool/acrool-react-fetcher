@@ -1,6 +1,6 @@
 import {isEmpty} from '@acrool/js-utils/equal';
 import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
-import React, {createContext, useContext, useLayoutEffect} from 'react';
+import React, {createContext, useContext, useEffect, useLayoutEffect} from 'react';
 
 import {SystemException} from '../exception';
 import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';
@@ -31,16 +31,17 @@ const AxiosClientProvider = ({
     t = (key: string, options?: any) => key, // fallback
     onError,
 }: IProps) => {
+    console.log('authTokens', authTokensManager.tokens);
 
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         const interceptorReq = axiosInstance.interceptors.request.use(interceptorsRequest);
         const interceptorRes = axiosInstance.interceptors.response.use(interceptorsResponseSuccess, interceptorsResponseError);
         return () => {
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [authTokensManager.isRefreshing]);
+    }, [authTokensManager]);
 
 
     /**
@@ -123,6 +124,8 @@ const AxiosClientProvider = ({
         return new Promise((resolve, reject) => {
             const authTokens = authTokensManager.tokens;
             originConfig.headers['Accept-Language'] = getLocale();
+
+            console.log('authTokens', authTokens);
 
             if(authTokens?.accessToken){
                 originConfig.headers['Authorization'] = `Bearer ${authTokens.accessToken}`;

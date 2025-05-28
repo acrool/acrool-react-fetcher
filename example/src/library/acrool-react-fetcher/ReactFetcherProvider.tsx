@@ -42,7 +42,7 @@ const ReactFetcherProvider = ({
             return res?.authRefreshToken.authTokens;
         }}
         onForceLogout={ () => {
-            removeAuthTokens();
+            window.mockTokens = undefined;
         }}
         getLocale={() => 'zh-TW'}
     >

@@ -5,6 +5,7 @@ import {useCallback} from 'react';
 import {useNavigate} from 'react-router-dom';
 
 import {loginRoutePath} from '@/config/app';
+import {useAuthState} from '@/library/acrool-react-fetcher/AuthStateProvider';
 import {refreshingHeaderKey} from '@/library/graphql/config';
 import {useAppDispatch, useAppSelector} from '@/library/redux';
 import {
@@ -49,12 +50,14 @@ export function useLogout() {
     const {t} = useLocale();
     const navigate = useNavigate();
     const [AuthLogoutMutation] = usePutAuthLogoutMutation();
+    const {setIsAuth} = useAuthState();
 
     return () => {
         AuthLogoutMutation({})
             .unwrap()
             .then(res => {
-                dispatch(actions.logout());
+                // dispatch(actions.logout());
+                setIsAuth(false);
                 console.log(t('message.logout', {def: 'Thank you for your use, you have successfully logged out'}));
                 navigate(loginRoutePath);
             });
@@ -72,7 +75,7 @@ export function useLogoutWithSoft() {
     const navigate = useNavigate();
 
     return () => {
-        dispatch(actions.logout());
+        // dispatch(actions.logout());
         navigate(loginRoutePath);
         console.log(t('message.logout', {def: 'Thank you for your use, you have successfully logged out'}));
     };
@@ -89,7 +92,7 @@ export function useKickOut() {
     const navigate = useNavigate();
 
     return () => {
-        dispatch(actions.logout());
+        // dispatch(actions.logout());
         console.error(
             t('message.kickOut',{def: 'Login status is invalid, please log in again'}),
             {code: 'KICK_OUT'},
@@ -106,14 +109,15 @@ export function useKickOut() {
  */
 function useCheckIn() {
     const dispatch = useAppDispatch();
+    const {setIsAuth} = useAuthState();
 
 
     const {t} = useLocale();
 
     return (args: ICheckIn) => {
         // 將緩存失效
-        dispatch(authActions.login(args));
-
+        // dispatch(authActions.login(args));
+        setIsAuth(true);
         console.log(t('message.login', {args: {userName: args.name}}));
     };
 

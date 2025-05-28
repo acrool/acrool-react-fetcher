@@ -15,6 +15,7 @@ export interface AuthPayload {
 
 
 interface AuthState {
+    lastUpdateTimestamp: number
     tokensRef: RefObject<IAuthTokens|null>|null
     updateTokens: (tokens: IAuthTokens|null) => void
     isAuth: boolean
@@ -22,6 +23,7 @@ interface AuthState {
 }
 
 const AuthStateContext = createContext<AuthState>({
+    lastUpdateTimestamp: 0,
     tokensRef: null,
     updateTokens: () => {},
     isAuth: false,
@@ -35,7 +37,7 @@ interface AuthStateProviderProps {
 
 const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
     const tokensRef = useRef<IAuthTokens>(null);
-    const [count, updateCount] = useState<number>(0);
+    const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
     const [isAuth, setIsAuth] = useState<boolean>(false);
 
     /**
@@ -46,7 +48,7 @@ const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
         logger.danger('更新Token', tokens);
         tokensRef.current = tokens;
         setIsAuth(isNotEmpty(tokens));
-        updateCount(curr => curr+1);
+        setLastUpdateTimestamp(Date.now());
     };
 
 
@@ -56,6 +58,7 @@ const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
             tokensRef,
             isAuth,
             updateTokens,
+            lastUpdateTimestamp,
         }}>
             {children}
         </AuthStateContext.Provider>

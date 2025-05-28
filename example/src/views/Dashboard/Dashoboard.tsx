@@ -9,8 +9,7 @@ import {useLogout} from '@/store/main/auth/hook';
 const Dashboard = () => {
     const navigate = useNavigate();
 
-    const {updateTokens} = useAuthState();
-    const {tokens} = useAuthState();
+    const {updateTokens, tokensRef} = useAuthState();
 
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
@@ -27,9 +26,11 @@ const Dashboard = () => {
      * 模擬AccessToken失效, 刷新成功, 重發請求成功
      */
     const handleMockTokenInvalid = () => {
-        updateTokens({
-            accessToken: 'mock-invalid-token',
-            refreshToken: 'mock-login-refresh-token',
+        updateTokens(curr => {
+            return {
+                ...curr,
+                accessToken: 'mock-invalid-token',
+            };
         });
 
         Bookmark1.refetch();
@@ -85,7 +86,7 @@ const Dashboard = () => {
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
-        {JSON.stringify(tokens)}
+        {JSON.stringify(tokensRef?.current)}
     </div>;
 };
 

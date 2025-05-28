@@ -13,11 +13,13 @@ export interface AuthPayload {
     [key: string]: any
 }
 
+// 新增 updateTokens 的型別
+export type AuthTokensUpdater = (tokensOrUpdater: IAuthTokens | null | ((curr: IAuthTokens | null) => IAuthTokens | null)) => void;
 
 interface AuthState {
     lastUpdateTimestamp: number
     tokensRef: RefObject<IAuthTokens|null>|null
-    updateTokens: (tokens: IAuthTokens|null) => void
+    updateTokens: AuthTokensUpdater
     isAuth: boolean
     // clearTokens: () => void
 }
@@ -35,19 +37,27 @@ interface AuthStateProviderProps {
     children: ReactNode
 }
 
-const AuthStateProvider: React.FC<AuthStateProviderProps> = ({children}) => {
+const AuthStateProvider = ({
+    children
+}: AuthStateProviderProps) => {
     const tokensRef = useRef<IAuthTokens>(null);
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
     const [isAuth, setIsAuth] = useState<boolean>(false);
 
     /**
      * 更新 tokens
-     * @param tokens 新的認證 Token
+     * @param tokensOrUpdater 新的認證 Token 或 (curr) => 新的 Token
      */
-    const updateTokens = (tokens: IAuthTokens|null) => {
-        logger.danger('更新Token', tokens);
-        tokensRef.current = tokens;
-        setIsAuth(isNotEmpty(tokens));
+    const updateTokens: AuthTokensUpdater = (tokensOrUpdater) => {
+        let nextTokens: IAuthTokens | null;
+        if (typeof tokensOrUpdater === 'function') {
+            nextTokens = (tokensOrUpdater as (curr: IAuthTokens | null) => IAuthTokens | null)(tokensRef.current);
+        } else {
+            nextTokens = tokensOrUpdater;
+        }
+        logger.danger('更新Token', nextTokens);
+        tokensRef.current = nextTokens;
+        setIsAuth(isNotEmpty(nextTokens));
         setLastUpdateTimestamp(Date.now());
     };
 

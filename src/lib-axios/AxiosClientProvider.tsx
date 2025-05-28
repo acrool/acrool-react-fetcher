@@ -47,7 +47,7 @@ const AxiosClientProvider = ({
     onError,
 }: IProps) => {
 
-    const {tokens, updateTokens, logout} = useAuthState();
+    const {tokensRef, updateTokens} = useAuthState();
 
 
     useLayoutEffect(() => {
@@ -57,18 +57,18 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [isTokenRefreshing, tokens]);
+    }, [isTokenRefreshing, updateTokens]);
 
 
     /**
      * 發送 refreshToken 並更新 token 狀態
      */
     const postRefreshToken = () => {
-        logger.warning('postRefreshToken');
+        const refreshToken = tokensRef?.current?.refreshToken;
+        logger.warning('postRefreshToken', refreshToken);
+        if(!onRefreshToken || !refreshToken) return;
 
-        if(!onRefreshToken || !tokens?.refreshToken) return;
-
-        onRefreshToken(tokens.refreshToken)
+        onRefreshToken(refreshToken)
             .then(authTokens => {
                 // 假設外部 refreshToken 已經自動更新 token 狀態
                 if(isEmpty(authTokens)){
@@ -112,7 +112,7 @@ const AxiosClientProvider = ({
         //     .refreshing(false)
         //     .clear();
         isTokenRefreshing = false;
-        logout();
+        updateTokens(null);
 
         if(onForceLogout) onForceLogout();
     };
@@ -151,8 +151,8 @@ const AxiosClientProvider = ({
 
             originConfig.headers['Accept-Language'] = getLocale();
 
-            if(tokens?.accessToken){
-                originConfig.headers['Authorization'] = `Bearer ${tokens?.accessToken}`;
+            if(tokensRef?.current?.accessToken){
+                originConfig.headers['Authorization'] = `Bearer ${tokensRef?.current?.accessToken}`;
             }
 
             // if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
@@ -201,9 +201,9 @@ const AxiosClientProvider = ({
 
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
-                logger.warning('401OrUNAUTHENTICATED', tokens?.refreshToken);
+                logger.warning('401OrUNAUTHENTICATED', tokensRef?.current?.refreshToken);
 
-                if (isEmpty(tokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                if (isEmpty(tokensRef?.current?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
                     isTokenRefreshing = false; // 考慮放置位置
                     handleOnForceLogout();
                     return Promise.reject(new SystemException(responseFirstError));

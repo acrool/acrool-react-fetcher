@@ -40,7 +40,6 @@ interface IProps extends IAxiosClientProviderProps{
  */
 const AxiosClientProvider = ({
     children,
-    // authTokensManager,
     onRefreshToken,
     onForceLogout,
     getLocale,
@@ -109,9 +108,6 @@ const AxiosClientProvider = ({
      */
     const handleOnForceLogout = () => {
         logger.warning('Logout');
-        // authTokensManager
-        //     .refreshing(false)
-        //     .clear();
         isTokenRefreshing = false;
         updateTokens(null);
 
@@ -147,7 +143,6 @@ const AxiosClientProvider = ({
      */
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
-            // const authTokens = authTokensManager.tokens;
             logger.warning('interceptorsRequest');
 
             originConfig.headers['Accept-Language'] = getLocale();
@@ -156,10 +151,6 @@ const AxiosClientProvider = ({
                 originConfig.headers['Authorization'] = `Bearer ${tokensRef?.current?.accessToken}`;
             }
 
-            // if(!checkIsRefreshTokenAPI(originConfig) && authTokensManager.isRefreshing){
-            //     pushPendingRequestQueues(resolve, reject)(originConfig);
-            //     reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
-            // }
             if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
@@ -188,11 +179,9 @@ const AxiosClientProvider = ({
         const status = axiosError.status;
 
         const responseFirstError = getResponseFirstError(response);
-        // const authTokens = authTokensManager.tokens;
 
         logger.warning('interceptorsResponseError');
 
-        // const {refreshToken: refreshTokenValue} = getAuthTokens();
         if (onError) {
             onError(responseFirstError);
         }
@@ -209,11 +198,6 @@ const AxiosClientProvider = ({
                     handleOnForceLogout();
                     return Promise.reject(new SystemException(responseFirstError));
                 }
-
-                // if (!authTokensManager.isRefreshing) {
-                //     authTokensManager.refreshing(true);
-                //     postRefreshToken();
-                // }
 
                 if (!isTokenRefreshing) {
                     isTokenRefreshing = true;

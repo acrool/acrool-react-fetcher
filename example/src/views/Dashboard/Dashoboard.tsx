@@ -15,12 +15,12 @@ const Dashboard = () => {
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
     });
-    const Bookmark2 = useGetBookmarkQuery({
-        variables: {bookmarkId: '2'}
-    });
-    const Bookmark3 = useGetBookmarkQuery({
-        variables: {bookmarkId: '3'}
-    });
+    // const Bookmark2 = useGetBookmarkQuery({
+    //     variables: {bookmarkId: '2'}
+    // });
+    // const Bookmark3 = useGetBookmarkQuery({
+    //     variables: {bookmarkId: '3'}
+    // });
     const logout = useLogout();
 
     /**
@@ -33,11 +33,11 @@ const Dashboard = () => {
         });
 
         Bookmark1.refetch();
-        Bookmark2.refetch();
+        // Bookmark2.refetch();
 
-        setTimeout(() => {
-            Bookmark3.refetch();
-        },100);
+        // setTimeout(() => {
+        //     Bookmark3.refetch();
+        // },100);
     };
 
     /**
@@ -51,11 +51,11 @@ const Dashboard = () => {
 
 
         Bookmark1.refetch();
-        Bookmark2.refetch();
+        // Bookmark2.refetch();
 
-        setTimeout(() => {
-            Bookmark3.refetch();
-        },100);
+        // setTimeout(() => {
+        //     Bookmark3.refetch();
+        // },100);
     };
 
     /**
@@ -83,7 +83,7 @@ const Dashboard = () => {
         </Flex>
 
         {Bookmark1.data?.bookmark?.name}
-        {Bookmark2.data?.bookmark?.name}
+        {/*{Bookmark2.data?.bookmark?.name}*/}
 
         {JSON.stringify(tokens)}
     </div>;

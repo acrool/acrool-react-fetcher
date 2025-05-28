@@ -30,7 +30,6 @@ const ReactFetcherProvider = ({
 
     const RefreshToken = useRefreshToken();
 
-    console.log('xx');
 
     return <AuthStateProvider>
         <FetcherClientProvider
@@ -44,7 +43,6 @@ const ReactFetcherProvider = ({
             //     }
             // })}
             onRefreshToken={async (refreshToken) => {
-                console.log('refresh token', refreshToken);
                 const res = await RefreshTokenMutation({
                     variables: {input: {refreshToken: refreshToken}},
                     fetchOptions: {

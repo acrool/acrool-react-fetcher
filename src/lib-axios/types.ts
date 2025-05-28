@@ -9,8 +9,8 @@ export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosRespons
 export interface IAxiosClientProviderProps {
     // authTokensManager: AuthTokensManager
     // getAuthTokens: () => IAuthTokens |undefined
-    onRefreshToken?: (refreshToken: string) => Promise<IAuthTokens|undefined>
-    onForceLogout: () => void
+    // onRefreshToken?: (refreshToken: string) => Promise<IAuthTokens|undefined>
+    // onForceLogout: () => void
         getLocale: () => string
     t?: (key: string, options?: any) => string
     onError?: (error: IResponseFirstError) => void

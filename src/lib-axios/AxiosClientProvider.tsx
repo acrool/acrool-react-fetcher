@@ -31,8 +31,6 @@ interface IProps extends IAxiosClientProviderProps{
  * Axios Client 提供者
  * @param children
  * @param authTokensManager
- * @param onRefreshToken
- * @param onForceLogout
  * @param getLocale
  * @param t
  * @param onError
@@ -40,14 +38,12 @@ interface IProps extends IAxiosClientProviderProps{
  */
 const AxiosClientProvider = ({
     children,
-    onRefreshToken,
-    onForceLogout,
     getLocale,
     t = (key: string, options?: any) => key, // fallback
     onError,
 }: IProps) => {
 
-    const {tokensRef, updateTokens} = useAuthState();
+    const {tokensRef, updateTokens, onRefreshToken, onForceLogout} = useAuthState();
 
 
     useLayoutEffect(() => {
@@ -57,35 +53,8 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [isTokenRefreshing, updateTokens]);
+    }, [isTokenRefreshing, updateTokens, onRefreshToken, onForceLogout]);
 
-
-    /**
-     * 發送 refreshToken 並更新 token 狀態
-     */
-    const postRefreshToken = () => {
-        const refreshToken = tokensRef?.current?.refreshToken;
-        logger.warning('postRefreshToken', refreshToken);
-        if(!onRefreshToken || !refreshToken) return;
-
-        onRefreshToken(refreshToken)
-            .then(authTokens => {
-                // 假設外部 refreshToken 已經自動更新 token 狀態
-                if(isEmpty(authTokens)){
-                    throw new SystemException({
-                        message: 'Refresh Token Fail',
-                        code: 'SERVICE_HTTP_401',
-                    });
-                }
-                // authTokensManager.update(authTokens);
-                updateTokens(authTokens);
-                runPendingRequest(true);
-            })
-            .catch(() => {
-                // handleOnForceLogout();
-                runPendingRequest(false);
-            });
-    };
 
 
     /**
@@ -103,16 +72,6 @@ const AxiosClientProvider = ({
     };
 
 
-    /**
-     * 處理登出
-     */
-    const handleOnForceLogout = () => {
-        logger.warning('Logout');
-        isTokenRefreshing = false;
-        updateTokens(null);
-
-        if(onForceLogout) onForceLogout();
-    };
 
     /**
      * 將 request 放入 pendingRequestQueues
@@ -194,14 +153,19 @@ const AxiosClientProvider = ({
                 logger.warning('401OrUNAUTHENTICATED', tokensRef?.current?.refreshToken);
 
                 if (isEmpty(tokensRef?.current?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
-                    isTokenRefreshing = false; // 考慮放置位置
-                    handleOnForceLogout();
+                    isTokenRefreshing = false;
+                    onForceLogout();
+
                     return Promise.reject(new SystemException(responseFirstError));
                 }
 
                 if (!isTokenRefreshing) {
                     isTokenRefreshing = true;
-                    postRefreshToken();
+                    logger.warning('postRefreshToken');
+
+                    onRefreshToken()
+                        .then(() => runPendingRequest(true))
+                        .catch(() => runPendingRequest(false));
                 }
 
                 return new Promise((resolve, reject) => {

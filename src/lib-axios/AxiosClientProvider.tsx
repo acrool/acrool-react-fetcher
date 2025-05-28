@@ -1,7 +1,8 @@
+import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
 import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
-import logger from '@acrool/js-logger';
+
 import {useAuthState} from '../AuthStateProvider';
 import {SystemException} from '../exception';
 import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';

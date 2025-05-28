@@ -11,8 +11,8 @@ interface IProps {
 
 
 
-const repositoryUrl = 'https://github.com/acrool/acrool-react-router-hash';
-const name = 'Acrool React Router Hash';
+const repositoryUrl = 'https://github.com/acrool/acrool-react-fetcher';
+const name = 'Acrool React Fetcher';
 
 
 

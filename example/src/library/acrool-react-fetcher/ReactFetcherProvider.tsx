@@ -7,18 +7,11 @@ import {useRefreshToken} from '@/store/main/auth/hook';
 import {removeAuthTokens} from '@/store/main/auth/utils';
 
 
-
-
-
 interface IProps {
     children: JSX.Element
 }
 
 
-/**
- * 多語系提供者
- * @param children
- */
 const ReactFetcherProvider = ({
     children
 }: IProps) => {
@@ -29,7 +22,6 @@ const ReactFetcherProvider = ({
     const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
 
     const RefreshToken = useRefreshToken();
-
 
     return <AuthStateProvider>
         <FetcherClientProvider

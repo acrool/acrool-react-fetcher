@@ -44,7 +44,6 @@ const AxiosClientProvider = ({
 }: IProps) => {
 
     const {
-        // tokensRef,
         getTokens,
         updateTokens,
         refreshTokens,
@@ -59,7 +58,7 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [isTokenRefreshing, getTokens, refreshTokens, updateTokens, forceLogout]);
+    }, [getTokens, refreshTokens, updateTokens, forceLogout]);
 
 
 

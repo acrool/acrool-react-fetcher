@@ -113,7 +113,7 @@ const AuthStateProvider = ({
         try {
             const authTokens = await onRefreshTokens(refreshToken);
             if(isEmpty(authTokens)){
-                throw new SystemException({message: 'refresh token fail'});
+                throw new SystemException({message: 'refresh token fail', code: 'REFRESH_TOKEN_EMPTY'});
             }
             updateTokens(authTokens);
 
@@ -121,6 +121,7 @@ const AuthStateProvider = ({
 
         } catch (err){
             handleOnForceLogout();
+            throw new SystemException({message: 'refresh token fail', code: 'REFRESH_TOKEN_CATCH'});
         }
 
     };

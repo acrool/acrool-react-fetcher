@@ -158,7 +158,7 @@ const AxiosClientProvider = ({
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
                 const tokens = getTokens();
-                logger.warning('401OrUNAUTHENTICATED', refreshTokens);
+                logger.warning('401OrUNAUTHENTICATED', tokens?.refreshToken);
 
                 if (isEmpty(tokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
                     isTokenRefreshing = false;
@@ -173,7 +173,11 @@ const AxiosClientProvider = ({
 
                     refreshTokens()
                         .then(() => runPendingRequest(true))
-                        .catch(() => runPendingRequest(false));
+                        .catch(() => {
+                            logger.danger('refreshTokens fail');
+
+                            runPendingRequest(false);
+                        });
                 }
 
                 return new Promise((resolve, reject) => {

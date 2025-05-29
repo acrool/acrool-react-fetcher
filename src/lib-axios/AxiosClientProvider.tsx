@@ -107,7 +107,7 @@ const AxiosClientProvider = ({
             originConfig.headers['Accept-Language'] = getLocale();
 
             if(tokensRef?.current?.accessToken){
-                originConfig.headers['Authorization'] = `Bearer ${tokensRef?.current?.accessToken}`;
+                originConfig.headers['Authorization'] = `Bearer ${tokensRef.current.accessToken}`;
             }
 
             if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){

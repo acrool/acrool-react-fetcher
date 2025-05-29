@@ -64,6 +64,7 @@ const graphqlFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>
             'Content-Type': contentType,
             'Apollo-Require-Preflight': 'true',
             'X-Requested-With': 'XMLHttpRequest',
+            ...options?.headers,
         };
 
         const [res] = await Promise.all([

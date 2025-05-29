@@ -1,11 +1,9 @@
+import {jsonDecode} from '@acrool/js-utils/string';
 import {AuthStateProvider, FetcherClientProvider} from '@acrool/react-fetcher';
 import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
 import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
-import {useRefreshToken} from '@/store/main/auth/hook';
-import {jsonDecode} from '@acrool/js-utils/string';
-import {removeAuthTokens} from '@/store/main/auth/utils';
 
 
 interface IProps {
@@ -13,7 +11,7 @@ interface IProps {
 }
 
 const persistAuthKey = 'persist:acrool-auth';
-
+const refreshingHeaderKey = 'X-Requested-Refresh-Token';
 
 const ReactFetcherProvider = ({
     children
@@ -24,7 +22,6 @@ const ReactFetcherProvider = ({
 
     const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
 
-    const RefreshToken = useRefreshToken();
 
     return <AuthStateProvider
         onGetTokens={() => {
@@ -41,11 +38,10 @@ const ReactFetcherProvider = ({
             const res = await RefreshTokenMutation({
                 variables: {input: {refreshToken: refreshToken}},
                 fetchOptions: {
-                    requestCode: 'refreshToken',
-                    // headers: {
-                    //     [refreshingHeaderKey]: 'true',
-                    // }
-                }
+                    headers: {
+                        [refreshingHeaderKey]: '1',
+                    }
+                },
             }).unwrap();
 
             return res?.authRefreshToken.authTokens;
@@ -56,6 +52,9 @@ const ReactFetcherProvider = ({
     >
         <FetcherClientProvider
             getLocale={() => 'zh-TW'}
+            checkIsRefreshTokenRequest={config => {
+                return config.headers[refreshingHeaderKey] === '1';
+            }}
         >
             {children}
         </FetcherClientProvider>

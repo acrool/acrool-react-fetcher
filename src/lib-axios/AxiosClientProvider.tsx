@@ -25,6 +25,7 @@ export const useAxiosClient = () => useContext(AxiosClientContext);
 interface IProps extends IAxiosClientProviderProps{
     children: React.ReactNode
     i18nDict?: Record<string, Record<number, string>>
+    checkIsRefreshTokenRequest?: (config: InternalAxiosRequestConfig) => boolean
 }
 
 /**
@@ -41,6 +42,7 @@ const AxiosClientProvider = ({
     getLocale,
     onError,
     i18nDict,
+    checkIsRefreshTokenRequest,
 }: IProps) => {
 
     const {
@@ -117,7 +119,12 @@ const AxiosClientProvider = ({
                 originConfig.headers['Authorization'] = `Bearer ${accessTokens}`;
             }
 
-            if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
+            // 判斷是否為 refreshToken API
+            const isRefresh = originConfig
+                ? (checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig) : checkIsRefreshTokenAPI(originConfig))
+                : false;
+
+            if(!isRefresh && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
                 return;
@@ -161,15 +168,16 @@ const AxiosClientProvider = ({
             onError(responseFirstError);
         }
 
+        // 判斷是否為 refreshToken API
+        const isRefresh = originalConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originalConfig): false;
+
         if(response && originalConfig) {
-
-
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
                 const tokens = getTokens();
                 logger.warning('401OrUNAUTHENTICATED', tokens?.refreshToken);
 
-                if (isEmpty(tokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                if (isEmpty(tokens?.refreshToken) || isRefresh) {
                     isTokenRefreshing = false;
                     forceLogout();
 

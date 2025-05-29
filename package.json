@@ -22,8 +22,7 @@
       "types": "./dist/index.d.ts",
       "browser": "./dist/acrool-react-fetcher.es.js",
       "import": "./dist/acrool-react-fetcher.es.js"
-    },
-    "./dist/index.css": "./dist/react-fetcher.css"
+    }
   },
   "files": [
     "dist"

@@ -43,7 +43,13 @@ const AxiosClientProvider = ({
     onError,
 }: IProps) => {
 
-    const {tokensRef, updateTokens, onRefreshToken, onForceLogout} = useAuthState();
+    const {
+        // tokensRef,
+        getTokens,
+        updateTokens,
+        refreshTokens,
+        forceLogout
+    } = useAuthState();
 
 
     useLayoutEffect(() => {
@@ -53,7 +59,7 @@ const AxiosClientProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [isTokenRefreshing, updateTokens, onRefreshToken, onForceLogout]);
+    }, [isTokenRefreshing, getTokens, refreshTokens, updateTokens, forceLogout]);
 
 
 
@@ -106,8 +112,9 @@ const AxiosClientProvider = ({
 
             originConfig.headers['Accept-Language'] = getLocale();
 
-            if(tokensRef?.current?.accessToken){
-                originConfig.headers['Authorization'] = `Bearer ${tokensRef.current.accessToken}`;
+            const accessTokens = getTokens()?.accessToken;
+            if(accessTokens){
+                originConfig.headers['Authorization'] = `Bearer ${accessTokens}`;
             }
 
             if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
@@ -150,11 +157,12 @@ const AxiosClientProvider = ({
 
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
-                logger.warning('401OrUNAUTHENTICATED', tokensRef?.current?.refreshToken);
+                const tokens = getTokens();
+                logger.warning('401OrUNAUTHENTICATED', refreshTokens);
 
-                if (isEmpty(tokensRef?.current?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
+                if (isEmpty(tokens?.refreshToken) || checkIsRefreshTokenAPI(originalConfig)) {
                     isTokenRefreshing = false;
-                    onForceLogout();
+                    forceLogout();
 
                     return Promise.reject(new SystemException(responseFirstError));
                 }
@@ -163,7 +171,7 @@ const AxiosClientProvider = ({
                     isTokenRefreshing = true;
                     logger.warning('postRefreshToken');
 
-                    onRefreshToken()
+                    refreshTokens()
                         .then(() => runPendingRequest(true))
                         .catch(() => runPendingRequest(false));
                 }

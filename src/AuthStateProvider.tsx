@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty, isNotEmpty} from '@acrool/js-utils/equal';
-import React, {createContext, ReactNode, RefObject, useCallback, useContext, useRef, useState} from 'react';
+import React, {createContext, ReactNode, RefObject, useCallback, useContext, useEffect, useRef, useState} from 'react';
 
 import {SystemException} from './exception';
 import {IAuthTokens} from './types';
@@ -28,18 +28,15 @@ type TGetTokens = () => IAuthTokens | null;
 
 interface AuthState {
     lastUpdateTimestamp: number
-    // tokensRef: RefObject<IAuthTokens|null>|null
     getTokens: TGetTokens
     updateTokens: TAuthTokensUpdater
     refreshTokens: TRefreshToken
     forceLogout: TForceLogout
     isAuth: boolean
-    // clearTokens: () => void
 }
 
 const AuthStateContext = createContext<AuthState>({
     lastUpdateTimestamp: 0,
-    // tokensRef: null,
     isAuth: false,
     getTokens: () => {
         logger.warning('AuthStateContext','getTokens not yet ready');
@@ -70,9 +67,13 @@ const AuthStateProvider = ({
     onRefreshTokens,
     onForceLogout
 }: AuthStateProviderProps) => {
-    // const tokensRef = useRef<IAuthTokens>(null);
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
     const [isAuth, setIsAuth] = useState<boolean>(false);
+
+
+    useEffect(() => {
+        setIsAuth(isNotEmpty(onGetTokens()));
+    }, []);
 
     /**
      * 更新 tokens
@@ -86,7 +87,6 @@ const AuthStateProvider = ({
             nextTokens = tokensOrUpdater;
         }
         logger.danger('更新Token', nextTokens);
-        // tokensRef.current = nextTokens;
         onSetTokens(nextTokens);
         setIsAuth(isNotEmpty(nextTokens));
         setLastUpdateTimestamp(Date.now());
@@ -98,7 +98,6 @@ const AuthStateProvider = ({
      */
     const handleOnForceLogout = () => {
         updateTokens(null);
-        onSetTokens(null);
         onForceLogout();
     };
 
@@ -106,7 +105,6 @@ const AuthStateProvider = ({
      * 當刷新 tokens 時世紀ㄢ
      */
     const handleOnRefreshTokens = async () => {
-        // const refreshToken = tokensRef.current?.refreshToken;
         const refreshToken = onGetTokens()?.refreshToken;
         if(!refreshToken) return;
 
@@ -131,7 +129,6 @@ const AuthStateProvider = ({
     return (
         <AuthStateContext.Provider value={{
             lastUpdateTimestamp,
-            // tokensRef,
             isAuth,
             getTokens: onGetTokens,
             updateTokens,

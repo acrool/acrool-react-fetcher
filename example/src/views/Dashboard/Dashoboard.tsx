@@ -1,5 +1,6 @@
 import {useAuthState} from '@acrool/react-fetcher';
 import {Flex} from '@acrool/react-grid';
+import {useLocale} from '@acrool/react-locale';
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
@@ -8,6 +9,7 @@ import {useLogout} from '@/store/main/auth/hook';
 
 const Dashboard = () => {
     const navigate = useNavigate();
+    const {locale, setLocale} = useLocale();
 
     const {updateTokens, getTokens} = useAuthState();
 
@@ -78,14 +80,21 @@ const Dashboard = () => {
         </p>
         <Flex column className="gap-2 justify-content-center">
             <button type="button" onClick={logout}>Logout</button>
+            <button type="button" onClick={() => Bookmark1.refetch()}>reFetch</button>
             <button type="button" onClick={handleMockTokenInvalid}>Mock reFetch + token invalid</button>
             <button type="button" onClick={handleMockTokenInvalidRefreshFail}>Mock reFetch + token invalid + refresh token fail</button>
             <button type="button" onClick={handleMockTokenInvalidRefreshEmpty}>Mock reFetch + token invalid + refresh token empty</button>
+        </Flex>
+        <Flex className="gap-2 justify-content-center">
+            <button type="button" onClick={() => setLocale('en-US')}>en-US</button>
+            <button type="button" onClick={() => setLocale('zh-TW')}>zh-TW</button>
         </Flex>
 
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
+        {JSON.stringify(getTokens(), null, 2)}
+        Locale: {locale}
     </div>;
 };
 

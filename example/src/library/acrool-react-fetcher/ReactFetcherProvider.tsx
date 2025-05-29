@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
 import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
+import {useLocale} from "@acrool/react-locale";
 
 
 interface IProps {
@@ -19,6 +20,7 @@ const ReactFetcherProvider = ({
     const handleChangeLocale = (newLocale: string) => {
         dayjs.locale(newLocale);
     };
+    const {locale} = useLocale();
 
     const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
 
@@ -51,7 +53,7 @@ const ReactFetcherProvider = ({
         }}
     >
         <FetcherProvider
-            getLocale={() => 'zh-TW'}
+            locale={locale}
             checkIsRefreshTokenRequest={config => {
                 return config.headers[refreshingHeaderKey] === '1';
             }}

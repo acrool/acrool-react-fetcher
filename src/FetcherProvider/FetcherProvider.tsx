@@ -26,23 +26,25 @@ interface IProps {
     children: React.ReactNode
     i18nDict?: Record<string, Record<number, string>>
     checkIsRefreshTokenRequest?: (config: InternalAxiosRequestConfig) => boolean
-    getLocale: () => string
+    locale?: string
     onError?: (error: IResponseFirstError) => void
+    authorizationPrefix?: string
 }
 
 /**
  * Axios Client 提供者
  * @param children
  * @param authTokensManager
- * @param getLocale
+ * @param locale
  * @param onError
  */
 const FetcherProvider = ({
     children,
-    getLocale,
+    locale = 'en-US',
     onError,
     i18nDict,
     checkIsRefreshTokenRequest,
+    authorizationPrefix = 'Bearer'
 }: IProps) => {
 
     const {
@@ -112,12 +114,14 @@ const FetcherProvider = ({
         return new Promise((resolve, reject) => {
             logger.warning('interceptorsRequest');
 
-            originConfig.headers['Accept-Language'] = getLocale();
+            originConfig.headers['Accept-Language'] = locale;
 
             const accessTokens = getTokens()?.accessToken;
             logger.info('setHeader', accessTokens);
             if(accessTokens){
-                originConfig.headers['Authorization'] = `Bearer ${accessTokens}`;
+                originConfig.headers['Authorization'] = [authorizationPrefix, accessTokens]
+                    .filter(str => str)
+                    .join(' ');
             }
 
             // 判斷是否為 refreshToken API
@@ -145,7 +149,6 @@ const FetcherProvider = ({
      * 取得多語系錯誤訊息
      */
     const getErrorMessage = (status: number) => {
-        const locale = getLocale();
         const dict = (i18nDict?.[locale] || defaultI18nDict[locale] || defaultI18nDict['en-US']);
         return dict?.[status] || `Error: ${status}`;
     };

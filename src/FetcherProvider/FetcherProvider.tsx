@@ -115,6 +115,7 @@ const FetcherProvider = ({
             originConfig.headers['Accept-Language'] = getLocale();
 
             const accessTokens = getTokens()?.accessToken;
+            logger.info('setHeader', accessTokens);
             if(accessTokens){
                 originConfig.headers['Authorization'] = `Bearer ${accessTokens}`;
             }

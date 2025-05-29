@@ -1,8 +1,8 @@
+import {useAuthState} from '@acrool/react-fetcher';
 import {Flex} from '@acrool/react-grid';
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {useAuthState} from '@acrool/react-fetcher';
 import {useGetBookmarkQuery} from '@/store/__generated__';
 import {useLogout} from '@/store/main/auth/hook';
 
@@ -86,7 +86,6 @@ const Dashboard = () => {
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
-        {JSON.stringify(getTokens())}
     </div>;
 };
 

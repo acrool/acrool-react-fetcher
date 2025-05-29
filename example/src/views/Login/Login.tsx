@@ -24,7 +24,6 @@ const Login = ({
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const login = useLogin();
-    const {tokens} = useAuthState();
 
     const onSubmit = async (data: FormValues) => {
         setError('');
@@ -63,7 +62,7 @@ const Login = ({
         </form>
         {error && <p style={{color: 'red'}}>{error}</p>}
         {success && <p style={{color: 'green'}}>{success}</p>}
-        {JSON.stringify(tokens)}
+        {/*{JSON.stringify(tokens)}*/}
     </LoginRoot>;
 };
 

@@ -107,26 +107,6 @@ const AuthStateProvider = ({
             handleOnForceLogout();
         }
 
-
-
-
-        //
-        // .then(authTokens => {
-        //     // 假設外部 refreshToken 已經自動更新 token 狀態
-        //     if(isEmpty(authTokens)){
-        //         throw new SystemException({
-        //             message: 'Refresh Token Fail',
-        //             code: 'SERVICE_HTTP_401',
-        //         });
-        //     }
-        //     updateTokens(authTokens);
-        //     runPendingRequest(true);
-        // })
-        // .catch(() => {
-        //     // handleOnForceLogout();
-        //     runPendingRequest(false);
-        // });
-
     };
 
 

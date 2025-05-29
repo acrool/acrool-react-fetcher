@@ -7,7 +7,7 @@ import {useAuthState} from '../AuthStateProvider';
 import {SystemException} from '../exception';
 import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';
 import AxiosCancelException from './AxiosCancelException';
-import {axiosInstance} from './config';
+import {axiosInstance, defaultI18nDict} from './config';
 import {
     IAxiosClientProviderProps,
     TInterceptorRequest,
@@ -24,8 +24,8 @@ export const useAxiosClient = () => useContext(AxiosClientContext);
 
 interface IProps extends IAxiosClientProviderProps{
     children: React.ReactNode
+    i18nDict?: Record<string, Record<number, string>>
 }
-
 
 /**
  * Axios Client 提供者
@@ -39,8 +39,8 @@ interface IProps extends IAxiosClientProviderProps{
 const AxiosClientProvider = ({
     children,
     getLocale,
-    t = (key: string, options?: any) => key, // fallback
     onError,
+    i18nDict,
 }: IProps) => {
 
     const {
@@ -93,8 +93,9 @@ const AxiosClientProvider = ({
                     resolve(axiosInstance(originConfig));
                 } else {
                     reject(new SystemException({
-                        message: t('errorHttp.401', {def: '請求的API沒有權限'}),
-                        code: 'SERVICE_HTTP_401',
+                        message: getErrorMessage(401),
+                        code: 'UNAUTHORIZED',
+                        path: 'AxiosClientProvider.pushPendingRequestQueues'
                     }));
                 }
             });
@@ -119,6 +120,7 @@ const AxiosClientProvider = ({
             if(!checkIsRefreshTokenAPI(originConfig) && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
+                return;
             }
             resolve(originConfig);
         });
@@ -133,6 +135,14 @@ const AxiosClientProvider = ({
         return response;
     };
 
+    /**
+     * 取得多語系錯誤訊息
+     */
+    const getErrorMessage = (status: number) => {
+        const locale = getLocale();
+        const dict = (i18nDict?.[locale] || defaultI18nDict[locale] || defaultI18nDict['en-US']);
+        return dict?.[status] || `Error: ${status}`;
+    };
 
     /**
      * 處理 response 失敗
@@ -174,7 +184,6 @@ const AxiosClientProvider = ({
                         .then(() => runPendingRequest(true))
                         .catch(() => {
                             logger.danger('refreshTokens fail');
-
                             runPendingRequest(false);
                         });
                 }

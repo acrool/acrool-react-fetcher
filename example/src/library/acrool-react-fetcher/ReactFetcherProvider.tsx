@@ -55,16 +55,6 @@ const ReactFetcherProvider = ({
         }}
     >
         <FetcherClientProvider
-            // authTokensManager={new AuthTokensManager({
-            //     getter: () => window.mockTokens,
-            //     updater: (authTokens) => {
-            //         window.mockTokens = authTokens;
-            //     },
-            //     clearer: () => {
-            //         window.mockTokens = undefined;
-            //     }
-            // })}
-
             getLocale={() => 'zh-TW'}
         >
             {children}

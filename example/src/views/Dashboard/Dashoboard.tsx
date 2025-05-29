@@ -9,7 +9,7 @@ import {useLogout} from '@/store/main/auth/hook';
 const Dashboard = () => {
     const navigate = useNavigate();
 
-    const {updateTokens, tokensRef} = useAuthState();
+    const {updateTokens, getTokens} = useAuthState();
 
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
@@ -86,7 +86,7 @@ const Dashboard = () => {
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
-        {JSON.stringify(tokensRef?.current)}
+        {JSON.stringify(getTokens())}
     </div>;
 };
 

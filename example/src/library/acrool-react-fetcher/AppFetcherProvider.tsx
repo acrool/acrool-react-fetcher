@@ -54,6 +54,7 @@ const AppFetcherProvider = ({
     >
         <FetcherProvider
             locale={locale}
+            isDebug
             checkIsRefreshTokenRequest={config => {
                 return config.headers[refreshingHeaderKey] === '1';
             }}

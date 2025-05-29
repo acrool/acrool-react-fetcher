@@ -29,6 +29,7 @@ interface IProps {
     locale?: string
     onError?: (error: IResponseFirstError) => void
     authorizationPrefix?: string
+    isDebug?: boolean
 }
 
 /**
@@ -44,7 +45,8 @@ const FetcherProvider = ({
     onError,
     i18nDict,
     checkIsRefreshTokenRequest,
-    authorizationPrefix = 'Bearer'
+    authorizationPrefix = 'Bearer',
+    isDebug = false
 }: IProps) => {
 
     const {
@@ -71,8 +73,7 @@ const FetcherProvider = ({
      * @param isSuccess
      */
     const runPendingRequest = (isSuccess: boolean) => {
-        logger.warning('runPendingRequest');
-
+        if (isDebug) logger.warning('[FetcherProvider] runPendingRequest', {isSuccess});
         isTokenRefreshing = false;
         for(const cb of pendingRequestQueues){
             cb(isSuccess);
@@ -92,6 +93,7 @@ const FetcherProvider = ({
         reject: (value: SystemException) => void
     ) => {
         return (originConfig: InternalAxiosRequestConfig) => {
+            if (isDebug) logger.info('[FetcherProvider] Request add pending queue', {originConfig});
             pendingRequestQueues.push((isTokenRefreshOK: boolean) => {
                 if (isTokenRefreshOK) {
                     resolve(axiosInstance(originConfig));
@@ -112,21 +114,15 @@ const FetcherProvider = ({
      */
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
-            logger.warning('interceptorsRequest');
-
             originConfig.headers['Accept-Language'] = locale;
-
             const accessTokens = getTokens()?.accessToken;
-            logger.info('setHeader', accessTokens);
             if(accessTokens){
                 originConfig.headers['Authorization'] = [authorizationPrefix, accessTokens]
                     .filter(str => str)
                     .join(' ');
             }
-
             // 判斷是否為 refreshToken API
             const isRefresh = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig): false;
-
             if(!isRefresh && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({message: 'Token refreshing, so request save queues not send', code: 'REFRESH_TOKEN'}));
@@ -142,6 +138,7 @@ const FetcherProvider = ({
      * @param response
      */
     const interceptorsResponseSuccess: TInterceptorResponseSuccess = (response) => {
+        if (isDebug) logger.info('[FetcherProvider] interceptorsResponseSuccess', {response});
         return response;
     };
 
@@ -161,43 +158,35 @@ const FetcherProvider = ({
         const response = axiosError.response;
         const originalConfig = axiosError.config;
         const status = axiosError.status;
-
         const responseFirstError = getResponseFirstError(response);
-
-        logger.warning('interceptorsResponseError');
-
+        if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
         if (onError) {
             onError(responseFirstError);
         }
-
-        // 判斷是否為 refreshToken API
         const isRefresh = originalConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originalConfig): false;
-
         if(response && originalConfig) {
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
-                // 若沒有 RefreshToken 或 這次請求是 RefreshToken API 則直接拋出錯誤
                 const tokens = getTokens();
-                logger.warning('401OrUNAUTHENTICATED', tokens?.refreshToken);
-
+                if (isDebug) logger.warning('[FetcherProvider] enter refresh token flow', {refreshToken: tokens?.refreshToken});
                 if (isEmpty(tokens?.refreshToken) || isRefresh) {
                     isTokenRefreshing = false;
+                    if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI fail, force logout');
                     forceLogout();
-
                     return Promise.reject(new SystemException(responseFirstError));
                 }
-
                 if (!isTokenRefreshing) {
                     isTokenRefreshing = true;
-                    logger.warning('postRefreshToken');
-
+                    if (isDebug) logger.warning('[FetcherProvider] refreshTokens');
                     refreshTokens()
-                        .then(() => runPendingRequest(true))
+                        .then(() => {
+                            if (isDebug) logger.info('[FetcherProvider] refreshTokens success');
+                            runPendingRequest(true);
+                        })
                         .catch(() => {
-                            logger.danger('refreshTokens fail');
+                            if (isDebug) logger.danger('[FetcherProvider] refreshTokens fail');
                             runPendingRequest(false);
                         });
                 }
-
                 return new Promise((resolve, reject) => {
                     pushPendingRequestQueues(resolve, reject)(originalConfig);
                 });

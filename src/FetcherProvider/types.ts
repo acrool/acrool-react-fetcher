@@ -1,17 +1,26 @@
 import {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
-
-import {IAuthTokens, IResponseFirstError} from '../types';
-
+//
+//
 export type TInterceptorRequest = (value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
 export type TInterceptorResponseSuccess = (value: AxiosResponse<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
 export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
 
-export interface IAxiosClientProviderProps {
-    // authTokensManager: AuthTokensManager
-    // getAuthTokens: () => IAuthTokens |undefined
-    // onRefreshToken?: (refreshToken: string) => Promise<IAuthTokens|undefined>
-    // onForceLogout: () => void
-        getLocale: () => string
-    t?: (key: string, options?: any) => string
-    onError?: (error: IResponseFirstError) => void
+
+//
+//
+// export interface IFetchOptions extends InternalAxiosRequestConfig{
+//     requestCode?: string
+// }
+//
+//
+//
+// export interface IUseFetcherArgs<TVariables = {}> {variables?: TVariables, fetchOptions?: IFetchOptions}
+// export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
+//
+
+export interface IResponseFirstError {
+    message: string
+    code: string
+    path?: string
+    args?: any
 }

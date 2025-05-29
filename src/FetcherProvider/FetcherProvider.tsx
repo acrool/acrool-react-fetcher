@@ -5,15 +5,15 @@ import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
 import {SystemException} from '../exception';
-import {checkIsRefreshTokenAPI, getResponseFirstError} from '../utils';
 import AxiosCancelException from './AxiosCancelException';
 import {axiosInstance, defaultI18nDict} from './config';
 import {
-    IAxiosClientProviderProps,
+    IResponseFirstError,
     TInterceptorRequest,
     TInterceptorResponseError,
     TInterceptorResponseSuccess
 } from './types';
+import {getResponseFirstError} from './utils';
 
 
 let isTokenRefreshing = false;
@@ -22,10 +22,12 @@ let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
 export const AxiosClientContext = createContext<AxiosInstance>(axiosInstance);
 export const useAxiosClient = () => useContext(AxiosClientContext);
 
-interface IProps extends IAxiosClientProviderProps{
+interface IProps {
     children: React.ReactNode
     i18nDict?: Record<string, Record<number, string>>
     checkIsRefreshTokenRequest?: (config: InternalAxiosRequestConfig) => boolean
+    getLocale: () => string
+    onError?: (error: IResponseFirstError) => void
 }
 
 /**
@@ -33,11 +35,9 @@ interface IProps extends IAxiosClientProviderProps{
  * @param children
  * @param authTokensManager
  * @param getLocale
- * @param t
  * @param onError
- * @constructor
  */
-const AxiosClientProvider = ({
+const FetcherProvider = ({
     children,
     getLocale,
     onError,
@@ -120,9 +120,7 @@ const AxiosClientProvider = ({
             }
 
             // 判斷是否為 refreshToken API
-            const isRefresh = originConfig
-                ? (checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig) : checkIsRefreshTokenAPI(originConfig))
-                : false;
+            const isRefresh = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig): false;
 
             if(!isRefresh && isTokenRefreshing){
                 pushPendingRequestQueues(resolve, reject)(originConfig);
@@ -207,4 +205,4 @@ const AxiosClientProvider = ({
     return <AxiosClientContext.Provider value={axiosInstance}>{children}</AxiosClientContext.Provider>;
 };
 
-export default AxiosClientProvider;
+export default FetcherProvider;

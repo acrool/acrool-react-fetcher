@@ -1,30 +1,18 @@
 import logger from '@acrool/js-logger';
 import {isEmpty, isNotEmpty} from '@acrool/js-utils/equal';
-import React, {createContext, ReactNode, RefObject, useCallback, useContext, useEffect, useRef, useState} from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
 
-import {SystemException} from './exception';
-import {IAuthTokens} from './types';
+import {SystemException} from '../exception';
+import {
+    IAuthTokens,
+    TAuthTokensUpdater,
+    TForceLogout,
+    TGetTokens, TOnForceLogout,
+    TOnGetTokens, TOnRefreshToken,
+    TOnSetTokens,
+    TRefreshToken
+} from './types';
 
-// 定義 payload 與 token 的型別
-export interface AuthPayload {
-    userId: string
-    username: string
-
-    // 你可以根據實際需求擴充欄位
-    [key: string]: any
-}
-
-// 新增 updateTokens 的型別
-export type TAuthTokensUpdater = (tokensOrUpdater: IAuthTokens | null | ((curr: IAuthTokens | null) => IAuthTokens | null)) => void;
-
-
-type TOnRefreshToken = (refreshToken: string) => Promise<IAuthTokens|undefined>;
-type TRefreshToken = () => Promise<void>;
-type TOnForceLogout = () => void;
-type TForceLogout = () => void;
-type TOnSetTokens = TAuthTokensUpdater;
-type TOnGetTokens = () => IAuthTokens | null;
-type TGetTokens = () => IAuthTokens | null;
 
 interface AuthState {
     lastUpdateTimestamp: number

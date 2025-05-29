@@ -1,4 +1,4 @@
-import {axiosInstance} from './lib-axios/config';
+import {axiosInstance} from '../FetcherProvider/config';
 import {IFetchOptions, IUseFetcherArgs} from './types';
 import {getVariablesFileMap, TFileMapVariables} from './utils';
 

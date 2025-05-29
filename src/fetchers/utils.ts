@@ -1,8 +1,3 @@
-import {AxiosError, AxiosResponse} from 'axios';
-
-import {SystemException} from './exception';
-import {IFetchOptions, IResponseFirstError} from './types';
-
 export type TFileMapVariables = Record<string, any>;
 interface IConvertRes {variables: TFileMapVariables, map: string[], values: File[]}
 
@@ -47,33 +42,4 @@ export const getVariablesFileMap = <V extends TFileMapVariables|undefined>(origi
 
     }, {variables: {}, map: [], values: []});
 };
-
-
-
-
-
-/**
- * 檢查是否為 Refresh
- * @param config
- */
-export const checkIsRefreshTokenAPI = (config: IFetchOptions) => {
-    return config.requestCode === 'refreshToken';
-};
-
-/**
- * 返回 Axios 格式錯誤
- * @param response
- */
-export const getResponseFirstError = (response?: AxiosResponse): IResponseFirstError => {
-    console.log('response.data.errors', response);
-
-    if(response?.data?.errors[0]){
-        return response?.data?.errors[0];
-    }
-    return {
-        message: 'Axios error',
-        code: 'ERR_SYS_BAD_RESPONSE',
-    };
-};
-
 

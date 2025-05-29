@@ -7,7 +7,7 @@ import {createElement} from 'react';
 import ReactDOM from 'react-dom/client';
 import {HistoryRouter as Router} from 'redux-first-history/rr6';
 
-import ReactFetcherProvider from '@/library/acrool-react-fetcher';
+import AppFetcherProvider from '@/library/acrool-react-fetcher';
 import ReactLocaleProvider from '@/library/acrool-react-locale';
 import {Provider as ReduxProvider} from '@/library/redux';
 
@@ -24,7 +24,7 @@ function renderApp() {
                 // providerWithProps(ApolloProvider, {client: apolloClient}),
                 providerWithProps(ReactLocaleProvider, {}),
                 providerWithProps(Router, {history: history, basename: routePrefixPath}),
-                providerWithProps(ReactFetcherProvider, {}),
+                providerWithProps(AppFetcherProvider, {}),
                 providerWithProps(GridThemeProvider, {gridTheme: gridConfig}),
             ]
         )(App))

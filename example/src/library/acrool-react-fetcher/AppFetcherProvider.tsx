@@ -14,7 +14,7 @@ interface IProps {
 const persistAuthKey = 'persist:acrool-auth';
 const refreshingHeaderKey = 'X-Requested-Refresh-Token';
 
-const ReactFetcherProvider = ({
+const AppFetcherProvider = ({
     children
 }: IProps) => {
     const handleChangeLocale = (newLocale: string) => {
@@ -64,5 +64,5 @@ const ReactFetcherProvider = ({
 
 };
 
-export default ReactFetcherProvider;
+export default AppFetcherProvider;
 

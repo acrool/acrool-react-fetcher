@@ -44,8 +44,8 @@ interface AuthStateProviderProps {
     children: ReactNode
     onSetTokens: TOnSetTokens
     onGetTokens: TOnGetTokens
-    onRefreshTokens: TOnRefreshToken
-    onForceLogout: TOnForceLogout
+    onRefreshTokens?: TOnRefreshToken
+    onForceLogout?: TOnForceLogout
 }
 
 const AuthStateProvider = ({
@@ -86,7 +86,10 @@ const AuthStateProvider = ({
      */
     const handleOnForceLogout = () => {
         updateTokens(null);
-        onForceLogout();
+
+        if(onForceLogout){
+            onForceLogout();
+        }
     };
 
     /**
@@ -94,7 +97,7 @@ const AuthStateProvider = ({
      */
     const handleOnRefreshTokens = async () => {
         const refreshToken = onGetTokens()?.refreshToken;
-        if(!refreshToken) return;
+        if(!refreshToken || !onRefreshTokens) return;
 
         try {
             const authTokens = await onRefreshTokens(refreshToken);

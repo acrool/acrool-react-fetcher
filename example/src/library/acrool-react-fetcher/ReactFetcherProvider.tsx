@@ -1,5 +1,5 @@
 import {jsonDecode} from '@acrool/js-utils/string';
-import {AuthStateProvider, FetcherClientProvider} from '@acrool/react-fetcher';
+import {AuthStateProvider, FetcherProvider} from '@acrool/react-fetcher';
 import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
@@ -50,14 +50,14 @@ const ReactFetcherProvider = ({
             // removeAuthTokens();
         }}
     >
-        <FetcherClientProvider
+        <FetcherProvider
             getLocale={() => 'zh-TW'}
             checkIsRefreshTokenRequest={config => {
                 return config.headers[refreshingHeaderKey] === '1';
             }}
         >
             {children}
-        </FetcherClientProvider>
+        </FetcherProvider>
     </AuthStateProvider>;
 
 };

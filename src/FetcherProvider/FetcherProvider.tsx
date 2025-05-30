@@ -6,7 +6,7 @@ import React, {createContext, useContext, useLayoutEffect} from 'react';
 import {useAuthState} from '../AuthStateProvider';
 import {defaultI18nDict} from '../config/i18nDict';
 import {SystemException} from '../exception';
-import {IFetchOptions, IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
+import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
     IResponseFirstError,
@@ -128,7 +128,7 @@ const FetcherProvider = ({
             originConfig.headers['Accept-Language'] = locale;
 
             const accessTokens = getTokens()?.accessToken;
-            const forceGuest = (originConfig.fetchOptions as IFetchOptions)?.forceGuest;
+            const forceGuest = (originConfig.fetchOptions as IInternalRequestConfig)?.forceGuest;
 
             if (!forceGuest && accessTokens) {
                 originConfig.headers['Authorization'] = [authorizationPrefix, accessTokens]

@@ -1,6 +1,6 @@
 import {objToFormData} from '@acrool/js-utils/convert';
 
-import {ERequestHeader} from './config';
+import {ERequestHeaderContentType} from './config';
 
 /**
  *
@@ -9,18 +9,18 @@ import {ERequestHeader} from './config';
  */
 export function flattenObjectToFormData(
     obj: Record<string, any>,
-    contentType : ERequestHeader
+    contentType: ERequestHeaderContentType
 ): { body: FormData | string, contentType: string } {
 
 
-    if (contentType === ERequestHeader.formData) {
+    if (contentType === ERequestHeaderContentType.formData) {
         const formData = objToFormData(obj);
         return {
             contentType,
             body: formData,
         };
 
-    } else if (contentType === ERequestHeader.formUrlDecode) {
+    } else if (contentType === ERequestHeaderContentType.formUrlDecode) {
         return {
             contentType,
             body: new URLSearchParams(obj as Record<string, string>).toString(),

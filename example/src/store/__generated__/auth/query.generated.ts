@@ -1,4 +1,4 @@
-import {IUseFetcherArgs} from '@acrool/react-fetcher';
+import {IUseGraphQLFetcherArgs as IUseFetcherArgs} from '@acrool/react-fetcher';
 
 import {baseApi} from '@/library/redux/baseApi';
 

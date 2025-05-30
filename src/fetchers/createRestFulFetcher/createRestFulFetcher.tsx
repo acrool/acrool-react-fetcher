@@ -3,7 +3,7 @@ import {AxiosInstance} from 'axios';
 
 import {fetcherLeastTime} from '../config';
 import {IRequestConfig} from '../types';
-import {ERequestHeader} from './config';
+import {ERequestHeaderContentType} from './config';
 import {IDocument, IUseFetcherArgs, TFileMapVariables} from './types';
 import {flattenObjectToFormData} from './utils';
 
@@ -29,7 +29,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
          */
         const getAxiosConfig = (): IRequestConfig => {
             if(method && ['post','put'].includes(method.toLowerCase())){
-                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeader.formData);
+                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeaderContentType.formData);
                 return {
                     url: document.url,
                     method,
@@ -41,7 +41,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
                 };
             }
             if(method && ['delete'].includes(method.toLowerCase())){
-                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeader.formUrlDecode);
+                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeaderContentType.formUrlDecode);
                 return {
                     url: document.url,
                     method,
@@ -59,7 +59,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
                 params,
                 headers: {
                     ...options?.headers,
-                    'Content-Type': ERequestHeader.json,
+                    'Content-Type': ERequestHeaderContentType.json,
                 }
             };
         };

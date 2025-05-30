@@ -21,7 +21,6 @@ Acrool React Fetcher is a solution for API integration and Auth state management
 
 </div>
 
-`^1.1.0 support react >=18.0.0 <20.0.0`
 
 ## Features
 

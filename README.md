@@ -1,11 +1,13 @@
 # Acrool React Fetcher
 
+Acrool React Fetcher is a solution for API integration and Auth state management in React projects. It helps you easily manage tokens, make API requests, perform GraphQL queries, and handle authentication flows.
+
 <a href="https://acrool-react-fetcher.pages.dev/" title="Acrool React Fetcher - This is a block function for React development loading block">
     <img src="https://raw.githubusercontent.com/acrool/acrool-react-fetcher/main/example/public/og.webp" alt="Acrool React Fetcher Logo"/>
 </a>
 
 <p align="center">
-    This is a toast message function for React development notifications
+    A solution for API integration and token management in React projects
 </p>
 
 <div align="center">
@@ -19,81 +21,110 @@
 
 </div>
 
-
 `^1.1.0 support react >=18.0.0 <20.0.0`
-
-
 
 ## Features
 
-- Supports queue block list
-- Plug and unplug using `@acrool/react-portal` and `framer-motion`
+- Token state management and custom refresh mechanism
+- GraphQL query support and custom fetcher
+- Seamless integration with Redux Toolkit Query
+- Flexible provider composition
+- Easy to test and simulate login/logout/token invalidation scenarios
 
-## Install
+## Installation
 
 ```bash
 yarn add @acrool/react-fetcher
 ```
 
+## Quick Start
 
-## Usage
+### 1. Import styles
 
-add in your index.tsx
-```tst
+Add the following to your entry file (e.g. `index.tsx`):
+
+```ts
 import "@acrool/react-fetcher/dist/index.css";
 ```
 
-add in your App.tsx
+### 2. Provider structure
+
+Wrap your app with `AuthStateProvider` and `AxiosClientProvider`. It is recommended to use `AppFetcherProvider` to automatically wrap all necessary providers:
 
 ```tsx
-import {BlockPortal} from "@acrool/react-fetcher";
+import AppFetcherProvider from '@/library/acrool-react-fetcher';
 
-const App = () => {
-    return (
-        <div>
-            <BaseUsed/>
-            <BlockPortal
-                isVisibleQueueKey={false}
-                loader={<Loader/>}
-                defaultMessage="Loading..."
-            />
-        </div>
-    );
+ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+  <AppFetcherProvider>
+    <App />
+  </AppFetcherProvider>
+);
+```
+
+### 3. Create baseApi (GraphQL query)
+
+For Redux Toolkit Query, create `baseApi.ts`:
+
+```ts
+import { createGraphQLFetcher } from '@acrool/react-fetcher';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { axiosInstance } from '@/library/acrool-react-fetcher';
+
+export const baseApi = createApi({
+  reducerPath: 'api',
+  baseQuery: async (query, api, extraOptions) => {
+    // Token handling and refresh are managed automatically
+    const data = await createGraphQLFetcher(axiosInstance, query.document)(query.args);
+    return { data };
+  },
+  endpoints: () => ({}),
+});
+```
+
+### 4. Use Auth state and API in your pages
+
+#### Get and update tokens
+
+```tsx
+import { useAuthState } from '@acrool/react-fetcher';
+
+const { getTokens, updateTokens } = useAuthState();
+```
+
+#### Send GraphQL query
+
+```tsx
+const { data, refetch } = useGetBookmarkQuery({ variables: { bookmarkId: '1' } });
+```
+
+#### Simulate token invalidation and refresh
+
+```tsx
+const handleMockTokenInvalid = () => {
+  updateTokens(curr => ({
+    ...curr,
+    accessToken: 'mock-invalid-token',
+  }));
+  refetch();
 };
 ```
 
-then in your page
+#### Login/Logout
 
 ```tsx
-import {block} from '@acrool/react-fetcher';
-import {useEffect} from "react";
+const login = useLogin();
+const logout = useLogout();
 
-const Example = () => {
-
-    useEffect(() => {
-        block.show();
-        
-        setTimeout(() => {
-            block.hide();
-        }, 3000)
-    }, []);
-
-    return (
-        <div>
-            sample page
-        </div>
-    );
-};
+await login({ variables: { input: { account, password } } });
+logout();
 ```
 
-- block.show
-- block.hide
+### 5. More examples
 
+- The Dashboard page demonstrates how to operate token, API, and locale switching
+- The Login page demonstrates login and error handling
 
-There is also a example that you can play with it:
-
-[![Play react-editext-example](https://raw.githubusercontent.com/acrool/acrool-react-fetcher/main/play-in-example-button.svg)](https://acrool-react-fetcher.pages.dev)
-
+---
 
 ## License
 

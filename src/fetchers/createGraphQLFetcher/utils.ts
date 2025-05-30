@@ -16,11 +16,10 @@ export const getVariablesFileMap = <V extends TFileMapVariables|undefined>(origi
     return originVariables && Object.keys(originVariables).reduce((curr: IConvertRes, key) => {
         const row = originVariables[key];
         if(isFile(row) || isBlob(row)){
-            const file = row;
             return {
                 variables: {...curr.variables, [key]: null},
                 map: [...curr.map, parentKey.concat(key).join('.')],
-                values: [...curr.values, file],
+                values: [...curr.values, row],
             };
 
         }else if(row && typeof row === 'object'){

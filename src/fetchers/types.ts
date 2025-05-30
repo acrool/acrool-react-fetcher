@@ -1,6 +1,6 @@
 import {AxiosRequestConfig, InternalAxiosRequestConfig} from 'axios';
 
-export interface IFetchOptions {
+interface IFetchOptions {
     pendingRequest?: boolean
     requestCode?: string
     forceGuest?: boolean

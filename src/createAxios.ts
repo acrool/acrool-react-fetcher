@@ -1,11 +1,8 @@
-import axios from 'axios';
+import axios, {CreateAxiosDefaults} from 'axios';
 
 
-type TCreateAxiosInstanceConfig = ReturnType<typeof axios.create>;
-
-export const createAxiosInstance = (config?: TCreateAxiosInstanceConfig) => {
+export const createAxiosInstance = (config?: CreateAxiosDefaults) => {
     return axios.create({
-        baseURL: '/graphql',
         timeout: 2 * 60 * 1000,
         ...config,
     });

@@ -105,7 +105,7 @@ export const handlers = [
             }, {status: 401});
         }
 
-        const validAuthTokens1 = {
+        validAuthTokens = {
             accessToken: `refresh-${refreshCount}-accessToken`,
             refreshToken: `refresh-${refreshCount}-refreshToken`,
         };
@@ -114,7 +114,7 @@ export const handlers = [
         return HttpResponse.json({
             data: {
                 authRefreshToken: {
-                    authTokens: validAuthTokens1
+                    authTokens: validAuthTokens
                 }
             }
         });

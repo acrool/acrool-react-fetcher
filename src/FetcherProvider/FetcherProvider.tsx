@@ -6,7 +6,7 @@ import React, {createContext, useContext, useLayoutEffect} from 'react';
 import {useAuthState} from '../AuthStateProvider';
 import {defaultI18nDict} from '../config/i18nDict';
 import {SystemException} from '../exception';
-import {IFetchOptions} from '../fetchers/types';
+import {IFetchOptions, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
     IResponseFirstError,
@@ -34,7 +34,7 @@ export const useAxiosClient = () => {
 interface IProps {
     children: React.ReactNode
     axiosInstance: AxiosInstance
-    checkIsRefreshTokenRequest?: (config: InternalAxiosRequestConfig) => boolean
+    checkIsRefreshTokenRequest?: (config: IRequestConfig) => boolean
     locale?: string
     onError?: (error: IResponseFirstError) => void
     authorizationPrefix?: string
@@ -103,10 +103,12 @@ const FetcherProvider = ({
         resolve: (value: any) => void,
         reject: (value: SystemException) => void
     ) => {
-        return (originConfig: InternalAxiosRequestConfig) => {
+        return (originConfig: IRequestConfig) => {
             if (isDebug) logger.info('[FetcherProvider] Request add pending queue', {originConfig});
             pendingRequestQueues.push((isTokenRefreshOK: boolean) => {
                 if (isTokenRefreshOK) {
+                    originConfig.pendingRequest = true;
+
                     resolve(axiosInstance(originConfig));
                 } else {
                     reject(new SystemException({
@@ -171,7 +173,7 @@ const FetcherProvider = ({
      */
     const interceptorsResponseError: TInterceptorResponseError = (axiosError) => {
         const response = axiosError.response;
-        const originalConfig = axiosError.config;
+        const originalConfig = axiosError.config as IRequestConfig;
         const status = axiosError.status;
         const responseFirstError = getResponseFirstError(response);
         if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
@@ -183,9 +185,9 @@ const FetcherProvider = ({
             if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
                 const tokens = getTokens();
                 if (isDebug) logger.warning('[FetcherProvider] enter refresh token flow', {refreshToken: tokens?.refreshToken});
-                if (isEmpty(tokens?.refreshToken) || isRefresh) {
+                if (isEmpty(tokens?.refreshToken) || isRefresh || originalConfig.pendingRequest) {
                     isTokenRefreshing = false;
-                    if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI fail, force logout');
+                    if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
                     return Promise.reject(new SystemException(responseFirstError));
                 }

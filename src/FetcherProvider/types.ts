@@ -1,0 +1,29 @@
+import {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+//
+//
+export type TInterceptorRequest = (value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
+export type TInterceptorResponseSuccess = (value: AxiosResponse<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
+export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosResponse<any> | Promise<AxiosResponse<any>>;
+
+
+//
+//
+// export interface IFetchOptions extends InternalAxiosRequestConfig{
+//     requestCode?: string
+// }
+//
+//
+//
+// export interface IUseFetcherArgs<TVariables = {}> {variables?: TVariables, fetchOptions?: IFetchOptions}
+// export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
+//
+
+export interface IFormatResponseErrorReturn {
+    message: string
+    code: string
+    path?: string
+    args?: any
+}
+
+
+export type TGetResponseFormatError = (response?: AxiosResponse) => IFormatResponseErrorReturn

@@ -23,9 +23,6 @@ export default {
         "\\.svg\\?(react|url)$": "<rootDir>/src/__mocks__/svgMock.tsx"
 
     },
-    transformIgnorePatterns: [
-        '/node_modules/(?!@acrool/react-portal)'
-    ],
     setupFilesAfterEnv: ['@testing-library/jest-dom'],
 };
 

@@ -1,0 +1,21 @@
+---
+description: 專案說明
+globs:
+alwaysApply: true
+---
+
+1. 這是一個 Acrool組織旗下 名字為 Acrool React Fetcher 的套件, 套件目的想解決的問題如下
+   - 解決開發者建立初始專案時, 實作API串接時使用的 Fetch (ex:Axios) 心智負擔
+   - 解決因為 Auth 依賴於 Redux, 持久化衝突或不一致, 導致跳到子站時的 Auth問題
+   - 解決 Auth refreshToken 機制在專案中難以單純驗證測試的問題
+   - 解決針對 客製化GraphQL查詢器送出的自訂義方法，包含上傳檔案時的夾帶問題 (可避免只能使用base64)
+2. 概念
+   - 開發者自行管理 Token, 透過中介 auhStateProvider 約束使用方法, 並提供給 AxiosClientProvider 使用
+   - 當 AxiosClientProvider 需要取得 Token, 設定 Token, 刷新 Token, 強制登出時，則由 AuthStateProvider 提供, 則這些方法是由外部提供給 AuthStateProvider props 傳入
+3. 目錄結構：
+   - 根目錄是套件的主要結構, src 則是起始點
+   - /example 目錄是模擬開發者使用該套件時的專案根目錄
+4. 使用方式：
+   - 使用端需要在專案最外層，使用 AuthStateProvider 包裹並提供需要的Props, 然後在包裹 AxiosClientProvider, 中間可因層級問題自行調配層級位置
+     - AuthStateProvider > AxiosClientProvider
+     - AxiosClientProvider > {CustomProvider} > AxiosClientProvider

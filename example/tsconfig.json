@@ -37,8 +37,7 @@
     ],
     "files": [
         "typings/global.d.ts",
-        "typings/module.d.ts",
-        "typings/graphql.d.ts"
+        "typings/module.d.ts"
     ],
     "references": [{ "path": "./tsconfig.node.json" }]
 }

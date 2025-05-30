@@ -1,1 +1,2 @@
-export {default} from './ReactFetcherProvider';
+export {default} from './AppFetcherProvider';
+export {axiosInstance} from './config';

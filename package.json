@@ -1,6 +1,6 @@
 {
   "name": "@acrool/react-fetcher",
-  "version": "0.0.1",
+  "version": "0.0.2-alpha.9",
   "description": "Fetcher library based for Reactjs",
   "keywords": [
     "acrool",
@@ -22,8 +22,7 @@
       "types": "./dist/index.d.ts",
       "browser": "./dist/acrool-react-fetcher.es.js",
       "import": "./dist/acrool-react-fetcher.es.js"
-    },
-    "./dist/index.css": "./dist/react-fetcher.css"
+    }
   },
   "files": [
     "dist"

@@ -1,14 +1,17 @@
 import {graphql, http, HttpResponse} from 'msw';
 
-let validAccessToken = 'mock-login-access-token';
-let validRefreshToken = 'mock-login-refresh-token';
+let validAuthTokens = {
+    accessToken: 'init-accessToken',
+    refreshToken: 'init-refreshToken',
+};
+let refreshCount = 0;
 
 export const handlers = [
 
 
     graphql.query('GetBookmark', ({request, variables}) => {
         const headerAuth = request.headers.get('authorization');
-        if (headerAuth !== `Bearer ${validAccessToken}`) {
+        if (headerAuth !== `Bearer ${validAuthTokens.accessToken}`) {
             return HttpResponse.json<{}>({
                 errors: [
                     {
@@ -42,15 +45,16 @@ export const handlers = [
     graphql.mutation('PutAuthLogin', async ({variables}) => {
         const {input} = variables as any;
         if (input.account === 'tester' && input.password === 'acrool_is_good_task_system') {
-            validAccessToken = 'mock-login-valid-token';
+            validAuthTokens = {
+                accessToken: 'login-accessToken',
+                refreshToken: 'login-refreshToken',
+            };
+
             return HttpResponse.json({
                 data: {
                     authLogin: {
                         name: '測試者',
-                        authTokens: {
-                            accessToken: validAccessToken,
-                            refreshToken: validRefreshToken
-                        }
+                        authTokens: validAuthTokens
                     }
                 }
             });
@@ -64,8 +68,10 @@ export const handlers = [
 
     // authLogout graphql mutation handler
     graphql.mutation('PutAuthLogout', async () => {
-        validAccessToken = '';
-        validRefreshToken = '';
+        validAuthTokens = {
+            accessToken: '',
+            refreshToken: '',
+        };
 
         return HttpResponse.json({
             data: {
@@ -91,7 +97,7 @@ export const handlers = [
             });
         }
 
-        if (variables.input.refreshToken !== validRefreshToken) {
+        if (variables.input.refreshToken !== validAuthTokens.refreshToken) {
             return HttpResponse.json({
                 errors: [
                     {message: '刷新Token失敗'}
@@ -99,16 +105,16 @@ export const handlers = [
             }, {status: 401});
         }
 
+        validAuthTokens = {
+            accessToken: `refresh-${refreshCount}-accessToken`,
+            refreshToken: `refresh-${refreshCount}-refreshToken`,
+        };
+        refreshCount+=1;
 
-        validAccessToken = 'refresh-new-access-token'; // 模擬換新 token
-        validRefreshToken = 'refresh-new-refresh-token';
         return HttpResponse.json({
             data: {
                 authRefreshToken: {
-                    authTokens: {
-                        accessToken: validAccessToken,
-                        refreshToken: validRefreshToken,
-                    }
+                    authTokens: validAuthTokens
                 }
             }
         });

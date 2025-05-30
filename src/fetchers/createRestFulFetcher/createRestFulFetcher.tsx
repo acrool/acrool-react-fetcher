@@ -34,6 +34,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
                     url: document.url,
                     method,
                     data: body,
+                    ...options,
                     headers: {
                         ...options?.headers,
                         'Content-Type': contentType,
@@ -46,6 +47,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
                     url: document.url,
                     method,
                     data: body,
+                    ...options,
                     headers: {
                         ...options?.headers,
                         'Content-Type': contentType,
@@ -57,6 +59,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
                 url: document.url,
                 method,
                 params,
+                ...options,
                 headers: {
                     ...options?.headers,
                     'Content-Type': ERequestHeaderContentType.json,

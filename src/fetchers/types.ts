@@ -1,4 +1,4 @@
-import {AxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig, InternalAxiosRequestConfig} from 'axios';
 
 export interface IFetchOptions {
     pendingRequest?: boolean
@@ -6,6 +6,9 @@ export interface IFetchOptions {
     forceGuest?: boolean
     leastTime?: number // 最少需等待時間 (毫秒)
     timeout?: number // 逾時時間 (毫秒)
+}
+
+export interface IInternalRequestConfig extends InternalAxiosRequestConfig, IFetchOptions{
 }
 
 export interface IRequestConfig extends AxiosRequestConfig, IFetchOptions{

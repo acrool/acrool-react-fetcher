@@ -1,3 +1,3 @@
-export * from './createGraphQL2Fetcher';
+export * from './createGraphQLFetcher';
 export * from './createRestFulFetcher';
 export type {IRequestConfig} from './types';

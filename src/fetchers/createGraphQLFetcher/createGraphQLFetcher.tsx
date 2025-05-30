@@ -13,7 +13,7 @@ import {getVariablesFileMap, TFileMapVariables} from './utils';
  * @param axiosInstance
  * @param query
  */
-const createGraphQL2Fetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
+const createGraphQLFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
     axiosInstance: AxiosInstance,
     query: string,
 ): ((args?: TArgs) => Promise<TData>) => {
@@ -83,4 +83,4 @@ const createGraphQL2Fetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVari
     };
 };
 
-export default createGraphQL2Fetcher;
+export default createGraphQLFetcher;

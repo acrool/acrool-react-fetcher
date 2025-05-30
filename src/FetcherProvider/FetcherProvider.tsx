@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
-import {AxiosInstance} from 'axios';
+import {AxiosInstance, AxiosResponse} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
@@ -9,12 +9,13 @@ import {SystemException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
-    IResponseFirstError,
+    IFormatResponseErrorReturn,
+    TGetResponseFormatError,
     TInterceptorRequest,
     TInterceptorResponseError,
     TInterceptorResponseSuccess
 } from './types';
-import {getResponseFirstError} from './utils';
+import {getRestFulResponseFormatError} from "./utils";
 
 
 let isTokenRefreshing = false;
@@ -36,7 +37,8 @@ interface IProps {
     axiosInstance: AxiosInstance
     checkIsRefreshTokenRequest?: (config: IInternalRequestConfig) => boolean
     locale?: string
-    onError?: (error: IResponseFirstError) => void
+    getResponseFormatError?: TGetResponseFormatError
+    onError?: (error: IFormatResponseErrorReturn) => void
     authorizationPrefix?: string
     i18nDict?: Record<string, Record<number, string>>
     isDebug?: boolean
@@ -53,6 +55,7 @@ const FetcherProvider = ({
     children,
     axiosInstance,
     locale = 'en-US',
+    getResponseFormatError = getRestFulResponseFormatError,
     onError,
     checkIsRefreshTokenRequest,
     authorizationPrefix = 'Bearer',
@@ -176,7 +179,7 @@ const FetcherProvider = ({
         const response = axiosError.response;
         const originalConfig = axiosError.config as IInternalRequestConfig;
         const status = axiosError.status;
-        const responseFirstError = getResponseFirstError(response);
+        const responseFirstError = getResponseFormatError(response);
 
         if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
 

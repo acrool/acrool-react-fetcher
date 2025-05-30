@@ -18,9 +18,12 @@ export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosRespons
 // export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
 //
 
-export interface IResponseFirstError {
+export interface IFormatResponseErrorReturn {
     message: string
     code: string
     path?: string
     args?: any
 }
+
+
+export type TGetResponseFormatError = (response?: AxiosResponse) => IFormatResponseErrorReturn

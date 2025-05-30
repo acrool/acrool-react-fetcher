@@ -9,7 +9,7 @@ import {getVariablesFileMap, TFileMapVariables} from './utils';
 
 
 /**
- * GrqpahQL 的查詢氣
+ * GrqpahQL 的查詢器
  * @param axiosInstance
  * @param query
  */

@@ -2,18 +2,15 @@ import {IRequestConfig} from '../types';
 
 
 
-export interface IUseFetcherArgs<TVariables extends IObjectArgs> {
-    params?: TVariables['params']
-    body?: TVariables['body']
-    variables?: TVariables['variables']
-    fetchOptions?: IRequestConfig
-}
+export type IUseFetcherArgs<TVariables> = TVariables | (TVariables & {
+    fetchOptions?: IRequestConfig,
+})
 
-export interface IObjectArgs {
-    params?: unknown
-    variables?: unknown
-    body?: unknown
-}
+// export interface IObjectArgs {
+//     params?: unknown
+//     variables?: unknown
+//     body?: unknown
+// }
 
 
 

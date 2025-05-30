@@ -1,5 +1,6 @@
 export {default as FetcherProvider} from './FetcherProvider';
-export type {IResponseFirstError} from './types';
+export {getGraphQLResponseFormatError, getRestFulResponseFormatError} from './utils';
+export type {TGetResponseFormatError} from './types';
 
 
 

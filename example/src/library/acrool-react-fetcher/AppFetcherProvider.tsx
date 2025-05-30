@@ -1,11 +1,10 @@
 import {jsonDecode} from '@acrool/js-utils/string';
-import {AuthStateProvider, FetcherProvider} from '@acrool/react-fetcher';
+import {AuthStateProvider, FetcherProvider, getGraphQLResponseFormatError} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
-import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
+import {axiosInstance} from '@/library/acrool-react-fetcher/config';
 import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
-import {axiosInstance} from "@/library/acrool-react-fetcher/config";
 
 
 
@@ -19,9 +18,7 @@ const refreshingHeaderKey = 'X-Requested-Refresh-Token';
 const AppFetcherProvider = ({
     children
 }: IProps) => {
-    const handleChangeLocale = (newLocale: string) => {
-        dayjs.locale(newLocale);
-    };
+
     const {locale} = useLocale();
 
     const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
@@ -58,6 +55,7 @@ const AppFetcherProvider = ({
             axiosInstance={axiosInstance}
             locale={locale}
             isDebug
+            getResponseFormatError={getGraphQLResponseFormatError}
             checkIsRefreshTokenRequest={config => {
                 return config.headers[refreshingHeaderKey] === '1';
             }}

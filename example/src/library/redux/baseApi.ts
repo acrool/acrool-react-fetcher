@@ -53,7 +53,6 @@ export const baseApi = createApi({
             endpointDefinition
         });
     },
-    // baseQuery: fetchBaseQuery(),
     endpoints: () => ({}),
     tagTypes: [
         'Bookmark',

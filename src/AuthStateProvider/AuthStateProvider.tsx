@@ -74,7 +74,6 @@ const AuthStateProvider = ({
         } else {
             nextTokens = tokensOrUpdater;
         }
-        logger.danger('更新Token', nextTokens);
         onSetTokens(nextTokens);
         setIsAuth(isNotEmpty(nextTokens));
         setLastUpdateTimestamp(Date.now());

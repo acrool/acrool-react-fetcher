@@ -1,11 +1,11 @@
-import {InternalAxiosRequestConfig} from 'axios';
+import {AxiosRequestConfig} from 'axios';
 
-
-
-export interface IFetchOptions extends InternalAxiosRequestConfig{
+export interface IFetchOptions {
     requestCode?: string
+    forceGuest?: boolean
+    leastTime?: number // 最少需等待時間 (毫秒)
+    timeout?: number // 逾時時間 (毫秒)
 }
 
-export interface IUseFetcherArgs<TVariables = {}> {variables?: TVariables, fetchOptions?: IFetchOptions}
-export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
-
+export interface IRequestConfig extends AxiosRequestConfig, IFetchOptions{
+}

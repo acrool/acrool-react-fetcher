@@ -1,2 +1,3 @@
-export {default as graphqlFetcher} from './graphqlFetcher';
-export type {IFetchOptions, IUseFetcherArgs, IUseSubscriptionArgs} from './types';
+export * from './createGraphQL2Fetcher';
+export * from './createRestFulFetcher';
+export type {IRequestConfig} from './types';

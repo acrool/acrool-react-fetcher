@@ -1,10 +1,12 @@
 import {jsonDecode} from '@acrool/js-utils/string';
 import {AuthStateProvider, FetcherProvider} from '@acrool/react-fetcher';
+import {useLocale} from '@acrool/react-locale';
 import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 
 import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
-import {useLocale} from "@acrool/react-locale";
+import {axiosInstance} from "@/library/acrool-react-fetcher/config";
+
 
 
 interface IProps {
@@ -53,6 +55,7 @@ const AppFetcherProvider = ({
         }}
     >
         <FetcherProvider
+            axiosInstance={axiosInstance}
             locale={locale}
             isDebug
             checkIsRefreshTokenRequest={config => {

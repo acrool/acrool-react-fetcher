@@ -4,9 +4,10 @@ import {AxiosInstance, InternalAxiosRequestConfig} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
+import {defaultI18nDict} from '../config/i18nDict';
 import {SystemException} from '../exception';
+import {IFetchOptions} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
-import {axiosInstance, defaultI18nDict} from './config';
 import {
     IResponseFirstError,
     TInterceptorRequest,
@@ -19,16 +20,25 @@ import {getResponseFirstError} from './utils';
 let isTokenRefreshing = false;
 let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
 
-export const AxiosClientContext = createContext<AxiosInstance>(axiosInstance);
-export const useAxiosClient = () => useContext(AxiosClientContext);
+export const AxiosClientContext = createContext<AxiosInstance|null>(null);
+
+export const useAxiosClient = () => {
+    const axiosInstance = useContext(AxiosClientContext);
+
+    if(axiosInstance){
+        throw new Error('useAxiosClient must be used inside FetcherProvider');
+    }
+    return axiosInstance;
+};
 
 interface IProps {
     children: React.ReactNode
-    i18nDict?: Record<string, Record<number, string>>
+    axiosInstance: AxiosInstance
     checkIsRefreshTokenRequest?: (config: InternalAxiosRequestConfig) => boolean
     locale?: string
     onError?: (error: IResponseFirstError) => void
     authorizationPrefix?: string
+    i18nDict?: Record<string, Record<number, string>>
     isDebug?: boolean
 }
 
@@ -41,12 +51,13 @@ interface IProps {
  */
 const FetcherProvider = ({
     children,
+    axiosInstance,
     locale = 'en-US',
     onError,
-    i18nDict,
     checkIsRefreshTokenRequest,
     authorizationPrefix = 'Bearer',
-    isDebug = false
+    i18nDict,
+    isDebug = false,
 }: IProps) => {
 
     const {
@@ -115,12 +126,16 @@ const FetcherProvider = ({
     const interceptorsRequest: TInterceptorRequest = (originConfig) => {
         return new Promise((resolve, reject) => {
             originConfig.headers['Accept-Language'] = locale;
+
             const accessTokens = getTokens()?.accessToken;
-            if(accessTokens){
+            const forceGuest = (originConfig.fetchOptions as IFetchOptions)?.forceGuest;
+
+            if(!forceGuest && accessTokens){
                 originConfig.headers['Authorization'] = [authorizationPrefix, accessTokens]
                     .filter(str => str)
                     .join(' ');
             }
+
             // 判斷是否為 refreshToken API
             const isRefresh = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig): false;
             if(!isRefresh && isTokenRefreshing){
@@ -195,7 +210,11 @@ const FetcherProvider = ({
         return Promise.reject(new SystemException(responseFirstError));
     };
 
-    return <AxiosClientContext.Provider value={axiosInstance}>{children}</AxiosClientContext.Provider>;
+    return <AxiosClientContext.Provider
+        value={axiosInstance}
+    >
+        {children}
+    </AxiosClientContext.Provider>;
 };
 
 export default FetcherProvider;

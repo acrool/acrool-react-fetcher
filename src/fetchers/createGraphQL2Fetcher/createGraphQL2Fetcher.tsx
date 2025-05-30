@@ -1,16 +1,20 @@
-import {axiosInstance} from '../FetcherProvider/config';
-import {IFetchOptions, IUseFetcherArgs} from './types';
+import {delay} from '@acrool/js-utils/promise';
+import {AxiosInstance} from 'axios';
+
+import {fetcherLeastTime} from '../config';
+import {IUseFetcherArgs} from './types';
 import {getVariablesFileMap, TFileMapVariables} from './utils';
 
 // doc: https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query#usage-example-isreacthook-true
-const delay = (ms: number) => new Promise(resolve => {
-    setTimeout(() => {
-        resolve(true);
-    }, ms);
-});
 
 
-const graphqlFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
+/**
+ * GrqpahQL 的查詢氣
+ * @param axiosInstance
+ * @param query
+ */
+const createGraphQL2Fetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
+    axiosInstance: AxiosInstance,
     query: string,
 ): ((args?: TArgs) => Promise<TData>) => {
 
@@ -19,6 +23,7 @@ const graphqlFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>
         let contentType: string|undefined = undefined;
         const options = args?.fetchOptions;
         const variables = args?.variables;
+
         let isMultipartFormData = false;
         if(variables){
             const varOptions = getVariablesFileMap<TArgs['variables']>(variables);
@@ -72,10 +77,10 @@ const graphqlFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>
                 ...options,
                 headers,
             }),
-            delay(400),
+            delay(options?.leastTime ?? fetcherLeastTime),
         ]);
         return res.data.data;
     };
 };
 
-export default graphqlFetcher;
+export default createGraphQL2Fetcher;

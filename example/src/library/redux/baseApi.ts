@@ -1,6 +1,8 @@
-import {graphqlFetcher, IFetchOptions} from '@acrool/react-fetcher';
+import {createGraphQLFetcher, IRequestConfig} from '@acrool/react-fetcher';
 import {createApi, defaultSerializeQueryArgs} from '@reduxjs/toolkit/query/react';
 import {Mutex} from 'async-mutex';
+
+import {axiosInstance} from '@/library/acrool-react-fetcher';
 
 const mutex = new Mutex();
 
@@ -8,9 +10,10 @@ interface IQuery {
     document: string
     args: {
         variables: any,
-        fetchOptions?: IFetchOptions,
+        fetchOptions?: IRequestConfig,
     }
 }
+
 
 
 export const baseQueryWithReAuthGraphql: any = async (
@@ -20,7 +23,7 @@ export const baseQueryWithReAuthGraphql: any = async (
 ) => {
     await mutex.waitForUnlock();
     try {
-        const data = await graphqlFetcher(query.document)(query.args);
+        const data = await createGraphQLFetcher(axiosInstance, query.document)(query.args);
         return {
             data: data,
             meta: {},

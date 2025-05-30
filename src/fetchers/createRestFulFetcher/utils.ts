@@ -14,22 +14,21 @@ export function flattenObjectToFormData(
 
 
     if (contentType === ERequestHeaderContentType.formData) {
-        const formData = objToFormData(obj);
         return {
             contentType,
-            body: formData,
+            body: objToFormData(obj),
         };
+    }
 
-    } else if (contentType === ERequestHeaderContentType.formUrlDecode) {
+    if (contentType === ERequestHeaderContentType.formUrlDecode) {
         return {
             contentType,
             body: new URLSearchParams(obj as Record<string, string>).toString(),
         };
-
-    } else {
-        return {
-            contentType,
-            body: JSON.stringify(obj),
-        };
     }
+
+    return {
+        contentType,
+        body: JSON.stringify(obj),
+    };
 }

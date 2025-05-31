@@ -1,4 +1,5 @@
 import {IRequestConfig} from '../types';
+import {ERequestMethod} from './config';
 
 
 export type IUseFetcherArgs<TVariables> = TVariables | (TVariables & {
@@ -12,5 +13,5 @@ export interface IDocument {
 
 export type TFileMapVariables = Record<string, any>;
 export type TBody = Record<string, any> | FormData | File[] | File;
-export type TContentTypeResolver = (method: string) => string;
+export type TContentTypeResolver = (method: ERequestMethod) => string;
 

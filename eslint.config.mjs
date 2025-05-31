@@ -7,6 +7,9 @@ import stylisticTs from '@stylistic/eslint-plugin-ts';
 export default [
     {
         ignores: [
+            "**/*.stories.tsx",
+            "**/*.test.ts",
+            "**/*.spec.ts",
         ],
     },
     {

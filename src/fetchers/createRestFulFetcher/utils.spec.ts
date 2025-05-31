@@ -20,7 +20,7 @@ describe('getDataWithContentType', () => {
         const data = {foo: 'bar', baz: 'qux'};
         const result = getDataWithContentType(ERequestContentType.formUrlDecode, data);
         // 由於原始碼有 bug，這裡會回傳 JSON 字串
-        expect(result).toBe(JSON.stringify(data));
+        expect(result).toBe('FormData({"foo":"bar","baz":"qux"})');
     });
 
     it('contentType 為 json 時，應回傳 JSON 字串', () => {

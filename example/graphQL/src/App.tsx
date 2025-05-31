@@ -3,7 +3,7 @@ import './App.css';
 import {createBrowserHistory} from 'history';
 import {Route, Routes} from 'react-router-dom';
 
-import {AuthRoute} from '@/library/react-router';
+import {AuthRoute, SignRoute} from '@/library/react-router';
 
 import Banner from './components/Banner';
 import Dashboard from './views/Dashboard';
@@ -17,11 +17,11 @@ const history = createBrowserHistory({window});
 const MainRouter = () => {
     return  <Routes>
 
-        <Route element={<AuthRoute/>}>
+        <Route element={<SignRoute/>}>
             <Route path="/" element={<Dashboard/>} />
         </Route>
 
-        <Route path="sign" element={<AuthRoute isSignRoute/>}>
+        <Route path="sign" element={<AuthRoute/>}>
             <Route path="login" element={<Login/>} />
         </Route>
 

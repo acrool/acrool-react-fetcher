@@ -12,8 +12,7 @@ export const getDataWithContentType = (
     contentType: ERequestContentType,
     data: TBody = {},
 ): FormData | string => {
-    if (contentType === ERequestContentType.formData) return objToFormData(data);
-    if (contentType === ERequestContentType.formUrlDecode) new URLSearchParams(data as Record<string, string>).toString();
+    if ([ERequestContentType.formData, ERequestContentType.formUrlDecode].includes(contentType)) return objToFormData(data);
     return JSON.stringify(data);
 };
 

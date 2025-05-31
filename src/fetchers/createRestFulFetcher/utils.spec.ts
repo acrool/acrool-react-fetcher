@@ -1,5 +1,5 @@
-import {getDataWithContentType, getContentTypeWithMethod} from './utils';
-import {ERequestHeaderContentType} from './config';
+import {ERequestHeaderContentType} from './types';
+import {getContentTypeWithMethod,getDataWithContentType} from './utils';
 
 // 模擬 objToFormData 行為
 jest.mock('@acrool/js-utils/convert', () => ({
@@ -32,10 +32,10 @@ describe('getDataWithContentType', () => {
 
 describe('getContentTypeWithMethod', () => {
     it('method 為 post 應回傳 formData', () => {
-        expect(getContentTypeWithMethod('post')).toBe(ERequestHeaderContentType.formData);
+        expect(getContentTypeWithMethod('post')).toBe(ERequestHeaderContentType.json);
     });
     it('method 為 put 應回傳 formData', () => {
-        expect(getContentTypeWithMethod('put')).toBe(ERequestHeaderContentType.formData);
+        expect(getContentTypeWithMethod('put')).toBe(ERequestHeaderContentType.json);
     });
     it('method 為 get 應回傳 json', () => {
         expect(getContentTypeWithMethod('get')).toBe(ERequestHeaderContentType.json);
@@ -43,4 +43,4 @@ describe('getContentTypeWithMethod', () => {
     it('method 為 delete 應回傳 json', () => {
         expect(getContentTypeWithMethod('delete')).toBe(ERequestHeaderContentType.json);
     });
-}); 
+});

@@ -3,79 +3,48 @@ import {AxiosInstance} from 'axios';
 
 import {fetcherLeastTime} from '../config';
 import {IRequestConfig} from '../types';
-import {ERequestHeaderContentType} from './config';
-import {IDocument, IUseFetcherArgs, TFileMapVariables} from './types';
-import {flattenObjectToFormData} from './utils';
+import {IDocument, IUseFetcherArgs, TContentTypeResolver, TFileMapVariables} from './types';
+import {getContentTypeWithMethod, getDataWithContentType} from './utils';
+
+
+
+
 
 
 /**
  * RestFul 的查詢器
  * @param axiosInstance
  * @param document
+ * @param contentTypeResolver
  */
 const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
     axiosInstance: AxiosInstance,
-    document: IDocument
+    document: IDocument,
+    contentTypeResolver: TContentTypeResolver = getContentTypeWithMethod
 ): ((args?: TArgs) => Promise<TData>) => {
-
     return async (args?: TArgs) => {
-
-        const method = document?.method;
+        const method = document?.method || '';
         const options = args?.fetchOptions?.fetchOptions;
         const params = args?.params;
+        const contentType = options?.headers?.contentType ?? contentTypeResolver(method);
 
-        /**
-         * 取得 Axios 設定
-         */
-        const getAxiosConfig = (): IRequestConfig => {
-            if(method && ['post','put'].includes(method.toLowerCase())){
-                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeaderContentType.formData);
-                return {
-                    url: document.url,
-                    method,
-                    data: body,
-                    ...options,
-                    headers: {
-                        ...options?.headers,
-                        'Content-Type': contentType,
-                    },
-                };
-            }
-            if(method && ['delete'].includes(method.toLowerCase())){
-                const {body, contentType} = flattenObjectToFormData(args?.body ?? {}, ERequestHeaderContentType.formUrlDecode);
-                return {
-                    url: document.url,
-                    method,
-                    data: body,
-                    ...options,
-                    headers: {
-                        ...options?.headers,
-                        'Content-Type': contentType,
-                    }
-                };
-            }
-
-            return {
-                url: document.url,
-                method,
-                params,
-                ...options,
-                headers: {
-                    ...options?.headers,
-                    'Content-Type': ERequestHeaderContentType.json,
-                }
-            };
+        const config: IRequestConfig = {
+            url: document.url,
+            method,
+            params,
+            data: getDataWithContentType(contentType, args?.body),
+            ...options,
+            headers: {
+                ...options?.headers,
+                'Content-Type': contentType,
+            },
         };
 
-
-
         const [res] = await Promise.all([
-            axiosInstance(getAxiosConfig()),
+            axiosInstance(config),
             delay(options?.leastTime ?? fetcherLeastTime),
         ]);
-
         return res.data;
-
     };
 };
 

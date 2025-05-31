@@ -6,13 +6,6 @@ export type IUseFetcherArgs<TVariables> = TVariables | (TVariables & {
     fetchOptions?: IRequestConfig,
 })
 
-// export interface IObjectArgs {
-//     params?: unknown
-//     variables?: unknown
-//     body?: unknown
-// }
-
-
 
 export interface IDocument {
     url: string
@@ -20,3 +13,6 @@ export interface IDocument {
 }
 
 export type TFileMapVariables = Record<string, any>;
+
+export type TBody = Record<string, any> | FormData | File[] | File;
+export type TContentTypeResolver = (method: string) => string;

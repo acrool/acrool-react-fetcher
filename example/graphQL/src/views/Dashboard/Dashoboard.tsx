@@ -4,14 +4,16 @@ import {useLocale} from '@acrool/react-locale';
 import React from 'react';
 import {useNavigate} from 'react-router-dom';
 
-import {useGetBookmarkQuery} from '@/store/__generated__';
-import {useLogout} from '@/store/main/auth/hook';
+import {useAppDispatch} from '@/library/redux';
+import {bookmarkApi, useGetBookmarkQuery, usePutAuthLogoutMutation} from '@/store/__generated__';
 
 const Dashboard = () => {
     const navigate = useNavigate();
-    const {locale, setLocale} = useLocale();
+    const {t, locale, setLocale} = useLocale();
+    const dispatch = useAppDispatch();
 
-    const {updateTokens, getTokens} = useAuthState();
+    const {updateTokens, getTokens, isAuth} = useAuthState();
+    const [AuthLogoutMutation] = usePutAuthLogoutMutation();
 
     const Bookmark1 = useGetBookmarkQuery({
         variables: {bookmarkId: '1'}
@@ -22,7 +24,27 @@ const Dashboard = () => {
     const Bookmark3 = useGetBookmarkQuery({
         variables: {bookmarkId: '3'}
     });
-    const logout = useLogout();
+
+
+    const handleLogout = () => {
+        AuthLogoutMutation()
+            .unwrap()
+            .then(res => {
+                updateTokens(null);
+                // dispatch(actions.logout());
+                // navigate(loginRoutePath);
+                setTimeout(() => {
+                    dispatch(bookmarkApi.util.invalidateTags(
+                        [
+                            {type: 'Bookmark'}
+                        ]
+                    ));
+                }, 10);
+
+                console.log(t('message.logout', {def: 'Thank you for your use, you have successfully logged out'}));
+            });
+    };
+
 
     /**
      * 模擬AccessToken失效, 刷新成功, 重發請求成功
@@ -79,7 +101,7 @@ const Dashboard = () => {
             This page dashboard.
         </p>
         <Flex column className="gap-2 justify-content-center">
-            <button type="button" onClick={logout}>Logout</button>
+            <button type="button" onClick={handleLogout}>Logout</button>
             <button type="button" onClick={() => Bookmark1.refetch()}>reFetch</button>
             <button type="button" onClick={handleMockTokenInvalid}>Mock reFetch + token invalid</button>
             <button type="button" onClick={handleMockTokenInvalidRefreshFail}>Mock reFetch + token invalid + refresh token fail</button>
@@ -93,8 +115,15 @@ const Dashboard = () => {
         {Bookmark1.data?.bookmark?.name}
         {Bookmark2.data?.bookmark?.name}
 
-        {JSON.stringify(getTokens(), null, 2)}
-        Locale: {locale}
+        <div>
+            AuthTokens: {JSON.stringify(getTokens(), null, 2)}
+        </div>
+        <div>
+            Locale: {locale}
+        </div>
+        <div>
+            isAuth: {String(isAuth)}
+        </div>
     </div>;
 };
 

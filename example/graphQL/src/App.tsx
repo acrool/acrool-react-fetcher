@@ -17,13 +17,15 @@ const history = createBrowserHistory({window});
 const MainRouter = () => {
     return  <Routes>
 
-        <Route element={<SignRoute/>}>
+
+        <Route path="sign" element={<SignRoute/>}>
+            <Route path="login" element={<Login/>} />
+        </Route>
+
+        <Route element={<AuthRoute/>}>
             <Route path="/" element={<Dashboard/>} />
         </Route>
 
-        <Route path="sign" element={<AuthRoute/>}>
-            <Route path="login" element={<Login/>} />
-        </Route>
 
         {/* NotFound */}
         <Route path="*" element={<NotFound/>}/>

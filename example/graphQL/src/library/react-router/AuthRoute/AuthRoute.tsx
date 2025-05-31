@@ -9,10 +9,9 @@ const AuthRoute = () => {
     const {pathname} = useLocation();
     const {isAuth} = useAuthState();
 
-    if(isAuth){
-        return <Navigate to="/" state={{from: pathname}} replace/>;
+    if(!isAuth){
+        return <Navigate to="/sign/login" state={{from: pathname}} replace/>;
     }
-
     return <Outlet/>;
 };
 

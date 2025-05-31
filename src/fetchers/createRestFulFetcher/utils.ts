@@ -23,8 +23,8 @@ export const getDataWithContentType = (
  * @param method
  */
 export const getContentTypeWithMethod: TContentTypeResolver = (method) => {
-    if (['post', 'put'].includes(method.toLowerCase())) {
-        return ERequestHeaderContentType.formData;
-    }
+    // if (['post', 'put'].includes(method.toLowerCase())) {
+    //     return ERequestHeaderContentType.formData;
+    // }
     return ERequestHeaderContentType.json;
 };

@@ -1,4 +1,4 @@
-import {ERequestHeaderContentType} from './types';
+import {ERequestHeaderContentType} from './config';
 import {getContentTypeWithMethod,getDataWithContentType} from './utils';
 
 // 模擬 objToFormData 行為

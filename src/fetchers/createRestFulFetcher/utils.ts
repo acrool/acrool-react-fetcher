@@ -1,6 +1,7 @@
 import {objToFormData} from '@acrool/js-utils/convert';
 
-import {TBody, TContentTypeResolver, ERequestHeaderContentType} from './types';
+import {ERequestHeaderContentType} from './config';
+import {TBody, TContentTypeResolver} from './types';
 
 /**
  * 依據 Content-Type 處理 body

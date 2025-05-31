@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty, isNotEmpty} from '@acrool/js-utils/equal';
-import React, {createContext, ReactNode, useContext, useEffect, useState} from 'react';
+import React, {createContext, ReactNode, useContext, useEffect, useLayoutEffect, useState} from 'react';
 
 import {SystemException} from '../exception';
 import {
@@ -56,12 +56,11 @@ const AuthStateProvider = ({
     onForceLogout
 }: AuthStateProviderProps) => {
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
-    const [isAuth, setIsAuth] = useState<boolean>(false);
+    const [isAuth, setIsAuth] = useState<boolean>(() => {
+        return isNotEmpty(onGetTokens());
+    });
 
 
-    useEffect(() => {
-        setIsAuth(isNotEmpty(onGetTokens()));
-    }, []);
 
     /**
      * 更新 tokens

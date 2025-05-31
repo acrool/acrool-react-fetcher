@@ -1,8 +1,12 @@
 import {graphql, http, HttpResponse} from 'msw';
 
+// let validAuthTokens = {
+//     accessToken: 'init-accessToken',
+//     refreshToken: 'init-refreshToken',
+// };
 let validAuthTokens = {
-    accessToken: 'init-accessToken',
-    refreshToken: 'init-refreshToken',
+    accessToken: 'login-accessToken',
+    refreshToken: 'login-refreshToken',
 };
 let refreshCount = 0;
 

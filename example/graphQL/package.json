@@ -16,7 +16,7 @@
   "dependencies": {
     "@acrool/js-logger": "^1.0.27",
     "@acrool/react-block": "^1.1.2",
-    "@acrool/react-fetcher": "0.0.2-alpha.14",
+    "@acrool/react-fetcher": "link:../../",
     "@acrool/react-grid": "6.0.8-alpha.1",
     "@acrool/react-locale": "^4.0.0",
     "@acrool/react-providers": "^1.0.2",

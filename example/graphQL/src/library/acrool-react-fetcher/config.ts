@@ -5,5 +5,5 @@ export const axiosInstance = createAxiosInstance({
 });
 
 
-export const persistAuthKey = 'persist:acrool-auth';
+export const persistAuthKey = 'persist:acrool-fetcher-auth';
 export const refreshingHeaderKey = 'X-Requested-Refresh-Token';

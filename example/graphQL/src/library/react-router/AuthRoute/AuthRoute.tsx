@@ -8,6 +8,8 @@ import {Navigate, Outlet, useLocation} from 'react-router-dom';
 const AuthRoute = () => {
     const {pathname} = useLocation();
     const {isAuth} = useAuthState();
+    console.log('isAuth', isAuth);
+    
 
     if(!isAuth){
         return <Navigate to="/sign/login" state={{from: pathname}} replace/>;

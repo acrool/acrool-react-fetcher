@@ -29,15 +29,9 @@
     clsx "^2.1.1"
     framer-motion "^12.7.4"
 
-"@acrool/react-fetcher@0.0.2-alpha.14":
-  version "0.0.2-alpha.14"
-  resolved "https://registry.yarnpkg.com/@acrool/react-fetcher/-/react-fetcher-0.0.2-alpha.14.tgz#b34f9324ca4db76489bc08a1f40f93686cb97d54"
-  integrity sha512-ZWOsS2lS4j4VUW2AF/DWWA5nBn5nmCQwI1hVBrHuehc8OId2820vBIVQllVJ7GmE7sRRlM1paFPmCdoSrUwkCA==
-  dependencies:
-    "@acrool/js-logger" "^1.0.27"
-    "@acrool/js-utils" "^3.2.25"
-    axios "^1.9.0"
-    clsx "^2.1.1"
+"@acrool/react-fetcher@link:../..":
+  version "0.0.0"
+  uid ""
 
 "@acrool/react-grid@6.0.8-alpha.1":
   version "6.0.8-alpha.1"

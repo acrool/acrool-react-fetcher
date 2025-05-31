@@ -5,11 +5,11 @@ import {fetcherLeastTime} from '../config';
 import {IUseFetcherArgs} from './types';
 import {getVariablesFileMap, TFileMapVariables} from './utils';
 
-// doc: https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query#usage-example-isreacthook-true
 
 
 /**
- * GrqpahQL 的查詢器
+ * GraphQL 的查詢器
+ * https://the-guild.dev/graphql/codegen/plugins/typescript/typescript-react-query#usage-example-isreacthook-true
  * @param axiosInstance
  * @param query
  */

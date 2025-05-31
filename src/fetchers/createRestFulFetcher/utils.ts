@@ -24,13 +24,7 @@ export const getDataWithContentType = (
  */
 export const getContentTypeWithMethod: TContentTypeResolver = (method) => {
     if (['post', 'put'].includes(method.toLowerCase())) {
-        // 預設 post/put 用 application/json
-        return ERequestHeaderContentType.json;
+        return ERequestHeaderContentType.formData;
     }
-    if (['delete'].includes(method.toLowerCase())) {
-        // 預設 delete 用 application/json
-        return ERequestHeaderContentType.json;
-    }
-    // 其他（如 get）
     return ERequestHeaderContentType.json;
 };

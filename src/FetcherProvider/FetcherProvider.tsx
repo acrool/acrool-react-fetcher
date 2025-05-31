@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
-import {AxiosInstance, AxiosResponse} from 'axios';
+import {AxiosInstance} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
@@ -15,7 +15,7 @@ import {
     TInterceptorResponseError,
     TInterceptorResponseSuccess
 } from './types';
-import {getRestFulResponseFormatError} from "./utils";
+import {getRestFulResponseFormatError} from './utils';
 
 
 let isTokenRefreshing = false;

@@ -3,6 +3,7 @@ import {AxiosInstance} from 'axios';
 
 import {fetcherLeastTime} from '../config';
 import {IRequestConfig} from '../types';
+import {ERequestMethod} from './config';
 import {IDocument, IUseFetcherArgs, TContentTypeResolver, TFileMapVariables} from './types';
 import {getContentTypeWithMethod, getDataWithContentType} from './utils';
 
@@ -24,7 +25,7 @@ const createRestFulFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVaria
         const method = document?.method || '';
         const options = args?.fetchOptions?.fetchOptions;
         const params = args?.params;
-        const contentType = options?.headers?.contentType ?? contentTypeResolver(method.toLowerCase());
+        const contentType = options?.headers?.contentType ?? contentTypeResolver(method.toUpperCase() as ERequestMethod);
 
         const config: IRequestConfig = {
             url: document.url,

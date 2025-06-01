@@ -1,4 +1,4 @@
-import {TLocaleDictionaries, TLocaleDictionariesAsync} from '@acrool/react-locale';
+import {TLocaleDictionariesAsync} from '@acrool/react-locale';
 
 import {asset} from '@/utils/config';
 
@@ -17,19 +17,11 @@ import {asset} from '@/utils/config';
 export enum ELocales {
     enUS = 'en-US',
     zhTW = 'zh-TW',
-    // zhCN = 'zh-CN',
-    // thTH = 'th-TH',
-    // idID = 'id-ID',
-    // viVN = 'vi-VN',
 }
 
 export const serverDictionaries: TLocaleDictionariesAsync = {
     [ELocales.enUS]: () => import('../locales/en-US'),
     [ELocales.zhTW]: () => import('../locales/zh-TW'),
-    // [ELocales.zhCN]: require('locales/zh-CN').default,
-    // [ELocales.thTH]: require('locales/th-TH').default,
-    // [ELocales.idID]: require('locales/id-ID').default,
-    // [ELocales.viVN]: require('locales/vi-VN').default,
 };
 
 export const DEFAULT_LOCALE = ELocales.zhTW;
@@ -39,8 +31,4 @@ export const DEFAULT_LOCALE = ELocales.zhTW;
 export const optionData: Array<{text: string, value: ELocales, avatarUrl: string, code: string}> = [
     {text: 'ENGLISH', value: ELocales.enUS, code: 'en', avatarUrl: asset('/images/country/USA.webp')},
     {text: '繁體中文', value: ELocales.zhTW, code: 'zh-tw', avatarUrl: asset('/images/country/TWN.webp')},
-    // {text: '简体中文', value: ELocales.zhCN},
-    // {text: 'ยาสุฟุมิ', value: ELocales.thTH},
-    // {text: 'Indonesia', value: ELocales.idID},
-    // {text: 'Tiếng Việt', value: ELocales.viVN},
 ];

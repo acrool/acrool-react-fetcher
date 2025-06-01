@@ -1,5 +1,5 @@
 import {useAuthState} from '@acrool/react-fetcher';
-import {Navigate, Outlet} from 'react-router-dom';
+import {Navigate, Outlet} from 'react-router';
 
 
 /**
@@ -7,6 +7,8 @@ import {Navigate, Outlet} from 'react-router-dom';
  */
 const SignRoute = () => {
     const {isAuth} = useAuthState();
+    console.log('isAuth', isAuth);
+
     if(isAuth){
         return <Navigate to="/" replace/>;
     }

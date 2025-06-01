@@ -1,4 +1,3 @@
-// import log from '@acrool/js-utils/log';
 import {jsonDecode} from '@acrool/js-utils/string';
 
 import {persistKey, persistVersion} from '@/config/app';
@@ -64,14 +63,14 @@ console.log('info: ', JSON.stringify({
 
 const preloadedState = getPreloadedState();
 const {store, reduxSelector, reduxDispatch} = configureStore(preloadedState);
-const history = createReduxHistory(store);
+// const history = createReduxHistory(store);
 
 const appTheme = siteConfig.theme;
 
 
 export {
     store,
-    history,
+    // history,
     gridConfig,
     appTheme,
     reduxSelector,

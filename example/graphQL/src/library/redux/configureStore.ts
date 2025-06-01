@@ -1,6 +1,5 @@
 import {configureStore} from '@reduxjs/toolkit';
 
-import {routerMiddleware} from '@/library/react-router/redux';
 import {baseApi} from '@/library/redux/baseApi';
 import appReducer, {TAppState} from '@/store/appReducer';
 import appState from '@/store/appState';
@@ -17,7 +16,7 @@ import {ITypedSelector} from './types';
 export default function configureAppStore(preloadedState: any = {}) {
     const isDev = process.env.NODE_ENV !== 'production';
 
-    const middlewares = [syncStoreMiddleware, routerMiddleware];
+    const middlewares = [syncStoreMiddleware];
     const enhancers = undefined;
 
 

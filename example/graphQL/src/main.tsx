@@ -1,20 +1,21 @@
 import '@acrool/react-grid/dist/index.css';
+import '@acrool/react-dialog/dist/index.css';
+import '@acrool/react-block/dist/index.css';
+import '@acrool/react-toaster/dist/index.css';
 import './index.css';
 
 import {GridThemeProvider} from '@acrool/react-grid';
 import composedProviders, {providerWithProps} from '@acrool/react-providers';
 import {createElement} from 'react';
 import ReactDOM from 'react-dom/client';
-import {HistoryRouter as Router} from 'redux-first-history/rr6';
 
-import AppFetcherProvider from '@/library/acrool-react-fetcher';
+import AppFetcherProvider, {AppAuthStateProvider} from '@/library/acrool-react-fetcher';
 import ReactLocaleProvider from '@/library/acrool-react-locale';
 import {Provider as ReduxProvider} from '@/library/redux';
 
 import App from './App';
-import {appTheme, gridConfig, history, store} from './setup';
+import {gridConfig, store} from './setup';
 
-const routePrefixPath = '';
 
 function renderApp() {
     ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
@@ -23,7 +24,7 @@ function renderApp() {
                 providerWithProps(ReduxProvider, {store}),
                 // providerWithProps(ApolloProvider, {client: apolloClient}),
                 providerWithProps(ReactLocaleProvider, {}),
-                providerWithProps(Router, {history: history, basename: routePrefixPath}),
+                providerWithProps(AppAuthStateProvider, {}),
                 providerWithProps(AppFetcherProvider, {}),
                 providerWithProps(GridThemeProvider, {gridTheme: gridConfig}),
             ]

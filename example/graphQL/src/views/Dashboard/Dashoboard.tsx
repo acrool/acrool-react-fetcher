@@ -2,7 +2,7 @@ import {useAuthState} from '@acrool/react-fetcher';
 import {Flex} from '@acrool/react-grid';
 import {useLocale} from '@acrool/react-locale';
 import React from 'react';
-import {useNavigate} from 'react-router-dom';
+import {useNavigate} from 'react-router';
 
 import {useAppDispatch} from '@/library/redux';
 import {bookmarkApi, useGetBookmarkQuery, usePutAuthLogoutMutation} from '@/store/__generated__';

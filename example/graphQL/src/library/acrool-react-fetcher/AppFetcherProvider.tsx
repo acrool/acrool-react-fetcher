@@ -1,11 +1,8 @@
-import {jsonDecode} from '@acrool/js-utils/string';
-import {AuthStateProvider, FetcherProvider, getGraphQLResponseFormatError} from '@acrool/react-fetcher';
+import {FetcherProvider, getGraphQLResponseFormatError} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import React, {JSX} from 'react';
 
-import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
-
-import {axiosInstance, persistAuthKey, refreshingHeaderKey} from './config';
+import {axiosInstance, refreshingHeaderKey} from './config';
 
 
 
@@ -14,54 +11,34 @@ interface IProps {
 }
 
 
+/**
+ * AppFetcherProvider is a wrapper component that provides a configured FetcherProvider instance.
+ * It integrates application-specific settings like locale, axios instance, and debug options,
+ * and passes them to the FetcherProvider for consistent API request handling across the app.
+ *
+ * @param {Object} props - The component props.
+ * @param {React.ReactNode} props.children - The child components to be wrapped within the FetcherProvider.
+ *
+ * @returns {JSX.Element} A FetcherProvider component with the configured options.
+ */
 const AppFetcherProvider = ({
     children
 }: IProps) => {
 
     const {locale} = useLocale();
 
-    const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
 
-
-    return <AuthStateProvider
-        onGetTokens={() => {
-            const tokensStr = localStorage.getItem(persistAuthKey);
-            if(!tokensStr) return null;
-            return jsonDecode<IAuthTokens>(tokensStr) ?? null;
-        }}
-        onSetTokens={authTokens => {
-            const tokensStr = JSON.stringify(authTokens);
-            localStorage.setItem(persistAuthKey, tokensStr);
-        }}
-
-        onRefreshTokens={async (refreshToken) => {
-            const res = await RefreshTokenMutation({
-                variables: {input: {refreshToken: refreshToken}},
-                fetchOptions: {
-                    headers: {
-                        [refreshingHeaderKey]: '1',
-                    }
-                },
-            }).unwrap();
-
-            return res?.authRefreshToken.authTokens;
-        }}
-        onForceLogout={ () => {
-            // removeAuthTokens();
+    return <FetcherProvider
+        axiosInstance={axiosInstance}
+        locale={locale}
+        isDebug
+        getResponseFormatError={getGraphQLResponseFormatError}
+        checkIsRefreshTokenRequest={config => {
+            return config.headers[refreshingHeaderKey] === '1';
         }}
     >
-        <FetcherProvider
-            axiosInstance={axiosInstance}
-            locale={locale}
-            isDebug
-            getResponseFormatError={getGraphQLResponseFormatError}
-            checkIsRefreshTokenRequest={config => {
-                return config.headers[refreshingHeaderKey] === '1';
-            }}
-        >
-            {children}
-        </FetcherProvider>
-    </AuthStateProvider>;
+        {children}
+    </FetcherProvider>;
 
 };
 

@@ -1,5 +1,5 @@
 import {useAuthState} from '@acrool/react-fetcher';
-import {Navigate, Outlet, useLocation} from 'react-router-dom';
+import {Navigate, Outlet, useLocation} from 'react-router';
 
 
 /**
@@ -9,7 +9,7 @@ const AuthRoute = () => {
     const {pathname} = useLocation();
     const {isAuth} = useAuthState();
     console.log('isAuth', isAuth);
-    
+
 
     if(!isAuth){
         return <Navigate to="/sign/login" state={{from: pathname}} replace/>;

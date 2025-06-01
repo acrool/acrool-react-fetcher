@@ -7,7 +7,7 @@
   resolved "https://registry.yarnpkg.com/@acrool/js-logger/-/js-logger-1.0.26.tgz#fd033cb2581c776c8f6310adec5f1430ec28d7c7"
   integrity sha512-JnjCgzrZEcfePt0XxkFGN0TqxbFETpWm92lPhn5gK1jaVSFdwbxKPeY+fLPFmG70ECw/s5t0vOW/ByCgpUvAiw==
 
-"@acrool/js-logger@^1.0.27":
+"@acrool/js-logger@^1.0.26", "@acrool/js-logger@^1.0.27":
   version "1.0.27"
   resolved "https://registry.yarnpkg.com/@acrool/js-logger/-/js-logger-1.0.27.tgz#daed340cd6eedcb6d33c4f751afdff96db8bde8a"
   integrity sha512-HVIqU7UxLy+ib4G+ejUrCZeZhArawfNrzKuub3Up3JtgBB0pgDXB5gIZCkmhFKhm9Z04mZH5vTOF+0FdPcLEcg==
@@ -29,6 +29,17 @@
     clsx "^2.1.1"
     framer-motion "^12.7.4"
 
+"@acrool/react-dialog@^1.1.4":
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/@acrool/react-dialog/-/react-dialog-1.1.4.tgz#3a5486db11afaa0b651ab08619ad7493e816d401"
+  integrity sha512-4clYIcLQ9nymrWipjKghJCHSJO6qiwkk822ZltzBfZFJRew5Y+86B49Xfuqk1k+7NX/X+PL3lufAqnHkYQyxMg==
+  dependencies:
+    "@acrool/js-logger" "^1.0.26"
+    "@acrool/react-portal" "^1.1.2"
+    clsx "^2.x"
+    framer-motion "^11.18.2"
+    ulid "^2.3.0"
+
 "@acrool/react-fetcher@link:../..":
   version "0.0.0"
   uid ""
@@ -38,6 +49,11 @@
   resolved "https://registry.yarnpkg.com/@acrool/react-grid/-/react-grid-6.0.8-alpha.1.tgz#ef44fffdd8fba285c4e0d2367f5f9e10625f8445"
   integrity sha512-lr7lLHXUMcGav8K6G9tR/Kbw2WP5HIkfGwkpMgw3ii9rHLoD0G5VPB3AScNMTLpWYeEx904Jc4UmEJSCMIE0Wg==
 
+"@acrool/react-hooks@^1.1.2":
+  version "1.1.2"
+  resolved "https://registry.yarnpkg.com/@acrool/react-hooks/-/react-hooks-1.1.2.tgz#7ce6117e915e2ff0254109edf1f9b5ab2f79a0de"
+  integrity sha512-zIcKdhe3XUm5y1hlW6/G/v9gFiIzhe3rCFojQKOHpunuzwiphWNVAIsjXcJGkxw7GOT0pgBfjr7mnIxOCjb3ZA==
+
 "@acrool/react-locale@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@acrool/react-locale/-/react-locale-4.0.0.tgz#464d1572c6820a1e2df4dd61208e644e31adc95b"
@@ -46,7 +62,7 @@
     "@acrool/js-logger" "1.0.26"
     react-intl "7.1.11"
 
-"@acrool/react-portal@^1.1.1":
+"@acrool/react-portal@^1.1.1", "@acrool/react-portal@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@acrool/react-portal/-/react-portal-1.1.2.tgz#8519d839512b242b049f0b4d956b74f0eabbef79"
   integrity sha512-lH44ywSHVPuVPyPifCUVKDnO0BX0y19osmg2AciaLvp35ULt3HjcTgKzc1JRWqdSnOhp2LEtLDdKx7CAmkcRjA==
@@ -55,6 +71,17 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@acrool/react-providers/-/react-providers-1.0.2.tgz#a61aaf7704be4faf44ceac3b8287c4768aa7626d"
   integrity sha512-Spxqbl8WOao8SOKOWSB4W6hxLWfaALF2Y90ixfpeNi6Q8u+RTL9/K+hLOA0c6mC/Ceaa9zMVZiyhoYygxEuiFg==
+
+"@acrool/react-toaster@^3.2.3":
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@acrool/react-toaster/-/react-toaster-3.2.3.tgz#fbd80afb499d4d8b4985cd109ac994a7cb6c2e0f"
+  integrity sha512-K9jylYmoUycfrJbcZ+Ad9/Eg6Hyo676EpnSzVsr/ZnEpEhGGPGbmYX5gEU5Ecf9xO3N00HA+pG0gQoH0hH0Q1Q==
+  dependencies:
+    "@acrool/react-hooks" "^1.1.2"
+    "@acrool/react-portal" "^1.1.2"
+    clsx "^2.x"
+    framer-motion "^11.18.2"
+    ulid "^2.3.0"
 
 "@ampproject/remapping@^2.2.0":
   version "2.3.0"
@@ -827,11 +854,6 @@
     redux-thunk "^3.1.0"
     reselect "^5.1.0"
 
-"@remix-run/router@1.9.0":
-  version "1.9.0"
-  resolved "https://registry.yarnpkg.com/@remix-run/router/-/router-1.9.0.tgz#9033238b41c4cbe1e961eccb3f79e2c588328cf6"
-  integrity sha512-bV63itrKBC0zdT27qYm6SDZHlkXwFL1xMBuhkn+X7l0+IIhNaH5wuuvZKp6eKhCD4KFhujhfhCT1YxXW6esUIA==
-
 "@rolldown/pluginutils@1.0.0-beta.9":
   version "1.0.0-beta.9"
   resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-beta.9.tgz#68ef9fff5a9791a642cea0dc4380ce6cb487a84a"
@@ -1135,11 +1157,6 @@
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-1.0.7.tgz#4158d3105276773d5b7695cd4834b1722e4f37a8"
   integrity sha512-w28IoSUCJpidD/TGviZwwMJckNESJZXFu7NBZ5YJ4mEUnNraUn9Pm8HSZm/jDF1pDWYKspWE7oVphigUPRakIQ==
 
-"@types/history@^4.7.11":
-  version "4.7.11"
-  resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.11.tgz#56588b17ae8f50c53983a524fc3cc47437969d64"
-  integrity sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==
-
 "@types/hoist-non-react-statics@^3.3.1":
   version "3.3.6"
   resolved "https://registry.yarnpkg.com/@types/hoist-non-react-statics/-/hoist-non-react-statics-3.3.6.tgz#6bba74383cdab98e8db4e20ce5b4a6b98caed010"
@@ -1159,23 +1176,6 @@
   version "19.1.5"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-19.1.5.tgz#cdfe2c663742887372f54804b16e8dbc26bd794a"
   integrity sha512-CMCjrWucUBZvohgZxkjd6S9h0nZxXjzus6yDfUb+xLxYM7VvjKNH1tQrE9GWLql1XoOP4/Ds3bwFqShHUYraGg==
-
-"@types/react-router-dom@^5.3.3":
-  version "5.3.3"
-  resolved "https://registry.yarnpkg.com/@types/react-router-dom/-/react-router-dom-5.3.3.tgz#e9d6b4a66fcdbd651a5f106c2656a30088cc1e83"
-  integrity sha512-kpqnYK4wcdm5UaWI3fLcELopqLrHgLqNsdpHauzlQktfkHL3npOSwtj1Uz9oKBAzs7lFtVkV8j83voAz2D8fhw==
-  dependencies:
-    "@types/history" "^4.7.11"
-    "@types/react" "*"
-    "@types/react-router" "*"
-
-"@types/react-router@*":
-  version "5.1.20"
-  resolved "https://registry.yarnpkg.com/@types/react-router/-/react-router-5.1.20.tgz#88eccaa122a82405ef3efbcaaa5dcdd9f021387c"
-  integrity sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==
-  dependencies:
-    "@types/history" "^4.7.11"
-    "@types/react" "*"
 
 "@types/react@*", "@types/react@16 || 17 || 18 || 19", "@types/react@^19.1.2":
   version "19.1.6"
@@ -1336,7 +1336,7 @@ cliui@^8.0.1:
     strip-ansi "^6.0.1"
     wrap-ansi "^7.0.0"
 
-clsx@^2.1.1:
+clsx@^2.1.1, clsx@^2.x:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-2.1.1.tgz#eed397c9fd8bd882bfb18deab7102049a2f32999"
   integrity sha512-eYm0QWBtUrBWZWG0d386OGAw16Z995PiOVo2B7bjWSbHedGl5e0ZWaq65kOGgUSNesEIDkB9ISbTg/JK9dhCZA==
@@ -1385,6 +1385,11 @@ cookie@^0.7.1, cookie@^0.7.2:
   version "0.7.2"
   resolved "https://registry.yarnpkg.com/cookie/-/cookie-0.7.2.tgz#556369c472a2ba910f2979891b526b3436237ed7"
   integrity sha512-yki5XnKuf750l50uGTllt6kKILY4nQ1eNIQatoXEByZ5dWgnKqbnqmTrBE5B4N7lrMJKQ2ytWMiTO2o0v6Ew/w==
+
+cookie@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cookie/-/cookie-1.0.2.tgz#27360701532116bd3f1f9416929d176afe1e4610"
+  integrity sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==
 
 cosmiconfig@^8.1.3:
   version "8.3.6"
@@ -1624,6 +1629,15 @@ form-data@^4.0.0:
     combined-stream "^1.0.8"
     es-set-tostringtag "^2.1.0"
     mime-types "^2.1.12"
+
+framer-motion@^11.18.2:
+  version "11.18.2"
+  resolved "https://registry.yarnpkg.com/framer-motion/-/framer-motion-11.18.2.tgz#0c6bd05677f4cfd3b3bdead4eb5ecdd5ed245718"
+  integrity sha512-5F5Och7wrvtLVElIpclDT0CBzMVg3dL22B64aZwHtsIY8RB4mXICLrkajK4G9R+ieSAGcgrLeae2SeUTg2pr6w==
+  dependencies:
+    motion-dom "^11.18.1"
+    motion-utils "^11.18.1"
+    tslib "^2.4.0"
 
 framer-motion@^12.7.4:
   version "12.15.0"
@@ -1882,12 +1896,24 @@ miniflare@4.20250507.0:
     youch "3.3.4"
     zod "3.22.3"
 
+motion-dom@^11.18.1:
+  version "11.18.1"
+  resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-11.18.1.tgz#e7fed7b7dc6ae1223ef1cce29ee54bec826dc3f2"
+  integrity sha512-g76KvA001z+atjfxczdRtw/RXOM3OMSdd1f4DL77qCTF/+avrRJiawSG4yDibEQ215sr9kpinSlX2pCTJ9zbhw==
+  dependencies:
+    motion-utils "^11.18.1"
+
 motion-dom@^12.15.0:
   version "12.15.0"
   resolved "https://registry.yarnpkg.com/motion-dom/-/motion-dom-12.15.0.tgz#eca7c9d8c28976b8c920f175f92d5288f5a17785"
   integrity sha512-D2ldJgor+2vdcrDtKJw48k3OddXiZN1dDLLWrS8kiHzQdYVruh0IoTwbJBslrnTXIPgFED7PBN2Zbwl7rNqnhA==
   dependencies:
     motion-utils "^12.12.1"
+
+motion-utils@^11.18.1:
+  version "11.18.1"
+  resolved "https://registry.yarnpkg.com/motion-utils/-/motion-utils-11.18.1.tgz#671227669833e991c55813cf337899f41327db5b"
+  integrity sha512-49Kt+HKjtbJKLtgO/LKj9Ld+6vw9BjH5d9sc40R/kVyH8GLAXgT42M2NnuPcJNuA3s9ZfZBUcwIgpmZWGEE+hA==
 
 motion-utils@^12.12.1:
   version "12.12.1"
@@ -2104,30 +2130,18 @@ react-redux@9.2.0:
     "@types/use-sync-external-store" "^0.0.6"
     use-sync-external-store "^1.4.0"
 
-react-router-dom@6.16.0:
-  version "6.16.0"
-  resolved "https://registry.yarnpkg.com/react-router-dom/-/react-router-dom-6.16.0.tgz#86f24658da35eb66727e75ecbb1a029e33ee39d9"
-  integrity sha512-aTfBLv3mk/gaKLxgRDUPbPw+s4Y/O+ma3rEN1u8EgEpLpPe6gNjIsWt9rxushMHHMb7mSwxRGdGlGdvmFsyPIg==
+react-router@^7.6.1:
+  version "7.6.1"
+  resolved "https://registry.yarnpkg.com/react-router/-/react-router-7.6.1.tgz#a54f9b980b94594bcb4b7f26611612a9f6e17461"
+  integrity sha512-hPJXXxHJZEsPFNVbtATH7+MMX43UDeOauz+EAU4cgqTn7ojdI9qQORqS8Z0qmDlL1TclO/6jLRYUEtbWidtdHQ==
   dependencies:
-    "@remix-run/router" "1.9.0"
-    react-router "6.16.0"
-
-react-router@6.16.0:
-  version "6.16.0"
-  resolved "https://registry.yarnpkg.com/react-router/-/react-router-6.16.0.tgz#abbf3d5bdc9c108c9b822a18be10ee004096fb81"
-  integrity sha512-VT4Mmc4jj5YyjpOi5jOf0I+TYzGpvzERy4ckNSvSh2RArv8LLoCxlsZ2D+tc7zgjxcY34oTz2hZaeX5RVprKqA==
-  dependencies:
-    "@remix-run/router" "1.9.0"
+    cookie "^1.0.1"
+    set-cookie-parser "^2.6.0"
 
 react@^19.1.0:
   version "19.1.0"
   resolved "https://registry.yarnpkg.com/react/-/react-19.1.0.tgz#926864b6c48da7627f004795d6cce50e90793b75"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==
-
-redux-first-history@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/redux-first-history/-/redux-first-history-5.2.0.tgz#2cd9d84652a1cb7e485ebe9b2dc348ac8c88fedf"
-  integrity sha512-7kLqtSXGPZIgvEhl3B+3wRvzePvvZggpVqg+jpR2ZVqu2ESGj9DF6hMHpoEP7bGHqddljjKYjnRmtSetYEiG2Q==
 
 redux-thunk@^3.1.0:
   version "3.1.0"
@@ -2202,6 +2216,11 @@ semver@^7.6.3:
   version "7.7.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.7.2.tgz#67d99fdcd35cec21e6f8b87a7fd515a33f982b58"
   integrity sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==
+
+set-cookie-parser@^2.6.0:
+  version "2.7.1"
+  resolved "https://registry.yarnpkg.com/set-cookie-parser/-/set-cookie-parser-2.7.1.tgz#3016f150072202dfbe90fadee053573cc89d2943"
+  integrity sha512-IOc8uWeOZgnb3ptbCURJWNjWUPcO3ZnTTdzsurqERrP6nPyv+paC55vJM0LpOlT2ne+Ix+9+CRG1MNLlyZ4GjQ==
 
 shallowequal@1.1.0:
   version "1.1.0"
@@ -2393,6 +2412,11 @@ ufo@^1.5.4:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/ufo/-/ufo-1.6.1.tgz#ac2db1d54614d1b22c1d603e3aef44a85d8f146b"
   integrity sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==
+
+ulid@^2.3.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/ulid/-/ulid-2.4.0.tgz#9d9ee22e63f4390ee1bcd9ad09fca39d8ae0afed"
+  integrity sha512-fIRiVTJNcSRmXKPZtGzFQv9WRrZ3M9eoptl/teFJvjOzmpU+/K/JH6HZ8deBfb5vMEpicJcLn7JmvdknlMq7Zg==
 
 undici@^5.28.5:
   version "5.29.0"

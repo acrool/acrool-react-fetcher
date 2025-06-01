@@ -7,7 +7,7 @@ declare module 'react' {
     ): (props: P & React.RefAttributes<T>) => React.ReactElement | null;
 }
 
-declare module 'react-router-dom' {
+declare module 'react-router' {
     export function useParams<Params extends { [K in keyof Params]?: string } = {}>(): Params;
 }
 

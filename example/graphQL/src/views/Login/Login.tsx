@@ -1,17 +1,22 @@
+import {block} from '@acrool/react-block';
 import {useAuthState} from '@acrool/react-fetcher';
 import {FCProps} from '@acrool/react-grid';
-import React, {useState} from 'react';
-import {useForm} from 'react-hook-form';
+import React, {useCallback, useState} from 'react';
+import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 
+import Banner from '@/components/Banner';
 import {usePutAuthLoginMutation} from '@/store/__generated__';
 
 import {LoginRoot} from './styles';
 import {ILoginProps} from './types';
+import styled from "styled-components";
+import {dialog} from "@acrool/react-dialog";
+import { toast } from '@acrool/react-toaster';
 
 /**
  * Login
  */
-interface FormValues {
+interface IForm {
     account: string
     password: string
 }
@@ -20,55 +25,89 @@ const Login = ({
     className,
     style,
 }: ILoginProps & FCProps) => {
-    const {register, handleSubmit, formState: {errors, isSubmitting}} = useForm<FormValues>();
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
     const [AuthLoginMutation] = usePutAuthLoginMutation();
     const {updateTokens} = useAuthState();
+    const HookForm = useForm<IForm>();
 
-    const onSubmit = async (data: FormValues) => {
-        setError('');
-        setSuccess('');
-        await AuthLoginMutation({variables: {input: data}})
+    /**
+     * 送出表單
+     * @param data
+     */
+    const handleSubmitHandler: SubmitHandler<IForm> = useCallback(async formData => {
+        block.show();
+
+        await AuthLoginMutation({variables: {input: formData}})
             .unwrap()
             .then(res => {
-                setSuccess('登入成功！');
+                toast.success('登入成功');
                 updateTokens(res.authLogin.authTokens);
 
             })
             .catch(err => {
-                setError(err.message || '登入失敗');
+                toast.error('登入失敗');
+            })
+            .finally(() => {
+                block.hide();
             });
-    };
+
+
+    }, []);
+
 
     return <LoginRoot
         className={className}
         style={style}
     >
-        <h2>Dashboard</h2>
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <input
-                type="text"
-                placeholder="帳號"
-                defaultValue="tester"
-                {...register('account', {required: '請輸入帳號'})}
-                disabled={isSubmitting}
-            />
-            {errors.account && <p style={{color: 'red'}}>{errors.account.message}</p>}
-            <input
-                type="password"
-                placeholder="密碼"
-                defaultValue="acrool_is_good_task_system"
-                {...register('password', {required: '請輸入密碼'})}
-                disabled={isSubmitting}
-            />
-            {errors.password && <p style={{color: 'red'}}>{errors.password.message}</p>}
-            <button type="submit" disabled={isSubmitting}>登入</button>
-        </form>
-        {error && <p style={{color: 'red'}}>{error}</p>}
-        {success && <p style={{color: 'green'}}>{success}</p>}
-        {/*{JSON.stringify(tokens)}*/}
+        <Banner/>
+        <Wrapper>
+            <h2>Login</h2>
+            <form onSubmit={HookForm.handleSubmit(handleSubmitHandler)}>
+                <Controller
+                    control={HookForm.control}
+                    name="account"
+                    defaultValue="tester"
+                    rules={{
+                        required: '請輸入帳號',
+                    }}
+                    render={({field, fieldState}) => {
+                        return <input
+                            {...field}
+                            placeholder="帳號"
+                            autoComplete="username"
+                            disabled={HookForm.formState.isSubmitting}
+                        />;
+                    }}
+                />
+                <Controller
+                    control={HookForm.control}
+                    name="password"
+                    defaultValue="acrool_is_good_task_system"
+                    rules={{
+                        required: '請輸入密碼',
+                    }}
+                    render={({field, fieldState}) => {
+                        return <input
+                            {...field}
+                            type="password"
+                            placeholder="密碼"
+                            defaultValue="acrool_is_good_task_system"
+                            disabled={HookForm.formState.isSubmitting}
+                        />;
+                    }}
+                />
+                <button type="submit" disabled={HookForm.formState.isSubmitting}>登入</button>
+            </form>
+        </Wrapper>
+
+
+        {HookForm.formState.errors.password && <p style={{color: 'red'}}>{HookForm.formState.errors.password.message}</p>}
     </LoginRoot>;
 };
 
 export default Login;
+
+
+const Wrapper = styled.div`
+`;
+
+

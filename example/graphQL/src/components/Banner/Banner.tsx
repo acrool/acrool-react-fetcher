@@ -1,8 +1,9 @@
-import styled from 'styled-components';
-import {useRef} from 'react';
+import {media} from '@acrool/react-grid';
 import domtoimage from 'dom-to-image';
+import {useRef} from 'react';
+import styled from 'styled-components';
+
 import Github from '../../assets/github.svg?react';
-import {media} from "@acrool/react-grid";
 
 
 interface IProps {

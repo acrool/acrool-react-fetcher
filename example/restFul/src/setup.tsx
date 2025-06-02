@@ -4,7 +4,6 @@ import {persistKey, persistVersion} from '@/config/app';
 import {gridConfig} from '@/config/grid';
 import {DEFAULT_LOCALE,ELocales} from '@/config/locale';
 import {siteConfig} from '@/config/site';
-import {createReduxHistory} from '@/library/react-router/redux';
 import configureStore from '@/library/redux/configureStore';
 import {asset, getAppVersion} from '@/utils/config';
 

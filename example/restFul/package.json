@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --port=1182",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
     "pages:dev": "wrangler pages dev --proxy 3000 -- yarn dev",
     "pages:deploy": "NODE_VERSION=20 yarn build && wrangler pages deploy ./dist --project-name=acrool-react-fetcher-restful --branch main"

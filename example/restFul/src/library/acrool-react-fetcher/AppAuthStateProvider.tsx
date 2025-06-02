@@ -36,16 +36,21 @@ const AppAuthStateProvider = ({
         }}
 
         onRefreshTokens={async (refreshToken) => {
+            console.log('xx');
             const res = await RefreshTokenMutation({
-                body: {refreshToken: refreshToken},
+                variables: {
+                    body: {refreshToken},
+                },
                 fetchOptions: {
                     headers: {
                         [refreshingHeaderKey]: '1',
                     }
                 },
-            }).unwrap();
+            });
+            console.log('aaaaaa',res);
 
-            return res?.authTokens;
+
+            return res.data?.authTokens;
         }}
         onForceLogout={ () => {
             // removeAuthTokens();

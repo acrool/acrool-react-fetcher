@@ -1,7 +1,7 @@
 import {IRequestConfig} from '../types';
 
 
-export interface IUseFetcherArgs<TVariables = {}> {
+export interface IUseGraphQLFetcherArgs<TVariables = {}> {
     variables?: TVariables
     fetchOptions?: IRequestConfig
 }

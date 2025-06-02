@@ -1,4 +1,4 @@
-import {FetcherProvider, getGraphQLResponseFormatError} from '@acrool/react-fetcher';
+import {FetcherProvider, getRestFulResponseFormatError} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import React, {JSX} from 'react';
 
@@ -32,7 +32,7 @@ const AppFetcherProvider = ({
         axiosInstance={axiosInstance}
         locale={locale}
         isDebug
-        getResponseFormatError={getGraphQLResponseFormatError}
+        getResponseFormatError={getRestFulResponseFormatError}
         checkIsRefreshTokenRequest={config => {
             return config.headers[refreshingHeaderKey] === '1';
         }}

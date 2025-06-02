@@ -7,7 +7,10 @@ import {baseApi as api} from '../../../library/redux/baseApi';
 const injectedRtkApi = api.injectEndpoints({
     endpoints: (build) => ({
         getBookmarkById: build.query<GetBookmarkByIdApiResponse, IUseFetcherArgs<GetBookmarkByIdApiArg>>({
-            query: (queryArg) => ({url: `/bookmark/${queryArg.id}`}),
+            query: (queryArg) => ({
+                url: `/bookmark/${queryArg.variables?.id}`,
+                fetchOptions: queryArg.fetchOptions,
+            }),
         }),
     }),
     overrideExisting: false,

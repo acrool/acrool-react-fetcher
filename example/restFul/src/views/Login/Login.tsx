@@ -37,7 +37,9 @@ const Login = ({
         block.show();
 
         await AuthLoginMutation({
-            body: formData
+            variables: {
+                body: formData,
+            }
         })
             .unwrap()
             .then(res => {
@@ -92,7 +94,6 @@ const Login = ({
                             {...field}
                             type="password"
                             placeholder="密碼"
-                            defaultValue="acrool_is_good_task_system"
                             disabled={HookForm.formState.isSubmitting}
                         />;
                     }}

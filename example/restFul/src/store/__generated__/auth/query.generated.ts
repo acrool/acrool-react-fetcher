@@ -13,7 +13,10 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/login',
                 method: 'POST',
-                body: queryArg.body,
+                variables: {
+                    body: queryArg.variables?.body,
+                },
+                fetchOptions: queryArg.fetchOptions,
             }),
         }),
         postAuthSignRefresh: build.mutation<
@@ -23,14 +26,21 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/refresh',
                 method: 'POST',
-                body: queryArg.body,
+                variables: {
+                    body: queryArg.variables?.body,
+                },
+                fetchOptions: queryArg.fetchOptions,
             }),
         }),
         postAuthSignLogout: build.mutation<
             PostAuthSignLogoutApiResponse,
             IUseFetcherArgs<PostAuthSignLogoutApiArg>
         >({
-            query: () => ({url: '/auth/sign/logout', method: 'POST'}),
+            query: (queryArg) => ({
+                url: '/auth/sign/logout',
+                method: 'POST',
+                fetchOptions: queryArg.fetchOptions,
+            }),
         }),
     }),
     overrideExisting: false,
@@ -62,7 +72,7 @@ export type PostAuthSignRefreshApiResponse = /** status 200  */ {
 export type PostAuthSignRefreshApiArg = {
     body: {
         /** 更新用Token */
-        refreshToken?: string,
+        refreshToken: string,
     },
 };
 export type PostAuthSignLogoutApiResponse = /** status 200  */ {

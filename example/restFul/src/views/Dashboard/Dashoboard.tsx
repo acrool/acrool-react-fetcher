@@ -1,11 +1,19 @@
+import {block} from '@acrool/react-block';
 import {useAuthState} from '@acrool/react-fetcher';
 import {Flex} from '@acrool/react-grid';
 import {useLocale} from '@acrool/react-locale';
+import {toast} from '@acrool/react-toaster';
 import React from 'react';
 import {useNavigate} from 'react-router';
 
+import {refreshingHeaderKey} from '@/library/acrool-react-fetcher/config';
 import {useAppDispatch} from '@/library/redux';
-import {bookmarkApi, useGetBookmarkByIdQuery, usePostAuthSignLogoutMutation} from '@/store/__generated__';
+import {
+    bookmarkApi,
+    useGetBookmarkByIdQuery,
+    usePostAuthSignLogoutMutation,
+    usePostAuthSignRefreshMutation
+} from '@/store/__generated__';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -14,17 +22,55 @@ const Dashboard = () => {
 
     const {updateTokens, getTokens, isAuth} = useAuthState();
     const [AuthLogoutMutation] = usePostAuthSignLogoutMutation();
+    const [RefreshTokenMutation] = usePostAuthSignRefreshMutation();
 
     const Bookmark1 = useGetBookmarkByIdQuery({
-        id: '1',
+        variables: {
+            id: '1',
+        }
     });
     const Bookmark2 = useGetBookmarkByIdQuery({
-        id: '2',
+        variables: {
+            id: '2',
+        }
     });
     const Bookmark3 = useGetBookmarkByIdQuery({
-        id: '3',
+        variables: {
+            id: '3',
+        }
     });
 
+
+
+
+    const handleRefreshToken = () => {
+        block.show();
+        const tokens = getTokens();
+        if(!tokens?.refreshToken){
+            toast.error('refreshToken is empty');
+            return;
+        }
+
+        RefreshTokenMutation({
+            variables: {
+                body: {refreshToken: tokens.refreshToken},
+            },
+            fetchOptions: {
+                headers: {
+                    [refreshingHeaderKey]: '1',
+                }
+            },
+        }).unwrap()
+            .then(res => {
+                updateTokens(res.authTokens);
+            })
+            .catch(() => {
+                toast.error('refreshToken fail');
+            })
+            .finally(() => {
+                block.hide();
+            });
+    };
 
     const handleLogout = () => {
         AuthLogoutMutation()
@@ -60,9 +106,9 @@ const Dashboard = () => {
         Bookmark1.refetch();
         Bookmark2.refetch();
 
-        setTimeout(() => {
-            Bookmark3.refetch();
-        },100);
+        // setTimeout(() => {
+        //     Bookmark3.refetch();
+        // },100);
     };
 
     /**
@@ -102,6 +148,7 @@ const Dashboard = () => {
         </p>
         <Flex column className="gap-2 justify-content-center">
             <button type="button" onClick={handleLogout}>Logout</button>
+            <button type="button" onClick={handleRefreshToken}>Refresh Token</button>
             <button type="button" onClick={() => Bookmark1.refetch()}>reFetch</button>
             <button type="button" onClick={handleMockTokenInvalid}>Mock reFetch + token invalid</button>
             <button type="button" onClick={handleMockTokenInvalidRefreshFail}>Mock reFetch + token invalid + refresh token fail</button>
@@ -112,11 +159,12 @@ const Dashboard = () => {
             <button type="button" onClick={() => setLocale('zh-TW')}>zh-TW</button>
         </Flex>
 
-        {Bookmark1.data?.name}
-        {Bookmark2?.data?.name}
 
         <div>
             AuthTokens: {JSON.stringify(getTokens(), null, 2)}
+        </div>
+        <div>
+            Bookmark: {JSON.stringify(Bookmark1.data, null, 2)}
         </div>
         <div>
             Locale: {locale}

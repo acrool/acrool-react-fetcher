@@ -140,12 +140,12 @@ const FetcherProvider = ({
             }
 
             // 判斷是否為 refreshToken API
-            const isRefresh = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig) : false;
-            if (!isRefresh && isTokenRefreshing) {
+            const isRefreshTokenAPI = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig) : false;
+            if (!isRefreshTokenAPI && isTokenRefreshing) {
                 pushPendingRequestQueues(resolve, reject)(originConfig);
                 reject(new AxiosCancelException({
                     message: 'Token refreshing, so request save queues not send',
-                    code: 'REFRESH_TOKEN'
+                    code: 'REFRESHING_TOKEN'
                 }));
                 return;
             }

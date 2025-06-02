@@ -47,6 +47,8 @@ export const handlers = [
         }
         return HttpResponse.json({
             message: '帳號或密碼錯誤',
+            code: 'Unauthorized',
+            path: '/api/auth/sign/login',
         }, {status: 401});
     }),
 
@@ -64,8 +66,11 @@ export const handlers = [
 
     // 4. PutAuthRefreshToken → POST /auth/refresh-token
     http.post('/api/auth/sign/refresh', async ({request}) => {
-        const body = (await request.json()) as {refreshToken: string};
-        const {refreshToken} = body;
+        console.log('backend refreshToken.......');
+        const formData = await request.formData();
+        const refreshToken = formData.get('refreshToken');
+
+
         if (refreshToken === 'mock-empty-token') {
             return HttpResponse.json({
                 authTokens: {}

@@ -46,6 +46,7 @@ interface AuthStateProviderProps {
     onGetTokens: TOnGetTokens
     onRefreshTokens?: TOnRefreshToken
     onForceLogout?: TOnForceLogout
+    isDebug?: boolean
 }
 
 const AuthStateProvider = ({
@@ -53,7 +54,8 @@ const AuthStateProvider = ({
     onGetTokens,
     onSetTokens,
     onRefreshTokens,
-    onForceLogout
+    onForceLogout,
+    isDebug = false,
 }: AuthStateProviderProps) => {
     const [lastUpdateTimestamp, setLastUpdateTimestamp] = useState<number>(0);
     const [isAuth, setIsAuth] = useState<boolean>(() => {
@@ -95,12 +97,17 @@ const AuthStateProvider = ({
      */
     const handleOnRefreshTokens = async () => {
         const refreshToken = onGetTokens()?.refreshToken;
-        if(!refreshToken || !onRefreshTokens) return;
+        if(!refreshToken || !onRefreshTokens) {
+            if (isDebug) logger.danger('[AuthStateProvider] handleOnRefreshTokens', 'refreshToken|onRefreshTokens empty');
+            throw new SystemException({message: 'refreshToken|onRefreshTokens empty', code: 'REFRESH_TOKEN_EMPTY'});
+        }
 
         try {
             const authTokens = await onRefreshTokens(refreshToken);
             if(isEmpty(authTokens)){
-                throw new SystemException({message: 'refresh token fail', code: 'REFRESH_TOKEN_EMPTY'});
+                if (isDebug) logger.danger('[AuthStateProvider] handleOnRefreshTokens', 'new refresh token fail');
+
+                throw new SystemException({message: 'new refresh token fail', code: 'NEW_REFRESH_TOKEN_EMPTY'});
             }
             updateTokens(authTokens);
 

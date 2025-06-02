@@ -33,10 +33,6 @@ export const handlers = [
                     name: 'Acrool',
                     desc: '任務管理系統',
                     url: 'https://acrool.com',
-                    devUrl: '',
-                    evaluateUrl: '',
-                    country: 'TWA',
-                    remark: '',
                     faviconUrl: null
                 }
             }

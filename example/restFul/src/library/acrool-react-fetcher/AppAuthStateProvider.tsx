@@ -2,7 +2,7 @@ import {jsonDecode} from '@acrool/js-utils/string';
 import {AuthStateProvider, IAuthTokens} from '@acrool/react-fetcher';
 import React, {JSX} from 'react';
 
-import {usePutAuthRefreshTokenMutation} from '@/store/__generated__';
+import {usePostAuthSignRefreshMutation} from '@/store/__generated__';
 
 import {persistAuthKey, refreshingHeaderKey} from './config';
 
@@ -21,7 +21,7 @@ const AppAuthStateProvider = ({
     children
 }: IProps) => {
 
-    const [RefreshTokenMutation] = usePutAuthRefreshTokenMutation();
+    const [RefreshTokenMutation] = usePostAuthSignRefreshMutation();
 
 
     return <AuthStateProvider
@@ -37,7 +37,7 @@ const AppAuthStateProvider = ({
 
         onRefreshTokens={async (refreshToken) => {
             const res = await RefreshTokenMutation({
-                variables: {input: {refreshToken: refreshToken}},
+                body: {refreshToken: refreshToken},
                 fetchOptions: {
                     headers: {
                         [refreshingHeaderKey]: '1',
@@ -45,7 +45,7 @@ const AppAuthStateProvider = ({
                 },
             }).unwrap();
 
-            return res?.authRefreshToken.authTokens;
+            return res?.authTokens;
         }}
         onForceLogout={ () => {
             // removeAuthTokens();

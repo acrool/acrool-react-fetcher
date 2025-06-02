@@ -3,7 +3,7 @@
 Acrool React Fetcher is a solution for API integration and Auth state management in React projects. It helps you easily manage tokens, make API requests, perform GraphQL queries, and handle authentication flows.
 
 <a href="https://acrool-react-fetcher.pages.dev/" title="Acrool React Fetcher - This is a block function for React development loading block">
-    <img src="https://raw.githubusercontent.com/acrool/acrool-react-fetcher/main/example/public/og.webp" alt="Acrool React Fetcher Logo"/>
+    <img src="https://raw.githubusercontent.com/acrool/acrool-react-fetcher/main/example/graphQL/public/og.webp" alt="Acrool React Fetcher Logo"/>
 </a>
 
 <p align="center">

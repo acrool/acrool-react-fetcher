@@ -2,15 +2,18 @@ import {IRequestConfig} from '../types';
 import {ERequestMethod} from './config';
 
 
-// export type IUseRestFulFetcherArgs<TVariables> = TVariables | (TVariables & {
-//     fetchOptions?: IRequestConfig,
-// })
 
 
-export interface IUseRestFulFetcherArgs<TVariables = {}> {
-    variables?: TVariables
-    fetchOptions?: IRequestConfig
-}
+// export interface IUseRestFulFetcherArgs<TVariables = {}> {
+//     variables?: TVariables
+//     fetchOptions?: IRequestConfig
+// }
+
+export type IUseRestFulFetcherArgs<TVariables> =
+    [TVariables] extends [void]
+        ? void | { fetchOptions?: IRequestConfig }
+        : { variables: TVariables, fetchOptions?: IRequestConfig };
+
 
 export interface IDocument {
     url: string

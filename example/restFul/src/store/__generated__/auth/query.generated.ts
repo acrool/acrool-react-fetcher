@@ -16,7 +16,7 @@ const injectedRtkApi = api.injectEndpoints({
                 variables: {
                     body: queryArg.variables?.body,
                 },
-                fetchOptions: queryArg.fetchOptions,
+                fetchOptions: queryArg?.fetchOptions,
             }),
         }),
         postAuthSignRefresh: build.mutation<
@@ -27,9 +27,9 @@ const injectedRtkApi = api.injectEndpoints({
                 url: '/auth/sign/refresh',
                 method: 'POST',
                 variables: {
-                    body: queryArg.variables?.body,
+                    body: queryArg.variables.body,
                 },
-                fetchOptions: queryArg.fetchOptions,
+                fetchOptions: queryArg?.fetchOptions,
             }),
         }),
         postAuthSignLogout: build.mutation<
@@ -39,7 +39,7 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/logout',
                 method: 'POST',
-                fetchOptions: queryArg.fetchOptions,
+                fetchOptions: queryArg?.fetchOptions,
             }),
         }),
     }),

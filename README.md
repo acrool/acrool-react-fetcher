@@ -9,8 +9,10 @@ Acrool React Fetcher is a solution for API integration and Auth state management
 <p align="center">
     A solution for API integration and token management in React projects
 
-    https://acrool-react-fetcher-graphql.pages.dev/
-    https://acrool-react-fetcher-restful.pages.dev/
+    [GraphQL](https://acrool-react-fetcher-graphql.pages.dev/)
+
+    [RestFul](https://acrool-react-fetcher-restful.pages.dev/)
+    
 
 </p>
 

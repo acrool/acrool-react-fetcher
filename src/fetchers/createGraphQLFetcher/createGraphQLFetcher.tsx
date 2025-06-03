@@ -2,7 +2,7 @@ import {delay} from '@acrool/js-utils/promise';
 import {AxiosInstance} from 'axios';
 
 import {fetcherLeastTime} from '../config';
-import {IUseFetcherArgs} from './types';
+import {IUseGraphQLFetcherArgs} from './types';
 import {getVariablesFileMap, TFileMapVariables} from './utils';
 
 
@@ -13,7 +13,7 @@ import {getVariablesFileMap, TFileMapVariables} from './utils';
  * @param axiosInstance
  * @param query
  */
-const createGraphQLFetcher = <TData, TArgs extends IUseFetcherArgs<TFileMapVariables>>(
+const createGraphQLFetcher = <TData, TArgs extends IUseGraphQLFetcherArgs<TFileMapVariables>>(
     axiosInstance: AxiosInstance,
     query: string,
 ): ((args?: TArgs) => Promise<TData>) => {

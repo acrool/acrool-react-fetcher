@@ -1,8 +1,8 @@
 import {jsonDecode} from '@acrool/js-utils/string';
-import {AuthStateProvider} from '@acrool/react-fetcher';
+import {AuthStateProvider, IAuthTokens} from '@acrool/react-fetcher';
 import React, {JSX} from 'react';
 
-import {IAuthTokens, usePutAuthRefreshTokenMutation} from '@/store/__generated__';
+import {usePutAuthRefreshTokenMutation} from '@/store/__generated__';
 
 import {persistAuthKey, refreshingHeaderKey} from './config';
 

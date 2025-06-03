@@ -1,0 +1,52 @@
+{
+  "name": "example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port=1182",
+    "build": "vite build",
+    "preview": "vite preview",
+    "pages:dev": "wrangler pages dev --proxy 3000 -- yarn dev",
+    "pages:deploy": "NODE_VERSION=20 yarn build && yarn wrangler pages deploy ./dist --project-name=acrool-react-fetcher-restful --branch main"
+  },
+  "resolutions": {
+    "styled-components": "6"
+  },
+  "dependencies": {
+    "@acrool/js-logger": "^1.0.27",
+    "@acrool/react-block": "^1.1.2",
+    "@acrool/react-dialog": "^1.1.4",
+    "@acrool/react-fetcher": "link:../../",
+    "@acrool/react-grid": "6.0.8-alpha.1",
+    "@acrool/react-locale": "^4.0.0",
+    "@acrool/react-providers": "^1.0.2",
+    "@acrool/react-toaster": "^3.2.3",
+    "@reduxjs/toolkit": "^2.3.0",
+    "@types/dom-to-image": "^2.6.7",
+    "@types/jwt-decode": "^3.1.0",
+    "async-mutex": "^0.5.0",
+    "dom-to-image": "^2.6.0",
+    "fs-capacitor": "^8.0.0",
+    "history": "^5.3.0",
+    "jwt-decode": "^4.0.0",
+    "msw": "^2.0.0",
+    "proxy-memoize": "^3.0.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.4",
+    "react-redux": "9.2.0",
+    "react-router": "^7.6.1",
+    "redux": "5.0.1",
+    "styled-components": "6.1.17"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.2",
+    "@types/react-dom": "^19.1.2",
+    "@vitejs/plugin-react-swc": "^3.0.0",
+    "typescript": "^4.9.3",
+    "vite": "^6.3.5",
+    "vite-plugin-svgr": "^4.2.0",
+    "wrangler": "4.14.4"
+  }
+}

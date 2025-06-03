@@ -28,10 +28,6 @@ query GetBookmark($bookmarkId: ID!) {
     name
     desc
     url
-    devUrl
-    evaluateUrl
-    country
-    remark
     faviconUrl
   }
 }`;

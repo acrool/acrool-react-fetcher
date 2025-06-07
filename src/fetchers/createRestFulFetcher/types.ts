@@ -15,6 +15,12 @@ export type IUseRestFulFetcherArgs<TVariables> =
         : { variables: TVariables, fetchOptions?: IRequestConfig };
 
 
+export type IUseRestFulFetcherArgs2<TVariables> =
+    TVariables extends void
+        ? void | { fetchOptions?: IRequestConfig }
+        : { body: TFileMapVariables, param: TFileMapVariables, fetchOptions?: IRequestConfig };
+
+
 export interface IDocument {
     url: string
     method?: string

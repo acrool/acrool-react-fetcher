@@ -33,10 +33,10 @@ const Login = ({
      * 送出表單
      * @param data
      */
-    const handleSubmitHandler: SubmitHandler<IForm> = useCallback(async formData => {
+    const handleSubmitHandler: SubmitHandler<IForm> = useCallback(formData => {
         block.show();
 
-        await AuthLoginMutation({
+        AuthLoginMutation({
             variables: {
                 body: formData,
             }

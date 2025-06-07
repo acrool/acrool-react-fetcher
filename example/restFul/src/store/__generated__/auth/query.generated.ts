@@ -13,9 +13,8 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/login',
                 method: 'POST',
-                variables: {
-                    body: queryArg.variables.body,
-                },
+                qweqwe: '',
+                body: queryArg.variables.body,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),
@@ -26,9 +25,7 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/refresh',
                 method: 'POST',
-                variables: {
-                    body: queryArg.variables.body,
-                },
+                body: queryArg.variables.body,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),

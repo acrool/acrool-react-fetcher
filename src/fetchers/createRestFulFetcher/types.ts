@@ -12,7 +12,7 @@ import {ERequestMethod} from './config';
 export type IUseRestFulFetcherArgs<TVariables> =
     TVariables extends void
         ? void | { fetchOptions?: IRequestConfig }
-        : { variables?: TVariables, fetchOptions?: IRequestConfig };
+        : { variables: TVariables, fetchOptions?: IRequestConfig };
 
 
 export interface IDocument {

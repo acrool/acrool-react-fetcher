@@ -16,7 +16,7 @@ import {getContentTypeWithMethod, getDataWithContentType} from './utils';
  * @param document
  * @param contentTypeResolver
  */
-const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileMapVariables>>(
+const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileMapVariables|void>>(
     axiosInstance: AxiosInstance,
     document: IDocument,
     contentTypeResolver: TContentTypeResolver = getContentTypeWithMethod
@@ -24,14 +24,16 @@ const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileM
     return async (args?: TArgs) => {
         const method = document?.method || '';
         const options = args?.fetchOptions;
-        const params = args?.variables?.params;
+        const variables = typeof args === 'object' && args !== null && 'variables' in args ? args.variables : undefined;
+
+        const params = variables?.params;
         const contentType = options?.headers?.contentType ?? contentTypeResolver(method.toUpperCase() as ERequestMethod);
 
         const config: IRequestConfig = {
             url: document.url,
             method,
             params,
-            data: getDataWithContentType(contentType, args?.variables?.body),
+            data: getDataWithContentType(contentType, variables?.body),
             ...options,
             headers: {
                 ...options?.headers,

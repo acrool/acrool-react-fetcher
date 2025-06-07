@@ -16,7 +16,7 @@ import {getContentTypeWithMethod, getDataWithContentType} from './utils';
  * @param document
  * @param contentTypeResolver
  */
-const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs>(
+const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileMapVariables>>(
     axiosInstance: AxiosInstance,
     document: IDocument,
     contentTypeResolver: TContentTypeResolver = getContentTypeWithMethod

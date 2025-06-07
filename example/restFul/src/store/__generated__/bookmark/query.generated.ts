@@ -9,6 +9,7 @@ const injectedRtkApi = api.injectEndpoints({
         getBookmarkById: build.query<GetBookmarkByIdApiResponse, IUseFetcherArgs<GetBookmarkByIdApiArg>>({
             query: (queryArg) => ({
                 url: `/bookmark/${queryArg.variables.id}`,
+                variables: queryArg.variables,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),

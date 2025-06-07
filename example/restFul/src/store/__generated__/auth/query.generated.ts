@@ -14,7 +14,7 @@ const injectedRtkApi = api.injectEndpoints({
                 url: '/auth/sign/login',
                 method: 'POST',
                 variables: {
-                    body: queryArg.variables?.body,
+                    body: queryArg.variables.body,
                 },
                 fetchOptions: queryArg?.fetchOptions,
             }),

@@ -9,8 +9,8 @@ import {ERequestMethod} from './config';
 //     fetchOptions?: IRequestConfig
 // }
 
-export type IUseRestFulFetcherArgs<TVariables> =
-    [TVariables] extends [void]
+export type IUseRestFulFetcherArgs<TVariables = TFileMapVariables> =
+    TVariables extends void
         ? void | { fetchOptions?: IRequestConfig }
         : { variables: TVariables, fetchOptions?: IRequestConfig };
 

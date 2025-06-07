@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4-test.6](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.4-test.5...v0.0.4-test.6) (2025-06-07)
+
 ### [0.0.4-test.5](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.4-test.4...v0.0.4-test.5) (2025-06-07)
 
 ### [0.0.4-test.4](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.4-test.3...v0.0.4-test.4) (2025-06-07)

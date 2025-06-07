@@ -6,8 +6,7 @@ import {IRequestConfig} from '../types';
 import {ERequestMethod} from './config';
 import {
     IDocument,
-    IUseRestFulFetcherArgs,
-    IUseRestFulFetcherArgs2,
+    ICreateRestFulFetcherArgs,
     TContentTypeResolver,
     TFileMapVariables
 } from './types';
@@ -22,7 +21,7 @@ import {getContentTypeWithMethod, getDataWithContentType} from './utils';
  * @param document
  * @param contentTypeResolver
  */
-const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs2<TFileMapVariables|void>>(
+const createRestFulFetcher = <TData, TArgs extends ICreateRestFulFetcherArgs<TFileMapVariables|void>>(
     axiosInstance: AxiosInstance,
     document: IDocument,
     contentTypeResolver: TContentTypeResolver = getContentTypeWithMethod

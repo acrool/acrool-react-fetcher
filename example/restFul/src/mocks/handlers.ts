@@ -30,6 +30,34 @@ export const handlers = [
         });
     }),
 
+    http.get('/api/bookmark/:bookmarkId/links', ({request, params}) => {
+        const headerAuth = request.headers.get('authorization');
+        if (headerAuth !== `Bearer ${validAuthTokens.accessToken}`) {
+            return HttpResponse.json<{}>({
+                message: 'Token expired or invalid',
+                code: 'Unauthorized',
+                path: `/api/bookmark/${params.bookmarkId}`,
+            }, {status: 401});
+        }
+        return HttpResponse.json({
+            rows: [
+                {id: '1', url: 'https://acrool.com'},
+                {id: '2', url: 'https://medium.com/@imaginechiu'},
+                {id: '3', url: 'https://github.com/acrool'}
+            ],
+            paginateInfo: {
+                /** 總筆數 */
+                totalItems: 3,
+                /** 總頁數 */
+                totalPages: 1,
+            },
+            paginateMeta: {
+                currentPage: 1,
+                pageLimit: 10,
+            },
+        });
+    }),
+
     // 2. PutAuthLogin → POST /api/auth/sign/login
     http.post('/api/auth/sign/login', async ({request}) => {
         const formData = await request.formData();

@@ -1,4 +1,4 @@
-import {IUseRestFulFetcherArgs as IUseFetcherArgs} from '@acrool/react-fetcher';
+import {IRestFulEndpointsQueryReturn as IUseFetcherArgs} from '@acrool/react-fetcher';
 
 import {baseApi as api} from '../../../library/redux/baseApi';
 
@@ -9,11 +9,10 @@ const injectedRtkApi = api.injectEndpoints({
         getBookmarkById: build.query<GetBookmarkByIdApiResponse, IUseFetcherArgs<GetBookmarkByIdApiArg>>({
             query: (queryArg) => ({
                 url: `/bookmark/${queryArg.variables.id}`,
-                variables: queryArg.variables,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),
-        getAudit: build.query<GetBookmarkLinksApiResponse, IUseFetcherArgs<GetBookmarkLinksApiArg>>({
+        getBookmarkLinks: build.query<GetBookmarkLinksApiResponse, IUseFetcherArgs<GetBookmarkLinksApiArg>>({
             query: (queryArg) => ({
                 url: `/bookmark/${queryArg.variables.id}/links`,
                 params: {
@@ -84,12 +83,11 @@ export type BookmarkDetail = {
 export type BookmarkLinkListRow = {
     /** ID */
     id: string,
-    /** 名稱 */
-    name: string,
     /** 網址 */
     url: string,
 };
 
 export const {
     useGetBookmarkByIdQuery,
+    useGetBookmarkLinksQuery,
 } = injectedRtkApi;

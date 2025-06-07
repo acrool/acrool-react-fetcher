@@ -18,7 +18,7 @@ const mutex = new Mutex();
 interface IQuery {
     url: string
     method?: string
-    variables: Record<string, any>
+    variables?: Record<string, any>
     fetchOptions?: IRequestConfig
 }
 

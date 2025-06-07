@@ -8,7 +8,6 @@ import {Navigate, Outlet, useLocation} from 'react-router';
 const AuthRoute = () => {
     const {pathname} = useLocation();
     const {isAuth} = useAuthState();
-    console.log('isAuth', isAuth);
 
 
     if(!isAuth){

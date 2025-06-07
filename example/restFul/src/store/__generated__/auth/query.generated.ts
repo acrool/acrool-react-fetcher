@@ -1,4 +1,4 @@
-import {IUseRestFulFetcherArgs as IUseFetcherArgs} from '@acrool/react-fetcher';
+import {IRestFulEndpointsQueryReturn as IUseFetcherArgs} from '@acrool/react-fetcher';
 
 import {baseApi as api} from '../../../library/redux/baseApi';
 
@@ -13,9 +13,7 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/login',
                 method: 'POST',
-                variables: {
-                    body: queryArg.variables?.body,
-                },
+                body: queryArg.variables.body,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),
@@ -26,9 +24,7 @@ const injectedRtkApi = api.injectEndpoints({
             query: (queryArg) => ({
                 url: '/auth/sign/refresh',
                 method: 'POST',
-                variables: {
-                    body: queryArg.variables.body,
-                },
+                body: queryArg.variables.body,
                 fetchOptions: queryArg?.fetchOptions,
             }),
         }),

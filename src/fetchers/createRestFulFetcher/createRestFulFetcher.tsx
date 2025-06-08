@@ -4,7 +4,12 @@ import {AxiosInstance} from 'axios';
 import {fetcherLeastTime} from '../config';
 import {IRequestConfig} from '../types';
 import {ERequestMethod} from './config';
-import {IDocument, IUseRestFulFetcherArgs, TContentTypeResolver, TFileMapVariables} from './types';
+import {
+    IDocument,
+    ICreateRestFulFetcherArgs,
+    TContentTypeResolver,
+    TFileMapVariables
+} from './types';
 import {getContentTypeWithMethod, getDataWithContentType} from './utils';
 
 
@@ -16,7 +21,7 @@ import {getContentTypeWithMethod, getDataWithContentType} from './utils';
  * @param document
  * @param contentTypeResolver
  */
-const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileMapVariables>>(
+const createRestFulFetcher = <TData, TArgs extends ICreateRestFulFetcherArgs<TFileMapVariables|void>>(
     axiosInstance: AxiosInstance,
     document: IDocument,
     contentTypeResolver: TContentTypeResolver = getContentTypeWithMethod
@@ -24,14 +29,17 @@ const createRestFulFetcher = <TData, TArgs extends IUseRestFulFetcherArgs<TFileM
     return async (args?: TArgs) => {
         const method = document?.method || '';
         const options = args?.fetchOptions;
-        const params = args?.variables?.params;
+        const body = typeof args === 'object' && args !== null && 'body' in args ? args.body : undefined;
+        const params = typeof args === 'object' && args !== null && 'params' in args ? args.params : undefined;
+
+
         const contentType = options?.headers?.contentType ?? contentTypeResolver(method.toUpperCase() as ERequestMethod);
 
         const config: IRequestConfig = {
             url: document.url,
             method,
             params,
-            data: getDataWithContentType(contentType, args?.variables?.body),
+            data: getDataWithContentType(contentType, body),
             ...options,
             headers: {
                 ...options?.headers,

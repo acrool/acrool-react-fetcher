@@ -7,7 +7,6 @@ import {Navigate, Outlet} from 'react-router';
  */
 const SignRoute = () => {
     const {isAuth} = useAuthState();
-    console.log('isAuth', isAuth);
 
     if(isAuth){
         return <Navigate to="/" replace/>;

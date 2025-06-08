@@ -11,6 +11,7 @@ import {useAppDispatch} from '@/library/redux';
 import {
     bookmarkApi,
     useGetBookmarkByIdQuery,
+    useGetBookmarkLinksQuery,
     usePostAuthSignLogoutMutation,
     usePostAuthSignRefreshMutation
 } from '@/store/__generated__';
@@ -37,6 +38,13 @@ const Dashboard = () => {
     const Bookmark3 = useGetBookmarkByIdQuery({
         variables: {
             id: '3',
+        }
+    });
+    const BookmarkLinks = useGetBookmarkLinksQuery({
+        variables: {
+            id: '1',
+            currentPage: 1,
+            pageLimit: 10,
         }
     });
 
@@ -171,6 +179,14 @@ const Dashboard = () => {
         </div>
         <div>
             isAuth: {String(isAuth)}
+        </div>
+
+        <div>
+            {BookmarkLinks.data?.rows.map(row => {
+                return <div key={row.id}>
+                    {row.url}
+                </div>;
+            })}
         </div>
     </div>;
 };

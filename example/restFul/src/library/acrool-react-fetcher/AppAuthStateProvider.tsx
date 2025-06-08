@@ -36,7 +36,6 @@ const AppAuthStateProvider = ({
         }}
 
         onRefreshTokens={async (refreshToken) => {
-            console.log('xx');
             const res = await RefreshTokenMutation({
                 variables: {
                     body: {refreshToken},
@@ -47,7 +46,6 @@ const AppAuthStateProvider = ({
                     }
                 },
             });
-            console.log('aaaaaa',res);
 
 
             return res.data?.authTokens;

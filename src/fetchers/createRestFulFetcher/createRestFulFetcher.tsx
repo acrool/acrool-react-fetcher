@@ -32,7 +32,6 @@ const createRestFulFetcher = <TData, TArgs extends ICreateRestFulFetcherArgs<TFi
         const body = typeof args === 'object' && args !== null && 'body' in args ? args.body : undefined;
         const params = typeof args === 'object' && args !== null && 'params' in args ? args.params : undefined;
 
-        console.log('variables', args);
 
         const contentType = options?.headers?.contentType ?? contentTypeResolver(method.toUpperCase() as ERequestMethod);
 

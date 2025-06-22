@@ -5,7 +5,7 @@ interface IResponse {
     path?: string
 }
 
-export default class SystemException extends Error {
+export default class FetcherException extends Error {
     public readonly code;
     public readonly devInfo: any;
     public readonly args;
@@ -19,20 +19,6 @@ export default class SystemException extends Error {
         this.args = response.args;
         this.path = response.path;
 
-        this.initName();
+        Object.setPrototypeOf(this, FetcherException.prototype);
     }
-
-    public initName(): void {
-        this.name = this.constructor.name;
-    }
-
-    public getInfo(): IResponse {
-        return {
-            message: this.response.message,
-            code: this.response.code,
-            args: this.response.args,
-            path: this.response.path,
-        };
-    }
-
 }

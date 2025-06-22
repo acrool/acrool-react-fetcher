@@ -1,5 +1,5 @@
 import {dialog} from '@acrool/react-dialog';
-import {createRestFulFetcher, ERequestContentType, ERequestMethod, IRequestConfig, TContentTypeResolver} from '@acrool/react-fetcher';
+import {createRestFulFetcher, FetcherException, ERequestContentType, ERequestMethod, IRequestConfig, TContentTypeResolver} from '@acrool/react-fetcher';
 import type {BaseQueryFn} from '@reduxjs/toolkit/query';
 import {Mutex} from 'async-mutex';
 
@@ -44,13 +44,11 @@ export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (query, BaseQueryAp
         };
 
     } catch (error: any) {
-        dialog.error(error.message, {code: error.code});
+        const fetcherError  = error as FetcherException;
+        // dialog.error(error.message, {code: error.code});
 
         return {
-            error: {
-                code: error.code || 500,
-                message: error.message
-            },
+            error: fetcherError,
         };
     }
 };

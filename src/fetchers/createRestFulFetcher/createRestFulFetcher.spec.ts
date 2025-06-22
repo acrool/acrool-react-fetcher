@@ -1,5 +1,5 @@
 import createRestFulFetcher from './createRestFulFetcher';
-import {IDocument, IUseRestFulFetcherArgs} from './types';
+import {IDocument, ICreateRestFulFetcherArgs} from './types';
 
 describe('createRestFulFetcher', () => {
     let mockAxios: jest.Mock;
@@ -31,7 +31,7 @@ describe('createRestFulFetcher', () => {
         mockAxios.mockResolvedValueOnce({data: mockData});
         const fetcher = createRestFulFetcher(mockAxios as any, document);
         const body = {a: 1};
-        await fetcher({body} as IUseRestFulFetcherArgs<any>);
+        await fetcher({body} as ICreateRestFulFetcherArgs<any>);
         expect(mockAxios).toHaveBeenCalledWith(expect.objectContaining({
             method: 'post',
             data: expect.anything(),
@@ -49,7 +49,7 @@ describe('createRestFulFetcher', () => {
                     headers: {Authorization: 'Bearer token'},
                 },
             },
-        } as IUseRestFulFetcherArgs<any>;
+        } as ICreateRestFulFetcherArgs<any>;
         await fetcher(args);
         expect(mockAxios).toHaveBeenCalledWith(expect.objectContaining({
             params: {id: 123},

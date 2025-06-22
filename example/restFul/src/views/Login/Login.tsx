@@ -1,6 +1,6 @@
 import {block} from '@acrool/react-block';
 import {dialog} from '@acrool/react-dialog';
-import {useAuthState} from '@acrool/react-fetcher';
+import {FetcherException, useAuthState} from '@acrool/react-fetcher';
 import {FCProps} from '@acrool/react-grid';
 import {toast} from '@acrool/react-toaster';
 import React, {useCallback, useState} from 'react';
@@ -43,12 +43,18 @@ const Login = ({
         })
             .unwrap()
             .then(res => {
+
                 toast.success('登入成功');
                 updateTokens(res.authTokens);
 
             })
             .catch(err => {
-                toast.error('登入失敗');
+                if(err instanceof FetcherException){
+                    console.log('err22', err.args);
+                }else{
+                    toast.error('登入失敗');
+                }
+
             })
             .finally(() => {
                 block.hide();

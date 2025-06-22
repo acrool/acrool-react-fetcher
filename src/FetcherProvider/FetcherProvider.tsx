@@ -4,7 +4,7 @@ import {AxiosInstance} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
-import {SystemException} from '../exception';
+import {FetcherException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
@@ -99,7 +99,7 @@ const FetcherProvider = ({
      */
     const pushPendingRequestQueues = (
         resolve: (value: any) => void,
-        reject: (value: SystemException) => void
+        reject: (value: FetcherException) => void
     ) => {
         return (originConfig: IRequestConfig) => {
             if (isDebug) logger.info('[FetcherProvider] Request add pending queue', {originConfig});
@@ -109,7 +109,7 @@ const FetcherProvider = ({
 
                     resolve(axiosInstance(originConfig));
                 } else {
-                    reject(new SystemException({
+                    reject(new FetcherException({
                         message: 'Please login before continuing',
                         code: 'UNAUTHORIZED',
                         path: 'AxiosClientProvider.pushPendingRequestQueues'
@@ -191,7 +191,7 @@ const FetcherProvider = ({
                     isTokenRefreshing = false;
                     if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
-                    return Promise.reject(new SystemException(responseFirstError));
+                    return Promise.reject(new FetcherException(responseFirstError));
                 }
 
                 if (!isTokenRefreshing) {
@@ -213,7 +213,7 @@ const FetcherProvider = ({
                 });
             }
         }
-        return Promise.reject(new SystemException(responseFirstError));
+        return Promise.reject(new FetcherException(responseFirstError));
     };
 
     return <AxiosClientContext.Provider

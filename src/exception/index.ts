@@ -1,1 +1,1 @@
-export {default as SystemException} from './SystemException';
+export {default as FetcherException} from './FetcherException';

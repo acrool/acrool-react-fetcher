@@ -5,8 +5,8 @@ import {fetcherLeastTime} from '../config';
 import {IRequestConfig} from '../types';
 import {ERequestMethod} from './config';
 import {
-    IDocument,
     ICreateRestFulFetcherArgs,
+    IDocument,
     TContentTypeResolver,
     TFileMapVariables
 } from './types';

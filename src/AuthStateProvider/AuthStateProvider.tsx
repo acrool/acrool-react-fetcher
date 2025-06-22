@@ -2,7 +2,7 @@ import logger from '@acrool/js-logger';
 import {isEmpty, isNotEmpty} from '@acrool/js-utils/equal';
 import React, {createContext, ReactNode, useContext, useEffect, useLayoutEffect, useState} from 'react';
 
-import {SystemException} from '../exception';
+import {FetcherException} from '../exception';
 import {
     IAuthTokens,
     TAuthTokensUpdater,
@@ -99,7 +99,7 @@ const AuthStateProvider = ({
         const refreshToken = onGetTokens()?.refreshToken;
         if(!refreshToken || !onRefreshTokens) {
             if (isDebug) logger.danger('[AuthStateProvider] handleOnRefreshTokens', 'refreshToken|onRefreshTokens empty');
-            throw new SystemException({message: 'refreshToken|onRefreshTokens empty', code: 'REFRESH_TOKEN_EMPTY'});
+            throw new FetcherException({message: 'refreshToken|onRefreshTokens empty', code: 'REFRESH_TOKEN_EMPTY'});
         }
 
         try {
@@ -107,7 +107,7 @@ const AuthStateProvider = ({
             if(isEmpty(authTokens)){
                 if (isDebug) logger.danger('[AuthStateProvider] handleOnRefreshTokens', 'new refresh token fail');
 
-                throw new SystemException({message: 'new refresh token fail', code: 'NEW_REFRESH_TOKEN_EMPTY'});
+                throw new FetcherException({message: 'new refresh token fail', code: 'NEW_REFRESH_TOKEN_EMPTY'});
             }
             updateTokens(authTokens);
 
@@ -115,7 +115,7 @@ const AuthStateProvider = ({
 
         } catch (err){
             handleOnForceLogout();
-            throw new SystemException({message: 'refresh token fail', code: 'REFRESH_TOKEN_CATCH'});
+            throw new FetcherException({message: 'refresh token fail', code: 'REFRESH_TOKEN_CATCH'});
         }
 
     };

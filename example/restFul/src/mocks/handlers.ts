@@ -60,9 +60,20 @@ export const handlers = [
 
     // 2. PutAuthLogin → POST /api/auth/sign/login
     http.post('/api/auth/sign/login', async ({request}) => {
-        const formData = await request.formData();
-        const account = formData.get('account');
-        const password = formData.get('password');
+        const formData = await request.json() as {account: string, password: string};
+
+        const account = formData?.account;
+        const password = formData?.password;
+        if (account === 'rp') {
+            return HttpResponse.json({
+                message: '帳號重複',
+                code: 'AUTH_EXIST',
+                path: '/api/auth/sign/login',
+                args: {
+                    newAccount: 'newTester'
+                }
+            }, {status: 400});
+        }
         if (account === 'tester' && password === 'acrool_is_good_task_system') {
             validAuthTokens = {
                 accessToken: 'login-accessToken',
@@ -95,8 +106,8 @@ export const handlers = [
     // 4. PutAuthRefreshToken → POST /auth/refresh-token
     http.post('/api/auth/sign/refresh', async ({request}) => {
         console.log('backend refreshToken.......');
-        const formData = await request.formData();
-        const refreshToken = formData.get('refreshToken');
+        const formData = await request.json() as {refreshToken: string};
+        const refreshToken = formData.refreshToken;
 
 
         if (refreshToken === 'mock-empty-token') {

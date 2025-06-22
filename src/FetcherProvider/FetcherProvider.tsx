@@ -4,7 +4,6 @@ import {AxiosInstance} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
-import {defaultI18nDict} from '../config/i18nDict';
 import {SystemException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
@@ -40,7 +39,6 @@ interface IProps {
     getResponseFormatError?: TGetResponseFormatError
     onError?: (error: IFormatResponseErrorReturn) => void
     authorizationPrefix?: string
-    i18nDict?: Record<string, Record<number, string>>
     isDebug?: boolean
 }
 
@@ -59,7 +57,6 @@ const FetcherProvider = ({
     onError,
     checkIsRefreshTokenRequest,
     authorizationPrefix = 'Bearer',
-    i18nDict,
     isDebug = false,
 }: IProps) => {
 
@@ -113,7 +110,7 @@ const FetcherProvider = ({
                     resolve(axiosInstance(originConfig));
                 } else {
                     reject(new SystemException({
-                        message: getErrorMessage(401),
+                        message: 'Please login before continuing',
                         code: 'UNAUTHORIZED',
                         path: 'AxiosClientProvider.pushPendingRequestQueues'
                     }));
@@ -163,13 +160,6 @@ const FetcherProvider = ({
         return response;
     };
 
-    /**
-     * 取得多語系錯誤訊息
-     */
-    const getErrorMessage = (status: number) => {
-        const dict = (i18nDict?.[locale] || defaultI18nDict[locale] || defaultI18nDict['en-US']);
-        return dict?.[status] || `Error: ${status}`;
-    };
 
     /**
      * 處理 response 失敗

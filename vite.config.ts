@@ -26,8 +26,8 @@ export default defineConfig({
         }
     },
     build: {
-        minify: process.env.NODE_ENV === 'production',
-        sourcemap: process.env.NODE_ENV !== 'production',
+        minify: 'terser',
+        sourcemap: true,
         lib: {
             entry: path.resolve(__dirname, 'src/index.ts'),
             formats: ['es'],
@@ -41,6 +41,19 @@ export default defineConfig({
                     react: 'React',
                     'react-dom': 'ReactDOM',
                 },
+                generatedCode: {
+                    constBindings: true,
+                },
+            },
+        },
+        terserOptions: {
+            compress: {
+                keep_classnames: true,
+                keep_fnames: true,
+            },
+            mangle: {
+                keep_classnames: true,
+                keep_fnames: true,
             },
         },
     },

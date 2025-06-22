@@ -18,6 +18,8 @@ export default class FetcherException<TArgs = unknown> extends Error {
         this.args = response.args as TArgs;
         this.path = response.path;
 
+        this.name = this.constructor.name;
+        
         Object.setPrototypeOf(this, FetcherException.prototype);
     }
 }

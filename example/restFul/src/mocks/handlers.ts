@@ -64,17 +64,17 @@ export const handlers = [
 
         const account = formData?.account;
         const password = formData?.password;
-        if (account === 'rp') {
+        if (account === 'tester2') {
             return HttpResponse.json({
                 message: '帳號重複',
-                code: 'AUTH_EXIST',
+                code: 'ACCOUNT_RECOMMEND',
                 path: '/api/auth/sign/login',
                 args: {
-                    newAccount: 'newTester'
+                    newAccount: 'tester2a9999'
                 }
             }, {status: 400});
         }
-        if (account === 'tester' && password === 'acrool_is_good_task_system') {
+        if (account === 'tester1' && password === 'acrool_is_good_task_system') {
             validAuthTokens = {
                 accessToken: 'login-accessToken',
                 refreshToken: 'login-refreshToken',

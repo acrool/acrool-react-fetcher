@@ -43,12 +43,9 @@ export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (query, BaseQueryAp
             meta: {}
         };
 
-    } catch (error: any) {
-        const fetcherError  = error as FetcherException;
-        // dialog.error(error.message, {code: error.code});
-
+    } catch (error: unknown) {
         return {
-            error: fetcherError,
+            error,
         };
     }
 };

@@ -3,7 +3,7 @@ import {dialog} from '@acrool/react-dialog';
 import {FetcherException, useAuthState} from '@acrool/react-fetcher';
 import {FCProps} from '@acrool/react-grid';
 import {toast} from '@acrool/react-toaster';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback} from 'react';
 import {Controller, SubmitHandler, useForm} from 'react-hook-form';
 import styled from 'styled-components';
 
@@ -43,18 +43,16 @@ const Login = ({
         })
             .unwrap()
             .then(res => {
-
                 toast.success('登入成功');
                 updateTokens(res.authTokens);
-
             })
             .catch(err => {
                 if(err instanceof FetcherException){
-                    console.log('err22', err.args);
+                    const errFormat = err as FetcherException<{newAccount: string}>;
+                    dialog.warning(`建議帳號 ${errFormat.args.newAccount}`);
                 }else{
                     toast.error('登入失敗');
                 }
-
             })
             .finally(() => {
                 block.hide();
@@ -69,6 +67,12 @@ const Login = ({
         style={style}
     >
         <Banner/>
+
+        <div>tester1: 正常登入</div>
+        <div>tester2: 特定 error.code 帳號重複，忽略全域錯誤</div>
+        <div>其他: 全域錯誤</div>
+
+
         <Wrapper>
             <h2>Login</h2>
             <form onSubmit={HookForm.handleSubmit(handleSubmitHandler)}>
@@ -117,6 +121,43 @@ export default Login;
 
 
 const Wrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+
+    h2 {
+        margin-bottom: 1rem;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        max-width: 300px;
+
+        input {
+            padding: 0.5rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 0.5rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+
+            &:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+        }
+    }
 `;
 
 

@@ -99,7 +99,7 @@ const FetcherProvider = ({
      */
     const pushPendingRequestQueues = (
         resolve: (value: any) => void,
-        reject: (value: FetcherException) => void
+        reject: (value: FetcherException<unknown>) => void
     ) => {
         return (originConfig: IRequestConfig) => {
             if (isDebug) logger.info('[FetcherProvider] Request add pending queue', {originConfig});

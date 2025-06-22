@@ -20,10 +20,10 @@ export type TInterceptorResponseError = (error: AxiosError<any>) => AxiosRespons
 
 export interface IFormatResponseErrorReturn {
     message: string
-    code: string
+    code?: string
     path?: string
     args?: any
 }
 
 
-export type TGetResponseFormatError = (response?: AxiosResponse) => IFormatResponseErrorReturn
+export type TGetResponseFormatError = (axiosError?: AxiosError) => IFormatResponseErrorReturn

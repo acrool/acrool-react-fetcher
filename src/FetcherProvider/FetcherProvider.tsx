@@ -179,7 +179,7 @@ const FetcherProvider = ({
         const response = axiosError.response;
         const originalConfig = axiosError.config as IInternalRequestConfig;
         const status = axiosError.status;
-        const responseFirstError = getResponseFormatError(response);
+        const responseFirstError = getResponseFormatError(axiosError);
 
         if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
 

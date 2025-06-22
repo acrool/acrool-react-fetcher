@@ -2,7 +2,7 @@ import {createGraphQLFetcher, IRequestConfig} from '@acrool/react-fetcher';
 import {createApi, defaultSerializeQueryArgs} from '@reduxjs/toolkit/query/react';
 import {Mutex} from 'async-mutex';
 
-import {axiosInstance} from '@/library/acrool-react-fetcher';
+import {baseQueryWithAxios} from '@/library/acrool-react-fetcher/baseQueryWithAxios';
 
 const mutex = new Mutex();
 
@@ -16,35 +16,10 @@ interface IQuery {
 
 
 
-export const baseQueryWithReAuthGraphql: any = async (
-    query: IQuery,
-    api: any,
-    extraOptions: any,
-) => {
-    await mutex.waitForUnlock();
-    try {
-        const data = await createGraphQLFetcher(axiosInstance, query.document)(query.args);
-        return {
-            data: data,
-            meta: {},
-        };
-
-    } catch (error: any) {
-        console.error(error.message, {code: error.code, path: error.path});
-
-        return {
-            error: {
-                code: error.code || 500,
-                message: error.message
-            },
-        };
-    }
-};
-
 
 export const baseApi = createApi({
     reducerPath: 'api',
-    baseQuery: baseQueryWithReAuthGraphql,
+    baseQuery: baseQueryWithAxios,
     serializeQueryArgs: ({queryArgs, endpointDefinition, endpointName}) => {
         const {variables} = (queryArgs || {}) as any;
         return defaultSerializeQueryArgs({

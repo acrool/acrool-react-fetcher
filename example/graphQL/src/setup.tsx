@@ -35,7 +35,7 @@ function getPreloadedState() {
 
     // 持久化資料回存到 Redux (若版本不同則重設)
     let initialState: IInitialState|undefined = {};
-    if (persistVersion !== window.localStorage.getItem(`${persistKey}-version`)) {
+    if (persistVersion !== window.localStorage.getItem(persistKeyMap.version)) {
         window.localStorage.setItem(persistKeyMap.version, persistVersion);
         window.localStorage.setItem(persistKeyMap.locale, userLanguage);
         window.localStorage.setItem(persistKeyMap.auth, '{}');

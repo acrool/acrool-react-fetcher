@@ -1,9 +1,8 @@
-import {dialog} from '@acrool/react-dialog';
-import {createRestFulFetcher, FetcherException, ERequestContentType, ERequestMethod, IRequestConfig, TContentTypeResolver} from '@acrool/react-fetcher';
+import {createRestFulFetcher, IRequestConfig} from '@acrool/react-fetcher';
 import type {BaseQueryFn} from '@reduxjs/toolkit/query';
 import {Mutex} from 'async-mutex';
 
-import {axiosInstance} from '@/library/acrool-react-fetcher/config';
+import {axiosInstance} from './config';
 
 const mutex = new Mutex();
 
@@ -16,19 +15,6 @@ interface IQuery {
     fetchOptions?: IRequestConfig
 }
 
-
-
-/**
- * 根據 method 取得 Content-Type
- * @param query
- * @param BaseQueryApi
- * @param extraOptions
- */
-// export const getContentTypeWithMethod: TContentTypeResolver = (method) => {
-//     if ([ERequestMethod.POST, ERequestMethod.PUT].includes(method)) return ERequestContentType.formData;
-//     if ([ERequestMethod.DELETE].includes(method)) return ERequestContentType.formUrlDecode;
-//     return ERequestContentType.json;
-// };
 
 
 export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (query, BaseQueryApi, extraOptions) => {

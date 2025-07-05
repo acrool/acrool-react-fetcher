@@ -8,11 +8,12 @@ import {FetcherException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
+    TCheckIsErrorResponse,
     TCheckIsRefreshTokenRequest,
     TGetResponseFormatError,
     TInterceptorRequest,
     TInterceptorResponseError,
-    TInterceptorResponseSuccess, TResponseOnErrorCallback
+    TInterceptorResponseSuccess, TOnResponseError,
 } from './types';
 import {getRestFulResponseFormatError} from './utils';
 
@@ -35,9 +36,10 @@ interface IProps {
     children: React.ReactNode
     axiosInstance: AxiosInstance
     checkIsRefreshTokenRequest?: TCheckIsRefreshTokenRequest
+    checkIsErrorResponse?: TCheckIsErrorResponse
     locale?: string
     getResponseFormatError?: TGetResponseFormatError
-    onError?: TResponseOnErrorCallback
+    onResponseError?: TOnResponseError
     authorizationPrefix?: string
     isDebug?: boolean
 }
@@ -47,15 +49,16 @@ interface IProps {
  * @param children
  * @param authTokensManager
  * @param locale
- * @param onError
+ * @param onResponseError
  */
 const FetcherProvider = ({
     children,
     axiosInstance,
     locale = 'en-US',
     getResponseFormatError = getRestFulResponseFormatError,
-    onError,
+    onResponseError,
     checkIsRefreshTokenRequest,
+    checkIsErrorResponse,
     authorizationPrefix = 'Bearer',
     isDebug = false,
 }: IProps) => {
@@ -157,6 +160,11 @@ const FetcherProvider = ({
      */
     const interceptorsResponseSuccess: TInterceptorResponseSuccess = (response) => {
         if (isDebug) logger.info('[FetcherProvider] interceptorsResponseSuccess', {response});
+
+        if (checkIsErrorResponse && checkIsErrorResponse(response)){
+            // 拋出自定義錯誤讓 catch 接住
+            return Promise.reject(response);
+        }
         return response;
     };
 
@@ -173,8 +181,8 @@ const FetcherProvider = ({
 
         if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
 
-        if (onError && originalConfig.ignoreErrorCallback !== true) {
-            onError(responseFirstError);
+        if (onResponseError && originalConfig.ignoreErrorCallback !== true) {
+            onResponseError(responseFirstError);
         }
 
 

@@ -1,4 +1,4 @@
-import {FetcherProvider, getGraphQLResponseFormatError, TCheckIsRefreshTokenRequest} from '@acrool/react-fetcher';
+import {FetcherProvider, getGraphQLResponseFormatError, TCheckIsErrorResponse,TCheckIsRefreshTokenRequest} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import React, {JSX} from 'react';
 
@@ -37,6 +37,16 @@ const AppFetcherProvider = ({
         return config.headers[refreshingHeaderKey] === '1';
     };
 
+    /**
+     * 檢查是否為錯誤回應
+     * (使用在非標準 HTTP STATUS CODE 的情況下)
+     * @param response
+     */
+    const checkIsErrorResponse: TCheckIsErrorResponse = (response) => {
+        const data = response.data;
+        return data.success === false;
+    };
+
 
     return <FetcherProvider
         axiosInstance={axiosInstance}
@@ -44,6 +54,7 @@ const AppFetcherProvider = ({
         isDebug
         getResponseFormatError={getGraphQLResponseFormatError}
         checkIsRefreshTokenRequest={checkIsRefreshTokenRequest}
+        checkIsErrorResponse={checkIsErrorResponse}
     >
         {children}
     </FetcherProvider>;

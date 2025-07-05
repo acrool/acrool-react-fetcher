@@ -162,8 +162,15 @@ const FetcherProvider = ({
         if (isDebug) logger.info('[FetcherProvider] interceptorsResponseSuccess', {response});
 
         if (checkIsErrorResponse && checkIsErrorResponse(response)){
-            // 拋出自定義錯誤讓 catch 接住
-            return Promise.reject(response);
+            // 創建一個 AxiosError 來模擬錯誤狀態，這樣可以進入 interceptorsResponseError
+            const axiosError = new Error('Business logic error') as any;
+            axiosError.response = response;
+            axiosError.config = response.config;
+            axiosError.status = response.status;
+            axiosError.isAxiosError = true;
+            
+            // 拋出 AxiosError 讓 interceptorsResponseError 處理
+            return Promise.reject(axiosError);
         }
         return response;
     };

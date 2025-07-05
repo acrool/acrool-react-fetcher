@@ -38,22 +38,34 @@ describe('createRestFulFetcher', () => {
         }));
     });
 
-    it('應正確處理 headers 與 params', async () => {
+    it('應正確處理 headers', async () => {
+        const mockData = {ok: true};
+        mockAxios.mockResolvedValueOnce({data: mockData});
+        const fetcher = createRestFulFetcher(mockAxios as any, document);
+        const args = {
+            fetchOptions: {
+                headers: {Authorization: 'Bearer token'},
+            },
+        } as ICreateRestFulFetcherArgs<any>;
+        await fetcher(args);
+        expect(mockAxios).toHaveBeenCalledWith(expect.objectContaining({
+            headers: expect.objectContaining({
+                Authorization: 'Bearer token',
+                'Content-Type': expect.any(String),
+            }),
+        }));
+    });
+
+    it('應正確處理 params', async () => {
         const mockData = {ok: true};
         mockAxios.mockResolvedValueOnce({data: mockData});
         const fetcher = createRestFulFetcher(mockAxios as any, document);
         const args = {
             params: {id: 123},
-            fetchOptions: {
-                fetchOptions: {
-                    headers: {Authorization: 'Bearer token'},
-                },
-            },
         } as ICreateRestFulFetcherArgs<any>;
         await fetcher(args);
         expect(mockAxios).toHaveBeenCalledWith(expect.objectContaining({
             params: {id: 123},
-            headers: expect.objectContaining({Authorization: 'Bearer token'}),
         }));
     });
 });

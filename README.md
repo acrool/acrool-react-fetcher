@@ -57,7 +57,7 @@ import "@acrool/react-fetcher/dist/index.css";
 Wrap your app with `AuthStateProvider` and `AxiosClientProvider`. It is recommended to use `AppFetcherProvider` to automatically wrap all necessary providers:
 
 ```tsx
-import AppFetcherProvider from '@/library/acrool-react-fetcher';
+import AppFetcherProvider from '@/library/react-fetcher';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <AppFetcherProvider>
@@ -73,7 +73,7 @@ For Redux Toolkit Query, create `baseApi.ts`:
 ```ts
 import { createGraphQLFetcher } from '@acrool/react-fetcher';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { axiosInstance } from '@/library/acrool-react-fetcher';
+import { axiosInstance } from '@/library/react-fetcher';
 
 export const baseApi = createApi({
   reducerPath: 'api',

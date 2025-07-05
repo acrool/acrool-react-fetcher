@@ -8,11 +8,11 @@ import {FetcherException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
-    IFormatResponseErrorReturn,
+    TCheckIsRefreshTokenRequest,
     TGetResponseFormatError,
     TInterceptorRequest,
     TInterceptorResponseError,
-    TInterceptorResponseSuccess
+    TInterceptorResponseSuccess, TResponseOnErrorCallback
 } from './types';
 import {getRestFulResponseFormatError} from './utils';
 
@@ -34,10 +34,10 @@ export const useAxiosClient = () => {
 interface IProps {
     children: React.ReactNode
     axiosInstance: AxiosInstance
-    checkIsRefreshTokenRequest?: (config: IInternalRequestConfig) => boolean
+    checkIsRefreshTokenRequest?: TCheckIsRefreshTokenRequest
     locale?: string
     getResponseFormatError?: TGetResponseFormatError
-    onError?: (error: IFormatResponseErrorReturn) => void
+    onError?: TResponseOnErrorCallback
     authorizationPrefix?: string
     isDebug?: boolean
 }
@@ -173,7 +173,7 @@ const FetcherProvider = ({
 
         if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError', {status, responseFirstError});
 
-        if (onError) {
+        if (onError && originalConfig.ignoreErrorCallback !== true) {
             onError(responseFirstError);
         }
 

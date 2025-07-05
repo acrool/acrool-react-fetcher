@@ -5,7 +5,7 @@ import {toast} from '@acrool/react-toaster';
 import React from 'react';
 import {useNavigate} from 'react-router';
 
-import {refreshingHeaderKey} from '@/library/acrool-react-fetcher/config';
+import {refreshingHeaderKey} from '@/library/react-fetcher/config';
 import {useAppDispatch} from '@/library/redux';
 import {
     bookmarkApi,

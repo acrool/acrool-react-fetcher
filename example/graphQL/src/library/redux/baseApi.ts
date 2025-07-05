@@ -1,18 +1,9 @@
-import {createGraphQLFetcher, IRequestConfig} from '@acrool/react-fetcher';
+import {objectKeys} from '@acrool/js-utils/object';
 import {createApi, defaultSerializeQueryArgs} from '@reduxjs/toolkit/query/react';
-import {Mutex} from 'async-mutex';
 
-import {baseQueryWithAxios} from '@/library/acrool-react-fetcher/baseQueryWithAxios';
+import {ECacheTagTypes} from '@/store/tagTypes';
 
-const mutex = new Mutex();
-
-interface IQuery {
-    document: string
-    args: {
-        variables: any,
-        fetchOptions?: IRequestConfig,
-    }
-}
+import {baseQueryWithAxios} from './baseQueryWithAxios';
 
 
 
@@ -21,6 +12,7 @@ export const baseApi = createApi({
     reducerPath: 'api',
     baseQuery: baseQueryWithAxios,
     serializeQueryArgs: ({queryArgs, endpointDefinition, endpointName}) => {
+        // 只使用 variables 作為緩存鍵
         const {variables} = (queryArgs || {}) as any;
         return defaultSerializeQueryArgs({
             endpointName,
@@ -29,8 +21,6 @@ export const baseApi = createApi({
         });
     },
     endpoints: () => ({}),
-    tagTypes: [
-        'Bookmark',
-        'Bookmarks',
-    ],
+    tagTypes: objectKeys(ECacheTagTypes),
+
 });

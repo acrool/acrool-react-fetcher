@@ -6,6 +6,7 @@ interface IFetchOptions {
     forceGuest?: boolean
     leastTime?: number // 最少需等待時間 (毫秒)
     timeout?: number // 逾時時間 (毫秒)
+    ignoreErrorCallback?: boolean // 忽略錯誤回調
 }
 
 export interface IInternalRequestConfig extends InternalAxiosRequestConfig, IFetchOptions{

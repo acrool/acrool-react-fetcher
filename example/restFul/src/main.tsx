@@ -9,7 +9,7 @@ import composedProviders, {providerWithProps} from '@acrool/react-providers';
 import {createElement} from 'react';
 import ReactDOM from 'react-dom/client';
 
-import AppFetcherProvider, {AppAuthStateProvider} from '@/library/acrool-react-fetcher';
+import AppFetcherProvider, {AppAuthStateProvider} from '@/library/react-fetcher';
 import ReactLocaleProvider from '@/library/acrool-react-locale';
 import {Provider as ReduxProvider} from '@/library/redux';
 

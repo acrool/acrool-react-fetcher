@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import React, {JSX} from 'react';
 import styled from 'styled-components';
 
-import {persistKey} from '@/config/app';
+import {persistKeyMap} from '@/config/app';
 import {DEFAULT_LOCALE, serverDictionaries} from '@/config/locale';
 
 interface IProps {
@@ -28,7 +28,7 @@ const AppLocaleProvider = ({
         defaultLocale={DEFAULT_LOCALE}
         onChangeLocale={handleChangeLocale}
         renderLoading={() => <BlockWrapperFixed queueKey="locale-fetching"/>}
-        persistKey={`${persistKey}-locale`}
+        persistKey={`${persistKeyMap.locale}-locale`}
     >
         {children}
     </LocaleAsyncProvider>;

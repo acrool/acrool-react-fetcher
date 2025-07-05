@@ -1,8 +1,9 @@
 import {Middleware} from 'redux';
 
-import {persistKey, persistWhileList} from '@/config/app';
+import {persistKeyMap, persistWhileList} from '@/config/app';
 import {getByPath, setWith} from '@/utils/setWith';
 
+const persistKey = persistKeyMap.root;
 
 /**
  * 同步Store白名單到 Localstorage

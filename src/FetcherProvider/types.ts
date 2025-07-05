@@ -1,4 +1,6 @@
 import {AxiosError, AxiosResponse, InternalAxiosRequestConfig} from 'axios';
+
+import {IInternalRequestConfig} from '../fetchers/types';
 //
 //
 export type TInterceptorRequest = (value: InternalAxiosRequestConfig<any>) => InternalAxiosRequestConfig<any> | Promise<InternalAxiosRequestConfig<any>>;
@@ -27,3 +29,5 @@ export interface IFormatResponseErrorReturn {
 
 
 export type TGetResponseFormatError = (axiosError?: AxiosError) => IFormatResponseErrorReturn
+export type TCheckIsRefreshTokenRequest = (config: IInternalRequestConfig) => boolean
+export type TResponseOnErrorCallback = (error: IFormatResponseErrorReturn) => void

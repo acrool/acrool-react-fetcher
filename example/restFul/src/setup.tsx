@@ -1,6 +1,6 @@
 import {jsonDecode} from '@acrool/js-utils/string';
 
-import {persistKey, persistVersion} from '@/config/app';
+import {persistKeyMap, persistVersion} from '@/config/app';
 import {gridConfig} from '@/config/grid';
 import {DEFAULT_LOCALE,ELocales} from '@/config/locale';
 import {siteConfig} from '@/config/site';
@@ -20,12 +20,6 @@ interface IInitialState {
 }
 
 
-const persistKeyMap = {
-    root: persistKey,
-    locale: `${persistKey}-locale`,
-    auth: `${persistKey}-auth`,
-    version: `${persistKey}-version`,
-};
 
 /**
  * 取得持久化預設Redux狀態
@@ -35,7 +29,7 @@ function getPreloadedState() {
 
     // 持久化資料回存到 Redux (若版本不同則重設)
     let initialState: IInitialState|undefined = {};
-    if (persistVersion !== window.localStorage.getItem(`${persistKey}-version`)) {
+    if (persistVersion !== window.localStorage.getItem(persistKeyMap.version)) {
         window.localStorage.setItem(persistKeyMap.version, persistVersion);
         window.localStorage.setItem(persistKeyMap.locale, userLanguage);
         window.localStorage.setItem(persistKeyMap.auth, '{}');

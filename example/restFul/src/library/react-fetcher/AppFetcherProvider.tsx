@@ -1,9 +1,10 @@
 import {dialog} from '@acrool/react-dialog';
-import {FetcherProvider, getRestFulResponseFormatError} from '@acrool/react-fetcher';
+import {FetcherProvider, getRestFulResponseFormatError, TCheckIsRefreshTokenRequest,TResponseOnErrorCallback} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import React, {JSX} from 'react';
 
-import {axiosInstance, refreshingHeaderKey} from './config';
+import {axiosInstance} from './axiosInstance';
+import {refreshingHeaderKey} from './config';
 
 
 
@@ -36,7 +37,7 @@ const AppFetcherProvider = ({
      * 處理全域錯誤
      * @param error
      */
-    const handleGlobalError = (error: {message: string, code?: string, path?: string, args?: any}) => {
+    const handleGlobalError: TResponseOnErrorCallback = (error: {message: string, code?: string, path?: string, args?: any}) => {
         // 如果錯誤代碼在忽略清單中，則不顯示全域錯誤
         if (error.code && IGNORED_ERROR_CODES.includes(error.code)) {
             console.log('[AppFetcherProvider] Ignored error:', error);
@@ -47,15 +48,22 @@ const AppFetcherProvider = ({
         dialog.error(error.message, {code: error.code});
     };
 
+    /**
+     * 檢查是否為刷新 token 的請求
+     * @param config
+     */
+    const checkIsRefreshTokenRequest: TCheckIsRefreshTokenRequest = (config) => {
+        return config.headers[refreshingHeaderKey] === '1';
+    };
+
+
     return <FetcherProvider
         axiosInstance={axiosInstance}
         locale={locale}
         isDebug
         getResponseFormatError={getRestFulResponseFormatError}
         onError={handleGlobalError}
-        checkIsRefreshTokenRequest={config => {
-            return config.headers[refreshingHeaderKey] === '1';
-        }}
+        checkIsRefreshTokenRequest={checkIsRefreshTokenRequest}
     >
         {children}
     </FetcherProvider>;

@@ -1,8 +1,9 @@
-import {FetcherProvider, getGraphQLResponseFormatError} from '@acrool/react-fetcher';
+import {FetcherProvider, getGraphQLResponseFormatError, TCheckIsRefreshTokenRequest} from '@acrool/react-fetcher';
 import {useLocale} from '@acrool/react-locale';
 import React, {JSX} from 'react';
 
-import {axiosInstance, refreshingHeaderKey} from './config';
+import {axiosInstance} from './axiosInstance';
+import {refreshingHeaderKey} from './config';
 
 
 
@@ -28,14 +29,21 @@ const AppFetcherProvider = ({
     const {locale} = useLocale();
 
 
+    /**
+     * 檢查是否為刷新 token 的請求
+     * @param config
+     */
+    const checkIsRefreshTokenRequest: TCheckIsRefreshTokenRequest = (config) => {
+        return config.headers[refreshingHeaderKey] === '1';
+    };
+
+
     return <FetcherProvider
         axiosInstance={axiosInstance}
         locale={locale}
         isDebug
         getResponseFormatError={getGraphQLResponseFormatError}
-        checkIsRefreshTokenRequest={config => {
-            return config.headers[refreshingHeaderKey] === '1';
-        }}
+        checkIsRefreshTokenRequest={checkIsRefreshTokenRequest}
     >
         {children}
     </FetcherProvider>;

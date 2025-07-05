@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7-alpha.2](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.1...v0.0.7-alpha.2) (2025-07-05)
+
+
+### Features
+
+* 改善錯誤處理邏輯以支持 AxiosError ([529c1f9](https://github.com/acrool/acrool-react-fetcher/commit/529c1f990408c663a7b41cfb4199d4d966026515))
+
 ### [0.0.7-alpha.1](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.0...v0.0.7-alpha.1) (2025-07-05)
 
 

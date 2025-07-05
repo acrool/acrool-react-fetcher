@@ -8,7 +8,7 @@ const mutex = new Mutex();
 
 interface IQuery {
     document: string
-    args: IUseGraphQLFetcherArgs
+    args: IUseGraphQLFetcherArgs|void
 }
 
 
@@ -16,7 +16,7 @@ interface IQuery {
 export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (query, BaseQueryApi, extraOptions) => {
     await mutex.waitForUnlock();
     try {
-        const data = await createGraphQLFetcher(axiosInstance, query.document)(query.args);
+        const data = await createGraphQLFetcher(axiosInstance, query.document)(query.args || undefined);
         return {
             data: data,
             meta: {},

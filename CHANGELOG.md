@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7-alpha.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.6...v0.0.7-alpha.0) (2025-07-05)
+
+
+### Features
+
+* 優化 createRestFulFetcher 測試用例 ([47eb738](https://github.com/acrool/acrool-react-fetcher/commit/47eb738d55b55ab62340125d0c31a6434e2ad899))
+* 新增錯誤回應檢查功能 ([35f1d7b](https://github.com/acrool/acrool-react-fetcher/commit/35f1d7badc34eb6da5f4e526a5879e7f5f6f4e51))
+
+
+### Bug Fixes
+
+* 修正 baseQueryWithAxios 中 args 參數的類型 ([9b92e58](https://github.com/acrool/acrool-react-fetcher/commit/9b92e58e8fef27d0793c94e7514cf12281e66a16))
+
 ### [0.0.6](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.6-alpha.0...v0.0.6) (2025-07-05)
 
 

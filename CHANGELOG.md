@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7-alpha.1](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.0...v0.0.7-alpha.1) (2025-07-05)
+
+
+### Features
+
+* 增加錯誤回應攔截器的日誌紀錄 ([8e09feb](https://github.com/acrool/acrool-react-fetcher/commit/8e09feb8c2d269de13db49656371404a76ee2415))
+
 ### [0.0.7-alpha.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.6...v0.0.7-alpha.0) (2025-07-05)
 
 

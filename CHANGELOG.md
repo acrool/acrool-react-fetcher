@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.6](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.6-alpha.0...v0.0.6) (2025-07-05)
+
+
+### Features
+
+* 新增 AppAuthStateProvider 和 axiosInstance，優化認證流程 ([94bd44f](https://github.com/acrool/acrool-react-fetcher/commit/94bd44fbb617af52a4c9a0142b0ee878e41adfd8))
+
 ### [0.0.6-alpha.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.5...v0.0.6-alpha.0) (2025-06-21)
 
 ### [0.0.5](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.3...v0.0.5) (2025-06-08)

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.8-alpha.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7...v0.0.8-alpha.0) (2025-07-06)
+
+
+### Features
+
+* 更新認證邏輯與錯誤處理 ([e967f4d](https://github.com/acrool/acrool-react-fetcher/commit/e967f4d1ebd335045de61ee8bca1afd7f383dc70))
+
 ### [0.0.7](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.3...v0.0.7) (2025-07-06)
 
 ### [0.0.7-alpha.3](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.2...v0.0.7-alpha.3) (2025-07-06)

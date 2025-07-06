@@ -1,6 +1,6 @@
 {
   "name": "@acrool/react-fetcher",
-  "version": "0.0.7-alpha.3",
+  "version": "0.0.7",
   "description": "Fetcher library based for Reactjs",
   "keywords": [
     "acrool",

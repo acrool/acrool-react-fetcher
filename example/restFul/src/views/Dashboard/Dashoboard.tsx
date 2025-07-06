@@ -64,7 +64,10 @@ const Dashboard = () => {
                 body: {refreshToken: tokens.refreshToken},
             },
             fetchOptions: {
+                // forceGuest: true,
+                // ignoreGlobalError: true,
                 headers: {
+
                     [refreshingHeaderKey]: '1',
                 }
             },

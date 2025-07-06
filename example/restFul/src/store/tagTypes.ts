@@ -6,4 +6,5 @@ export enum ECacheTagTypes {
   adminDetail = 'adminDetail',
   adminHistoryList = 'adminHistoryList',
   Bookmark = 'Bookmark',
+  Bookmarks = 'Bookmarks',
 }

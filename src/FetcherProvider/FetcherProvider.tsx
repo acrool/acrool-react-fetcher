@@ -219,7 +219,7 @@ const FetcherProvider = ({
                     if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
 
-                    if(originalConfig.ignoreErrorCallback !== true) handleOnResponseError(responseFirstError);
+                    if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError);
                     return Promise.reject(new FetcherException(responseFirstError));
                 }
 
@@ -244,7 +244,7 @@ const FetcherProvider = ({
         }
 
         // 處理其他錯誤
-        if(originalConfig.ignoreErrorCallback !== true) handleOnResponseError(responseFirstError);
+        if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError);
         return Promise.reject(new FetcherException(responseFirstError));
     };
 

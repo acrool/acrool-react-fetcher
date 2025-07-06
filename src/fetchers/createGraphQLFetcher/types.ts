@@ -8,3 +8,8 @@ export interface IUseGraphQLFetcherArgs<TVariables = {}> {
 export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
 
 
+
+export interface ICreateGraphqlOptions {
+    // contentTypeResolver?: TContentTypeResolver
+    fetcherLeastTime: number
+}

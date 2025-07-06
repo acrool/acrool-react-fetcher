@@ -44,6 +44,7 @@ const Dashboard = () => {
         const res = RefreshTokenMutation({
             variables: {input: {refreshToken: tokens.refreshToken}},
             fetchOptions: {
+                // forceGuest: true,
                 headers: {
                     [refreshingHeaderKey]: '1',
                 }

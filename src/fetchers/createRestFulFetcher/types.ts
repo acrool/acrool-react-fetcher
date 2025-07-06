@@ -24,9 +24,14 @@ export type ICreateRestFulFetcherArgs<TVariables> =
 export interface IDocument {
     url: string
     method?: string
+    contentType?: string
 }
 
 export type TFileMapVariables = Record<string, any>;
 export type TBody = Record<string, any> | FormData | File[] | File;
 export type TContentTypeResolver = (method: ERequestMethod) => string;
 
+export interface ICreateRestFulOptions {
+    contentTypeResolver?: TContentTypeResolver
+    fetcherLeastTime: number
+}

@@ -1,13 +1,14 @@
 import {graphql, http, HttpResponse} from 'msw';
+import {isNotEmpty} from "@acrool/js-utils/equal";
 
-let validAuthTokens = {
-    accessToken: 'init-accessToken',
-    refreshToken: 'init-refreshToken',
-};
 // let validAuthTokens = {
-//     accessToken: 'login-accessToken',
-//     refreshToken: 'login-refreshToken',
+//     accessToken: 'init-accessToken',
+//     refreshToken: 'init-refreshToken',
 // };
+let validAuthTokens = {
+    accessToken: 'login-accessToken',
+    refreshToken: 'login-refreshToken',
+};
 let refreshCount = 0;
 
 export const handlers = [
@@ -86,6 +87,16 @@ export const handlers = [
 
     // refreshToken handler
     graphql.mutation('PutAuthRefreshToken', async ({request, variables}) => {
+        // const headerAuth = request.headers.get('authorization');
+        //
+        // if(isNotEmpty(headerAuth)){
+        //     return HttpResponse.json({
+        //         errors: [
+        //             {message: '不可帶入 Header authorization'}
+        //         ]
+        //     }, {status: 401});
+        // }
+
         if (variables.input.refreshToken === 'mock-empty-token') {
             return HttpResponse.json({
                 data: {

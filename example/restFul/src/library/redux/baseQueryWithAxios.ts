@@ -1,4 +1,4 @@
-import {createRestFulFetcher, IRequestConfig} from '@acrool/react-fetcher';
+import {createRestFulFetcher, ERequestContentType, IRequestConfig, TContentTypeResolver} from '@acrool/react-fetcher';
 import type {BaseQueryFn} from '@reduxjs/toolkit/query';
 import {Mutex} from 'async-mutex';
 
@@ -12,6 +12,18 @@ export interface IQuery {
   variables?: Record<string, unknown>
   fetchOptions?: IRequestConfig
 }
+
+
+/**
+ * 根據 method 取得 Content-Type
+ * @param method
+ */
+export const getContentTypeWithMethod: TContentTypeResolver = (method) => {
+    // if ([ERequestMethod.POST, ERequestMethod.PUT].includes(method)) return ERequestContentType.formData;
+    // if ([ERequestMethod.DELETE].includes(method)) return ERequestContentType.formUrlDecode;
+    return ERequestContentType.json;
+};
+
 
 /**
  * RTK Query 接入 Axios Fetcher 中間層
@@ -30,7 +42,12 @@ export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (
             url,
             method,
             contentType,
-        })(args);
+        },
+        {
+            contentTypeResolver: getContentTypeWithMethod,
+            fetcherLeastTime: 400,
+        },
+        )(args);
 
         return {
             data,

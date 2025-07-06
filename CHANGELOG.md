@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.7-alpha.3](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.2...v0.0.7-alpha.3) (2025-07-06)
+
+
+### Features
+
+* 更新持久化鍵與錯誤處理邏輯 ([002261d](https://github.com/acrool/acrool-react-fetcher/commit/002261d8e7b4c2899a0a21416891435b723dfce2))
+
 ### [0.0.7-alpha.2](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.7-alpha.1...v0.0.7-alpha.2) (2025-07-05)
 
 

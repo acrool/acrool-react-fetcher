@@ -11,5 +11,5 @@ export interface IUseSubscriptionArgs<TVariables> {variables?: TVariables}
 
 export interface ICreateGraphqlOptions {
     // contentTypeResolver?: TContentTypeResolver
-    fetcherLeastTime: number
+    fetcherLeastTime?: number
 }

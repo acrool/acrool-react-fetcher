@@ -33,5 +33,5 @@ export type TContentTypeResolver = (method: ERequestMethod) => string;
 
 export interface ICreateRestFulOptions {
     contentTypeResolver?: TContentTypeResolver
-    fetcherLeastTime: number
+    fetcherLeastTime?: number
 }

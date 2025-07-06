@@ -22,7 +22,7 @@ import {getContentTypeWithMethod, getDataWithContentType} from './utils';
 const createRestFulFetcher = <TData, TArgs extends ICreateRestFulFetcherArgs<TFileMapVariables|void>>(
     axiosInstance: AxiosInstance,
     document: IDocument,
-    options: ICreateRestFulOptions
+    options?: ICreateRestFulOptions
 ): ((args?: TArgs) => Promise<TData>) => {
     return async (args?: TArgs) => {
         const method = document?.method || '';

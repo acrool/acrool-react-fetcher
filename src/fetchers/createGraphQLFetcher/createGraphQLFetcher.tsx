@@ -17,7 +17,7 @@ import {getVariablesFileMap, TFileMapVariables} from './utils';
 const createGraphQLFetcher = <TData, TArgs extends IUseGraphQLFetcherArgs<TFileMapVariables>>(
     axiosInstance: AxiosInstance,
     query: string,
-    options: ICreateGraphqlOptions
+    options?: ICreateGraphqlOptions
 ): ((args?: TArgs) => Promise<TData>) => {
 
     return async (args?: TArgs) => {

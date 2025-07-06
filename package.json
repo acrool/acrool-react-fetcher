@@ -53,8 +53,7 @@
   "dependencies": {
     "@acrool/js-logger": "^1.0.27",
     "@acrool/js-utils": "^3.2.25",
-    "axios": "^1.9.0",
-    "clsx": "^2.1.1"
+    "axios": "1.10.0"
   },
   "devDependencies": {
     "@stylistic/eslint-plugin-ts": "^3.0.1",

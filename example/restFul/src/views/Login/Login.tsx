@@ -68,7 +68,7 @@ const Login = ({
     >
         <Banner/>
 
-        <div>tester1: 正常登入</div>
+        <div>tester1 / acrool_is_good_task_system: 正常登入</div>
         <div>tester2: 特定 error.code 帳號重複，忽略全域錯誤</div>
         <div>其他: 全域錯誤</div>
 
@@ -79,7 +79,7 @@ const Login = ({
                 <Controller
                     control={HookForm.control}
                     name="account"
-                    defaultValue="tester"
+                    defaultValue="tester1"
                     rules={{
                         required: '請輸入帳號',
                     }}

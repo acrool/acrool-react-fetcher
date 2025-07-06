@@ -1,16 +1,29 @@
-const routePrefixPath = '';
-const assetPrefixUrl = `${routePrefixPath}/static`;
+const routerPath = {
+    login: '/sign-in',
+    dashboard: '/',
+};
 
-const persistKey = 'persist:acrool-fetcher';
+const persistWhileList = [
+    'auth',
+];
+const persistKey = 'persist:fetcher';
+const persistVersion = '1.3.2';
+const persistKeyMap = {
+    root: persistKey,
+    version: `${persistKey}-version`,
+    locale: `${persistKey}-locale`,
+    auth: `${persistKey}-auth`,
+    themeMode: `${persistKey}-themeMode`,
+};
+const assetPrefixUrl = '/static';
 
-const persistWhileList = [];
-const persistVersion = '1.0.13';
-
+const fetcherLeastTime = 400;
 
 export {
-    assetPrefixUrl,
-    persistKey,
-    persistWhileList,
+    fetcherLeastTime,
+    persistKeyMap,
     persistVersion,
-    routePrefixPath,
+    persistWhileList,
+    routerPath,
+    assetPrefixUrl,
 };

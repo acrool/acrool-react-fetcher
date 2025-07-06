@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
-import {AxiosInstance} from 'axios';
+import {AxiosError, AxiosInstance} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
@@ -8,6 +8,7 @@ import {FetcherException} from '../exception';
 import {IInternalRequestConfig, IRequestConfig} from '../fetchers/types';
 import AxiosCancelException from './AxiosCancelException';
 import {
+    IFormatResponseErrorReturn, TCheckErrorIs401,
     TCheckIsErrorResponse,
     TCheckIsRefreshTokenRequest,
     TGetResponseFormatError,
@@ -26,7 +27,7 @@ export const AxiosClientContext = createContext<AxiosInstance | null>(null);
 export const useAxiosClient = () => {
     const axiosInstance = useContext(AxiosClientContext);
 
-    if (axiosInstance) {
+    if (!axiosInstance) {
         throw new Error('useAxiosClient must be used inside FetcherProvider');
     }
     return axiosInstance;
@@ -37,6 +38,7 @@ interface IProps {
     axiosInstance: AxiosInstance
     checkIsRefreshTokenRequest?: TCheckIsRefreshTokenRequest
     checkIsErrorResponse?: TCheckIsErrorResponse
+    checkErrorIs401?: TCheckErrorIs401
     locale?: string
     getResponseFormatError?: TGetResponseFormatError
     onResponseError?: TOnResponseError
@@ -59,6 +61,7 @@ const FetcherProvider = ({
     onResponseError,
     checkIsRefreshTokenRequest,
     checkIsErrorResponse,
+    checkErrorIs401,
     authorizationPrefix = 'Bearer',
     isDebug = false,
 }: IProps) => {
@@ -161,20 +164,29 @@ const FetcherProvider = ({
     const interceptorsResponseSuccess: TInterceptorResponseSuccess = (response) => {
         if (isDebug) logger.info('[FetcherProvider] interceptorsResponseSuccess', {response});
 
-        if (checkIsErrorResponse && checkIsErrorResponse(response)){
-            // 創建一個 AxiosError 來模擬錯誤狀態，這樣可以進入 interceptorsResponseError
-            const axiosError = new Error('Business logic error') as any;
-            axiosError.response = response;
-            axiosError.config = response.config;
-            axiosError.status = response.status;
-            axiosError.isAxiosError = true;
-            
-            // 拋出 AxiosError 讓 interceptorsResponseError 處理
-            return Promise.reject(axiosError);
+        if (checkIsErrorResponse && checkIsErrorResponse(response)) {
+            return interceptorsResponseError(new AxiosError(
+                response.data.message,
+                'ERR_BAD_RESPONSE',
+                response.config,
+                response.request,
+                response,
+            ));
         }
+
         return response;
     };
 
+
+    /**
+     * 處理 response 錯誤
+     * @param responseFirstError
+     */
+    const handleOnResponseError = (responseFirstError: IFormatResponseErrorReturn) => {
+        if (onResponseError) {
+            onResponseError(responseFirstError);
+        }
+    };
 
     /**
      * 處理 response 失敗
@@ -188,17 +200,15 @@ const FetcherProvider = ({
         const status = axiosError.status;
         const responseFirstError = getResponseFormatError(axiosError);
 
-        if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError(2)', {status, responseFirstError});
 
-        if (onResponseError && originalConfig.ignoreErrorCallback !== true) {
-            onResponseError(responseFirstError);
-        }
+        if (isDebug) logger.warning('[FetcherProvider] interceptorsResponseError(2)', {status, responseFirstError});
 
 
         const isRefresh = originalConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originalConfig) : false;
 
         if (response && originalConfig) {
-            if (status === 401 || responseFirstError.code === 'UNAUTHENTICATED') {
+
+            if (status === 401 || (checkErrorIs401 && checkErrorIs401(responseFirstError))) {
 
                 const tokens = getTokens();
 
@@ -208,6 +218,8 @@ const FetcherProvider = ({
                     isTokenRefreshing = false;
                     if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
+
+                    if(originalConfig.ignoreErrorCallback !== true) handleOnResponseError(responseFirstError);
                     return Promise.reject(new FetcherException(responseFirstError));
                 }
 
@@ -230,6 +242,9 @@ const FetcherProvider = ({
                 });
             }
         }
+
+        // 處理其他錯誤
+        if(originalConfig.ignoreErrorCallback !== true) handleOnResponseError(responseFirstError);
         return Promise.reject(new FetcherException(responseFirstError));
     };
 

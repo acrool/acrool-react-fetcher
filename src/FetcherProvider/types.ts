@@ -31,4 +31,5 @@ export interface IFormatResponseErrorReturn {
 export type TGetResponseFormatError = (axiosError?: AxiosError) => IFormatResponseErrorReturn
 export type TCheckIsRefreshTokenRequest = (config: IInternalRequestConfig) => boolean
 export type TCheckIsErrorResponse = (response: AxiosResponse) => boolean
+export type TCheckErrorIs401 = (error: IFormatResponseErrorReturn) => boolean
 export type TOnResponseError = (error: IFormatResponseErrorReturn) => void

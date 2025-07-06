@@ -1,6 +1,6 @@
 import {jsonDecode} from '@acrool/js-utils/string';
 
-import {persistKey, persistVersion} from '@/config/app';
+import {persistKeyMap, persistVersion} from '@/config/app';
 import {gridConfig} from '@/config/grid';
 import {DEFAULT_LOCALE,ELocales} from '@/config/locale';
 import {siteConfig} from '@/config/site';
@@ -19,13 +19,6 @@ function getDefaultLocale(locale: ELocales): ELocales {
 interface IInitialState {
 }
 
-
-const persistKeyMap = {
-    root: persistKey,
-    locale: `${persistKey}-locale`,
-    auth: `${persistKey}-auth`,
-    version: `${persistKey}-version`,
-};
 
 /**
  * 取得持久化預設Redux狀態

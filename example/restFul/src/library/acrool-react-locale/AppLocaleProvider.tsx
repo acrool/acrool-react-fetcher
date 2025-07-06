@@ -12,6 +12,8 @@ interface IProps {
 }
 
 
+const persistKey = persistKeyMap.locale;
+
 /**
  * 多語系提供者
  * @param children
@@ -28,7 +30,7 @@ const AppLocaleProvider = ({
         defaultLocale={DEFAULT_LOCALE}
         onChangeLocale={handleChangeLocale}
         renderLoading={() => <BlockWrapperFixed queueKey="locale-fetching"/>}
-        persistKey={`${persistKeyMap.locale}-locale`}
+        persistKey={persistKey}
     >
         {children}
     </LocaleAsyncProvider>;

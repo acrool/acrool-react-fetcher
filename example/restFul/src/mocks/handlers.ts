@@ -1,13 +1,13 @@
 import {http, HttpResponse} from 'msw';
 
-let validAuthTokens = {
-    accessToken: 'init-accessToken',
-    refreshToken: 'init-refreshToken',
-};
 // let validAuthTokens = {
-//     accessToken: 'login-accessToken',
-//     refreshToken: 'login-refreshToken',
+//     accessToken: 'init-accessToken',
+//     refreshToken: 'init-refreshToken',
 // };
+let validAuthTokens = {
+    accessToken: 'login-accessToken',
+    refreshToken: 'login-refreshToken',
+};
 let refreshCount = 0;
 
 export const handlers = [
@@ -15,11 +15,21 @@ export const handlers = [
     http.get('/api/bookmark/:bookmarkId', ({request, params}) => {
         const headerAuth = request.headers.get('authorization');
         if (headerAuth !== `Bearer ${validAuthTokens.accessToken}`) {
-            return HttpResponse.json<{}>({
-                message: 'Token expired or invalid',
-                code: 'Unauthorized',
-                path: `/api/bookmark/${params.bookmarkId}`,
-            }, {status: 401});
+            return HttpResponse.
+                json<{}>({
+                    message: 'Token expired or invalid',
+                    success: false,
+                    code: 'Unauthorized',
+                    path: `/api/bookmark/${params.bookmarkId}`,
+                }, {status: 200});
+
+            // return HttpResponse.
+            // json<{}>({
+            //     message: 'Token expired or invalid',
+            //     success: false,
+            //     code: 'Unauthorized',
+            //     path: `/api/bookmark/${params.bookmarkId}`,
+            // }, {status: 200});
         }
         return HttpResponse.json({
             id: params.bookmarkId,

@@ -44,7 +44,7 @@ export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (
             contentType,
         },
         {
-            contentTypeResolver: getContentTypeWithMethod,
+            // contentTypeResolver: getContentTypeWithMethod, // 根據 contentType, 如果這個參數設定了，則不會使用 document.contentType
             fetcherLeastTime: 400,
         },
         )(args);

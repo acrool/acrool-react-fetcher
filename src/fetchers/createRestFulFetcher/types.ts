@@ -1,5 +1,5 @@
 import {IRequestConfig} from '../types';
-import {ERequestMethod} from './config';
+import {ERequestContentType, ERequestMethod} from './config';
 
 
 
@@ -29,7 +29,7 @@ export interface IDocument {
 
 export type TFileMapVariables = Record<string, any>;
 export type TBody = Record<string, any> | FormData | File[] | File;
-export type TContentTypeResolver = (method: ERequestMethod) => string;
+export type TContentTypeResolver = (method: ERequestMethod) => ERequestContentType;
 
 export interface ICreateRestFulOptions {
     contentTypeResolver?: TContentTypeResolver

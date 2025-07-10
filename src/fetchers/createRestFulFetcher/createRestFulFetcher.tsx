@@ -2,13 +2,13 @@ import {delay} from '@acrool/js-utils/promise';
 import {AxiosInstance, AxiosRequestConfig} from 'axios';
 
 import {IRequestConfig} from '../types';
-import {ERequestMethod} from './config';
+import {ERequestContentType, ERequestMethod} from './config';
 import {
     ICreateRestFulFetcherArgs, ICreateRestFulOptions,
     IDocument,
     TFileMapVariables
 } from './types';
-import {getContentTypeWithMethod, getDataWithContentType} from './utils';
+import {getDataWithContentType} from './utils';
 
 
 
@@ -39,8 +39,12 @@ const createRestFulFetcher = <TData, TArgs extends ICreateRestFulFetcherArgs<TFi
         const params = typeof args === 'object' && args !== null && 'params' in args ? args.params : undefined;
 
 
-        const contentTypeResolver = options?.contentTypeResolver ?? getContentTypeWithMethod;
-        const contentType = headers?.contentType ?? contentTypeResolver(method.toUpperCase() as ERequestMethod);
+        let contentType = ERequestContentType.json;
+
+        if(headers?.contentType) contentType = headers.contentType;
+        else if(options?.contentTypeResolver) contentType = options.contentTypeResolver(method.toUpperCase() as ERequestMethod);
+        else if(document.contentType) contentType = document.contentType as ERequestContentType;
+
 
         const config: IRequestConfig = {
             url: document.url,

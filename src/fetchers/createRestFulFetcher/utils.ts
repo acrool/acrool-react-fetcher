@@ -16,13 +16,3 @@ export const getDataWithContentType = (
     return JSON.stringify(data);
 };
 
-
-/**
- * 根據 method 取得 Content-Type
- * @param method
- */
-export const getContentTypeWithMethod: TContentTypeResolver = (method) => {
-    // if ([ERequestMethod.POST, ERequestMethod.PUT].includes(method)) return ERequestContentType.formData;
-    // if ([ERequestMethod.DELETE].includes(method)) return ERequestContentType.formUrlDecode;
-    return ERequestContentType.json;
-};

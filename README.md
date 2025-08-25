@@ -131,6 +131,49 @@ logout();
 
 ---
 
+
+
+### Options queryString 
+
+(.net not support)
+default: `?statusIds[]=1&statusIds[]=2`
+
+change to: `?statusIds=1&statusIds=2`
+
+```ts
+export const baseQueryWithAxios: BaseQueryFn<IQuery> = async (query, BaseQueryApi, extraOptions) => {
+    await mutex.waitForUnlock();
+    try {
+        const {url, method, fetchOptions, ...args} = query;
+        const data = await createRestFulFetcher(axiosInstance, {url, method}, getContentTypeWithMethod)({
+            ...args,
+            fetchOptions: {
+                ...fetchOptions,
+                paramsSerializer: (params) => {
+                    return qs.stringify(params, {indices: false});
+                }
+            }
+        });
+
+        return {
+            data,
+            meta: {}
+        };
+
+    } catch (error: any) {
+        dialog.error(error.message, {code: error.code});
+
+        return {
+            error: {
+                code: error.code || 500,
+                message: error.message
+            },
+        };
+    }
+};
+```
+
+
 ## License
 
 MIT © [Acrool](https://github.com/acrool) & [Imagine](https://github.com/imagine10255)

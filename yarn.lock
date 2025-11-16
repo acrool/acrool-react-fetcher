@@ -12,13 +12,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@acrool/js-utils@npm:^3.2.25":
-  version: 3.2.25
-  resolution: "@acrool/js-utils@npm:3.2.25"
+"@acrool/js-utils@npm:^3.2.28":
+  version: 3.2.28
+  resolution: "@acrool/js-utils@npm:3.2.28"
   dependencies:
     big.js: "npm:^7.0.1"
     dayjs: "npm:^1.x"
-  checksum: 10c0/cc07f653709fd6f0de99c81dce0fd3017c5bce860ee6cfb1adb582cc4ff89c95aab7c011921b9cd53ea8cfb6711d1ba28d58be226dd42b14db3ddff0000789ad
+  checksum: 10c0/d419d604fec438184ce366d5bb217953a4eb10e36d1733dfadd596c98e021e403152709b05145bbec3226b5417f8175dc7dcf8b7fd24669d689950bbcfb224d8
   languageName: node
   linkType: hard
 
@@ -27,7 +27,7 @@ __metadata:
   resolution: "@acrool/react-fetcher@workspace:."
   dependencies:
     "@acrool/js-logger": "npm:^1.0.27"
-    "@acrool/js-utils": "npm:^3.2.25"
+    "@acrool/js-utils": "npm:^3.2.28"
     "@stylistic/eslint-plugin-ts": "npm:^3.0.1"
     "@swc/jest": "npm:^0.2.27"
     "@testing-library/dom": "npm:10.3.1"

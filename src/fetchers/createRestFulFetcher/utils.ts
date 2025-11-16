@@ -1,4 +1,4 @@
-import {objToFormData} from '@acrool/js-utils/convert';
+import {objToFormData, objToFormUrl} from '@acrool/js-utils/convert';
 
 import {ERequestContentType, ERequestMethod} from './config';
 import {TBody, TContentTypeResolver} from './types';
@@ -12,8 +12,8 @@ export const getDataWithContentType = (
     contentType: ERequestContentType,
     data: TBody = {},
 ): FormData | string | object => {
-    if ([ERequestContentType.formData].includes(contentType)) return objToFormData(data);
-    if(contentType === ERequestContentType.formUrlDecode) return data;
+    if(contentType === ERequestContentType.formData) return objToFormData(data);
+    if(contentType === ERequestContentType.formUrlDecode) return objToFormUrl(data);
     return JSON.stringify(data);
 };
 

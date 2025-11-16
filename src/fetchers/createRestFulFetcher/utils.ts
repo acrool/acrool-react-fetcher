@@ -12,7 +12,7 @@ export const getDataWithContentType = (
     contentType: ERequestContentType,
     data: TBody = {},
 ): FormData | string => {
-    if ([ERequestContentType.formData, ERequestContentType.formUrlDecode].includes(contentType)) return objToFormData(data);
+    if ([ERequestContentType.formData].includes(contentType)) return objToFormData(data);
     return JSON.stringify(data);
 };
 

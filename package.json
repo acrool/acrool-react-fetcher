@@ -8,9 +8,9 @@
     "typescript",
     "fetcher"
   ],
-  "private": false,
   "type": "module",
   "license": "MIT",
+  "packageManager": "yarn@4.9.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/acrool/acrool-react-fetcher.git"

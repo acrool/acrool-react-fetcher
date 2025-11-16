@@ -11,8 +11,9 @@ import {TBody, TContentTypeResolver} from './types';
 export const getDataWithContentType = (
     contentType: ERequestContentType,
     data: TBody = {},
-): FormData | string => {
+): FormData | string | object => {
     if ([ERequestContentType.formData].includes(contentType)) return objToFormData(data);
+    if(contentType === ERequestContentType.formUrlDecode) return data;
     return JSON.stringify(data);
 };
 

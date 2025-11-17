@@ -13,6 +13,7 @@
   "resolutions": {
     "styled-components": "6"
   },
+  "packageManager": "yarn@4.9.1",
   "dependencies": {
     "@acrool/js-logger": "^1.0.27",
     "@acrool/react-block": "^1.1.2",

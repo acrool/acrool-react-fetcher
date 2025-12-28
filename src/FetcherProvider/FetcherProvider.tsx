@@ -181,10 +181,11 @@ const FetcherProvider = ({
     /**
      * 處理 response 錯誤
      * @param responseFirstError
+     * @param httpStatus
      */
-    const handleOnResponseError = (responseFirstError: IFormatResponseErrorReturn) => {
+    const handleOnResponseError = (responseFirstError: IFormatResponseErrorReturn, httpStatus: string) => {
         if (onResponseError) {
-            onResponseError(responseFirstError);
+            onResponseError(responseFirstError, httpStatus);
         }
     };
 
@@ -208,7 +209,7 @@ const FetcherProvider = ({
 
         if (response && originalConfig) {
 
-            if (status === 401 || (checkErrorIs401 && checkErrorIs401(responseFirstError))) {
+            if (status === 401 || (checkErrorIs401 && checkErrorIs401(responseFirstError, String(status)))) {
 
                 const tokens = getTokens();
 
@@ -219,7 +220,7 @@ const FetcherProvider = ({
                     if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
 
-                    if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError);
+                    if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError, String(status));
                     return Promise.reject(new FetcherException(responseFirstError));
                 }
 
@@ -244,7 +245,7 @@ const FetcherProvider = ({
         }
 
         // 處理其他錯誤
-        if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError);
+        if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError, String(status));
         return Promise.reject(new FetcherException(responseFirstError));
     };
 

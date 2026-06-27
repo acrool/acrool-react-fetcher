@@ -139,4 +139,21 @@ export const handlers = [
             authTokens: validAuthTokens
         });
     }),
+
+
+    // 5. Error 500
+    http.post('/api/error500', ({request, params}) => {
+
+        return HttpResponse.json({
+            message: '500錯誤測試',
+            code: 'MAD',
+        }, {status: 500});
+    }),
+
+    // 6. Network Error (ERR_NETWORK)
+    // 模擬網路錯誤，例如 CORS 被阻止、網路中斷、伺服器無法連線等
+    http.post('/api/network-error', () => {
+        // HttpResponse.error() 會產生網路錯誤，axios 會回傳 ERR_NETWORK
+        return HttpResponse.error();
+    }),
 ];

@@ -81,7 +81,7 @@ const FetcherProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [getTokens, refreshTokens, updateTokens, forceLogout]);
+    }, [getTokens, refreshTokens, updateTokens, forceLogout, locale]);
 
 
     /**

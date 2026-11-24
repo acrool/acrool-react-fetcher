@@ -81,7 +81,7 @@ const FetcherProvider = ({
             axiosInstance.interceptors.request.eject(interceptorReq);
             axiosInstance.interceptors.response.eject(interceptorRes);
         };
-    }, [getTokens, refreshTokens, updateTokens, forceLogout]);
+    }, [getTokens, refreshTokens, updateTokens, forceLogout, locale]);
 
 
     /**
@@ -190,6 +190,17 @@ const FetcherProvider = ({
     };
 
     /**
+     * 這個請求是否要略過全域錯誤回調
+     * createRestFulFetcher／createGraphQLFetcher 會把呼叫端的 fetchOptions 放在 config.fetchOptions，
+     * 直接呼叫 axiosInstance 的則是寫在 config 最外層，兩種都要認
+     * @param config
+     */
+    const checkIsIgnoreGlobalError = (config?: IInternalRequestConfig) => {
+        const fetchOptions = (config as {fetchOptions?: IRequestConfig} | undefined)?.fetchOptions;
+        return config?.ignoreGlobalError === true || fetchOptions?.ignoreGlobalError === true;
+    };
+
+    /**
      * 處理 response 失敗
      * @param axiosError
      */
@@ -220,7 +231,7 @@ const FetcherProvider = ({
                     if (isDebug) logger.warning('[FetcherProvider] no refreshToken/refreshAPI|pendingRequest fail, force logout');
                     forceLogout();
 
-                    if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError, String(status));
+                    if(!checkIsIgnoreGlobalError(originalConfig)) handleOnResponseError(responseFirstError, String(status));
                     return Promise.reject(new FetcherException(responseFirstError));
                 }
 
@@ -245,7 +256,7 @@ const FetcherProvider = ({
         }
 
         // 處理其他錯誤
-        if(originalConfig.ignoreGlobalError !== true) handleOnResponseError(responseFirstError, String(status));
+        if(!checkIsIgnoreGlobalError(originalConfig)) handleOnResponseError(responseFirstError, String(status));
         return Promise.reject(new FetcherException(responseFirstError));
     };
 

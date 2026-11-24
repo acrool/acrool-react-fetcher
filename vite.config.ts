@@ -35,11 +35,16 @@ export default defineConfig({
         },
         cssTarget: 'chrome61',
         rollupOptions: {
-            external: ['react', 'react-dom'],
+            // 相依一律不打包進 dist：
+            // - react/jsx-runtime：內嵌的話會帶進一份 React 自己的 runtime，在 Preact（別名到 preact/compat）下渲染不出來
+            // - axios、@acrool/js-*：交給使用端的打包工具處理，才能去重、壓縮，沒用到的部分也能被剔除
+            external: ['react', 'react-dom', 'react/jsx-runtime', 'axios', /^@acrool\/js-(utils|logger)(\/|$)/],
             output: {
                 globals: {
                     react: 'React',
                     'react-dom': 'ReactDOM',
+                    'react/jsx-runtime': 'ReactJsxRuntime',
+                    axios: 'axios',
                 },
                 generatedCode: {
                     constBindings: true,

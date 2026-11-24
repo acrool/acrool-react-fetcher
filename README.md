@@ -42,19 +42,13 @@ Acrool React Fetcher is a solution for API integration and Auth state management
 yarn add @acrool/react-fetcher
 ```
 
+> `axios`, `@acrool/js-utils` and `@acrool/js-logger` are installed as dependencies, nothing to add on your side. Since 1.0.0 they are no longer bundled into `dist`, so your bundler can dedupe and tree-shake them. There is no stylesheet to import.
+
 ## Quick Start
 
-### 1. Import styles
+### 1. Provider structure
 
-Add the following to your entry file (e.g. `index.tsx`):
-
-```ts
-import "@acrool/react-fetcher/dist/index.css";
-```
-
-### 2. Provider structure
-
-Wrap your app with `AuthStateProvider` and `AxiosClientProvider`. It is recommended to use `AppFetcherProvider` to automatically wrap all necessary providers:
+Wrap your app with `AuthStateProvider` and `FetcherProvider`. It is recommended to use `AppFetcherProvider` to automatically wrap all necessary providers:
 
 ```tsx
 import AppFetcherProvider from '@/library/react-fetcher';
@@ -66,7 +60,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 );
 ```
 
-### 3. Create baseApi (GraphQL query)
+### 2. Create baseApi (GraphQL query)
 
 For Redux Toolkit Query, create `baseApi.ts`:
 
@@ -86,7 +80,7 @@ export const baseApi = createApi({
 });
 ```
 
-### 4. Use Auth state and API in your pages
+### 3. Use Auth state and API in your pages
 
 #### Get and update tokens
 
@@ -124,7 +118,7 @@ await login({ variables: { input: { account, password } } });
 logout();
 ```
 
-### 5. More examples
+### 4. More examples
 
 - The Dashboard page demonstrates how to operate token, API, and locale switching
 - The Login page demonstrates login and error handling

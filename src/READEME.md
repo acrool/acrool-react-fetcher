@@ -20,7 +20,7 @@
 </div>
 
 
-`^1.1.0 support react >=18.0.0 <20.0.0`
+`^1.0.0 support react >=18.0.0 <20.0.0`
 
 
 ## Features
@@ -31,15 +31,10 @@
 ## Install
 
 ```bash
-yarn add framer-motion @acrool/react-fetcher
+yarn add @acrool/react-fetcher
 ```
 
 ## Usage
-
-add in your index.tsx
-```tst
-import "@acrool/react-fetcher/dist/index.css";
-```
 
 add in your App.tsx
 

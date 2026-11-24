@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.11...v1.0.0) (2026-11-24)
+
+
+### Bug Fixes
+
+* externalize jsx-runtime and dependencies, honor fetchOptions.ignoreGlobalError ([13e6044](https://github.com/acrool/acrool-react-fetcher/commit/13e6044e517318d710ab5978f3b5430dc026d977))
+
 ### [0.0.11](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.11-alpha.1...v0.0.11) (2026-06-27)
 
 ### [0.0.11-alpha.1](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.11-alpha.0...v0.0.11-alpha.1) (2026-06-27)

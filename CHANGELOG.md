@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/acrool/acrool-react-fetcher/compare/v1.0.0...v1.0.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* only force logout on 401 when the request carried the current token ([feb44e4](https://github.com/acrool/acrool-react-fetcher/commit/feb44e4139b1a301fce4b1cca15d2593fda4e17d))
+
 ## [1.0.0](https://github.com/acrool/acrool-react-fetcher/compare/v0.0.11...v1.0.0) (2026-11-24)
 
 

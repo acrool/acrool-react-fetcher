@@ -1,6 +1,6 @@
 import logger from '@acrool/js-logger';
 import {isEmpty} from '@acrool/js-utils/equal';
-import {AxiosError, AxiosInstance} from 'axios';
+import {AxiosError, AxiosInstance, AxiosResponse} from 'axios';
 import React, {createContext, useContext, useLayoutEffect} from 'react';
 
 import {useAuthState} from '../AuthStateProvider';
@@ -21,6 +21,12 @@ import {getRestFulResponseFormatError} from './utils';
 
 let isTokenRefreshing = false;
 let pendingRequestQueues: Array<(isRefreshOK: boolean) => void> = [];
+
+/**
+ * 最近一次換發 token：from 是換發前的 accessToken，to 是換發後的。
+ * 晚到的 401 帶的是 from、而目前的 token 仍是 to，表示是同一個登入只是換發過，改用新 token 重送即可
+ */
+let lastRefreshedAccessToken: {from: string, to: string} | null = null;
 
 export const AxiosClientContext = createContext<AxiosInstance | null>(null);
 
@@ -135,12 +141,15 @@ const FetcherProvider = ({
 
             const accessTokens = getTokens()?.accessToken;
             const forceGuest = (originConfig.fetchOptions as IInternalRequestConfig)?.forceGuest;
+            const requestAccessToken = !forceGuest && accessTokens ? accessTokens : undefined;
 
-            if (!forceGuest && accessTokens) {
-                originConfig.headers['Authorization'] = [authorizationPrefix, accessTokens]
+            if (requestAccessToken) {
+                originConfig.headers['Authorization'] = [authorizationPrefix, requestAccessToken]
                     .filter(str => str)
                     .join(' ');
             }
+            // 重送時會再經過這裡，一律覆寫成這次實際帶的 token
+            (originConfig as IInternalRequestConfig).requestAccessToken = requestAccessToken;
 
             // 判斷是否為 refreshToken API
             const isRefreshTokenAPI = originConfig && checkIsRefreshTokenRequest ? checkIsRefreshTokenRequest(originConfig) : false;
@@ -201,6 +210,38 @@ const FetcherProvider = ({
     };
 
     /**
+     * 處理「請求帶的 token 已經不是目前的」401
+     * - 那個 token 是被換發掉的（同一個登入）：改用目前的 token 重送；換發還在進行中就排進佇列，換發完再送
+     * - 其他情況（已登出、換了帳號）：只 reject 這次請求。不能拿新 token 重送，那會用另一個帳號執行舊的請求
+     * @param originalConfig 失敗的請求
+     * @param requestAccessToken 失敗的請求帶的 token
+     * @param currentAccessToken 目前的 token
+     * @param responseFirstError 整理過的錯誤
+     */
+    const handleStaleTokenUnauthorized = (
+        originalConfig: IInternalRequestConfig,
+        requestAccessToken: string,
+        currentAccessToken: string | undefined,
+        responseFirstError: IFormatResponseErrorReturn,
+    ): Promise<AxiosResponse> => {
+        const isRefreshedToken = lastRefreshedAccessToken?.from === requestAccessToken
+            && lastRefreshedAccessToken.to === currentAccessToken;
+
+        if (!isRefreshedToken) {
+            return Promise.reject(new FetcherException(responseFirstError));
+        }
+
+        if (isTokenRefreshing) {
+            return new Promise((resolve, reject) => {
+                pushPendingRequestQueues(resolve, reject)(originalConfig);
+            });
+        }
+
+        originalConfig.pendingRequest = true;
+        return axiosInstance(originalConfig);
+    };
+
+    /**
      * 處理 response 失敗
      * @param axiosError
      */
@@ -223,6 +264,14 @@ const FetcherProvider = ({
             if (status === 401 || (checkErrorIs401 && checkErrorIs401(responseFirstError, String(status)))) {
 
                 const tokens = getTokens();
+                const requestAccessToken = originalConfig.requestAccessToken;
+
+                // 請求帶的 token 已經不是目前的（送出後已登出、重新登入或換發過）：
+                // 失效的是舊 token，跟目前的登入無關，不換發、不登出、不回報 onResponseError
+                if (requestAccessToken && requestAccessToken !== tokens?.accessToken) {
+                    if (isDebug) logger.warning('[FetcherProvider] 401 with stale token, skip refresh/logout');
+                    return handleStaleTokenUnauthorized(originalConfig, requestAccessToken, tokens?.accessToken, responseFirstError);
+                }
 
                 if (isDebug) logger.warning('[FetcherProvider] enter refresh token flow', {refreshToken: tokens?.refreshToken});
 
@@ -237,10 +286,15 @@ const FetcherProvider = ({
 
                 if (!isTokenRefreshing) {
                     isTokenRefreshing = true;
+                    const fromAccessToken = tokens?.accessToken;
                     if (isDebug) logger.warning('[FetcherProvider] refreshTokens');
                     refreshTokens()
                         .then(() => {
                             if (isDebug) logger.info('[FetcherProvider] refreshTokens success');
+                            const toAccessToken = getTokens()?.accessToken;
+                            lastRefreshedAccessToken = fromAccessToken && toAccessToken
+                                ? {from: fromAccessToken, to: toAccessToken}
+                                : null;
                             runPendingRequest(true);
                         })
                         .catch(() => {

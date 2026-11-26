@@ -31,7 +31,8 @@
     "example",
     "node_modules",
     "**/*.spec.ts",
-    "**/*.test.ts"
+    "**/*.test.ts",
+    "**/*.spec.tsx"
   ],
   "files": [],
   "references": [{ "path": "./tsconfig.node.json" }]

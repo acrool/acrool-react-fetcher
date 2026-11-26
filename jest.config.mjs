@@ -3,8 +3,10 @@ export default {
     preset: 'ts-jest',
     testEnvironment: 'jsdom',
     testMatch: ['<rootDir>/**/*.(spec|test).ts?(x)'],
+    // @acrool/js-logger 等套件在 browser 條件下給的是 ESM（.mjs），要交給 swc 轉譯
+    transformIgnorePatterns: ['/node_modules/(?!@acrool/)'],
     transform: {
-        '^.+\\.(t|j)sx?$': [
+        '^.+\\.(t|m?j)sx?$': [
             '@swc/jest',
             {
                 jsc: {
